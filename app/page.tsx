@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import gsap from "gsap";
 import Image from "next/image";
 
 // --- SVG Icons ---
@@ -87,9 +86,9 @@ export default function Page() {
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      <div className={`transition-opacity duration-300 ease-out ${isLoading ? "opacity-0" : "opacity-100"}`}>
+      <div className={`transition-opacity duration-700 ease-in-out ${isLoading ? "opacity-0" : "opacity-100"}`}>
         <Navbar />
-        <Hero isLoading={isLoading} />
+        <Hero />
         <SquadSection />
       </div>
     </main>
@@ -97,7 +96,7 @@ export default function Page() {
 }
 
 // ==========================================
-// 1. FAST LOADING SCREEN
+// 1. DELIBERATE, PROFESSIONAL LOADING SCREEN
 // ==========================================
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [count, setCount] = useState(0);
@@ -105,50 +104,51 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 150);
+    // 800ms per word gives a clean, readable pace
+    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 800);
     return () => clearInterval(interval);
   }, [words.length]);
 
   useEffect(() => {
     let start: number | null = null;
-    const duration = 500; 
+    const duration = 2400; // 2.4 seconds for a premium, intentional load sequence
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 100);
+      else setTimeout(onComplete, 400); // Brief pause at 100% before fading out
     };
     requestAnimationFrame(step);
   }, [onComplete]);
 
   return (
-    <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-[9999] bg-bg flex flex-col justify-between">
-      <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.2 }} className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-muted uppercase tracking-[0.3em]">
+    <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.6 }} className="fixed inset-0 z-[9999] bg-bg flex flex-col justify-between">
+      <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-muted uppercase tracking-[0.3em]">
         Tekkrew
-      </motion.div>
+      </div>
 
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div key={wordIndex} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-text/80 absolute">
+          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-text absolute">
             {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display text-text tabular-nums leading-none">
+      <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display text-text tabular-nums leading-none">
         {count.toString().padStart(3, "0")}
-      </motion.div>
+      </div>
 
       <div className="absolute bottom-0 left-0 w-full h-[3px] bg-stroke/50 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.5, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.5)" }} />
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.4, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.4)" }} />
       </div>
     </motion.div>
   );
 }
 
 // ==========================================
-// 2. NAVBAR (Mobile Optimized)
+// 2. NAVBAR
 // ==========================================
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -163,7 +163,7 @@ function Navbar() {
       <nav className={`inline-flex items-center rounded-full backdrop-blur-md border border-white/10 bg-surface/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-shadow duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg shadow-black/80" : ""}`}>
         
         <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-accent-gradient cursor-pointer flex-shrink-0">
-          <div className="w-full h-full bg-bg rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 group-hover:scale-110 relative">
+          <div className="w-full h-full bg-bg rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 relative">
             <Image 
               src="/Tekkrew.jpg" 
               alt="Tekkrew Logo" 
@@ -213,9 +213,9 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO (Local Video + Stadium Glow)
+// 3. HERO (NO VIDEO - Premium CSS Stadium Pitch)
 // ==========================================
-function Hero({ isLoading }: { isLoading: boolean }) {
+function Hero() {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
   const [roleIndex, setRoleIndex] = useState(0);
 
@@ -224,60 +224,63 @@ function Hero({ isLoading }: { isLoading: boolean }) {
     return () => clearInterval(interval);
   }, [roles.length]);
 
-  useEffect(() => {
-    if (!isLoading) {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.fromTo(".name-reveal", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8 }, 0.1)
-        .fromTo(".blur-in", { opacity: 0, filter: "blur(5px)", y: 15 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.6, stagger: 0.1 }, 0.2);
-    }
-  }, [isLoading]);
-
   return (
-    <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
+    <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full bg-[#050505]">
       
-      {/* Stadium Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-accent/15 blur-[100px] rounded-full pointer-events-none z-0" />
-
-      {/* Optimized Local Video */}
-      <div className="absolute inset-0 z-0 overflow-hidden mix-blend-screen" style={{ transform: "translateZ(0)" }}>
-        <video
-          autoPlay muted loop playsInline preload="auto"
-          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-50 md:opacity-60 grayscale contrast-125"
-          src="/Dark_Portfolio_Hero_0.mp4" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90" />
-        <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-bg to-transparent" />
+      {/* PREMIUM BACKGROUND: 
+        Replaced the heavy video with a lightweight, hardware-accelerated CSS pattern.
+        It features a subtle "tactical grid" and a soft yellow stadium spotlight in the center.
+      */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,230,0,0.06)_0%,transparent_60%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg to-transparent" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center text-center px-4 w-full">
-        <span className="blur-in text-[10px] md:text-xs text-white/80 uppercase tracking-[0.3em] mb-4 md:mb-8 font-bold">
+      <div className="relative z-10 flex flex-col items-center text-center px-4 w-full pt-10">
+        <motion.span 
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-[10px] md:text-xs text-white/80 uppercase tracking-[0.3em] mb-4 md:mb-8 font-bold"
+        >
           Road to World Cup '26
-        </span>
+        </motion.span>
 
-        <h1 className="name-reveal text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-display italic leading-[0.9] tracking-tight text-white mb-4 md:mb-6 drop-shadow-2xl">
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}
+          className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-display italic leading-[0.9] tracking-tight text-white mb-4 md:mb-6 drop-shadow-2xl"
+        >
           Tekkrew
-        </h1>
+        </motion.h1>
 
-        <p className="blur-in text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-6 md:mb-8 font-medium">
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}
+          className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-6 md:mb-8 font-medium"
+        >
           A squad of{" "}
-          <span key={roleIndex} className="font-display italic text-transparent bg-clip-text bg-accent-gradient inline-block animate-fade-in font-bold px-1 drop-shadow-md">
+          <span className="font-display italic text-transparent bg-clip-text bg-accent-gradient inline-block px-1 drop-shadow-md min-w-[120px] md:min-w-[180px]">
             {roles[roleIndex]}
           </span>{" "}
           taking over the pitch.
-        </p>
+        </motion.p>
 
-        <p className="blur-in text-xs sm:text-sm md:text-base text-white/70 leading-relaxed max-w-2xl mb-8 md:mb-12 border-l-2 border-accent pl-4 text-left mx-auto">
+        <motion.p 
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.7 }}
+          className="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed max-w-2xl mb-8 md:mb-12 border-l-2 border-accent pl-4 text-left mx-auto"
+        >
           Born on the concrete, headed for the global stage. We built Tekkrew to elevate the beautiful game with raw street style. As the world turns its eyes to North America for World Cup '26, we are bringing gravity-defying freestyle to the masses—and we are just getting started.
-        </p>
+        </motion.p>
 
-        <div className="blur-in flex flex-wrap items-center justify-center gap-3 md:gap-4">
-          <button className="btn-gradient-ring relative bg-text text-bg text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 font-bold transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.3)] w-full sm:w-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
+          className="flex flex-wrap items-center justify-center gap-3 md:gap-4"
+        >
+          <button className="btn-gradient-ring relative bg-text text-bg text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 font-bold transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.2)] w-full sm:w-auto">
             Watch Tape
           </button>
           <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="btn-gradient-ring relative bg-black/50 backdrop-blur-sm text-text text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 border border-stroke font-bold transition-transform hover:scale-105 hover:bg-surface w-full sm:w-auto">
             Meet the Squad
           </button>
-        </div>
+        </motion.div>
       </div>
 
       <div className="absolute bottom-6 md:bottom-8 z-10 flex flex-col items-center gap-2">
@@ -291,7 +294,7 @@ function Hero({ isLoading }: { isLoading: boolean }) {
 }
 
 // ==========================================
-// 4. SQUAD SECTION (Next.js Image Optimized)
+// 4. SQUAD SECTION
 // ==========================================
 function SquadSection() {
   return (
@@ -309,18 +312,18 @@ function SquadSection() {
           {squadData.map((member, index) => (
             <div 
               key={index}
-              className="bg-surface/80 backdrop-blur-sm border border-stroke rounded-2xl p-5 md:p-8 flex flex-col transition-all duration-300 hover:-translate-y-2 hover:border-accent/50 hover:shadow-[0_10px_30px_rgba(255,230,0,0.1)] group relative overflow-hidden"
+              className="bg-surface/80 backdrop-blur-sm border border-stroke rounded-2xl p-5 md:p-8 flex flex-col relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-accent/5 rounded-bl-full -z-0 transition-transform duration-500 group-hover:scale-150" />
+              <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-accent/5 rounded-bl-full -z-0" />
 
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-[2px] bg-stroke group-hover:bg-accent-gradient transition-all duration-500 mb-4 md:mb-6 relative z-10 mx-auto md:mx-0">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-[2px] bg-stroke mb-4 md:mb-6 relative z-10 mx-auto md:mx-0">
                 <div className="w-full h-full rounded-full bg-bg border-4 border-surface overflow-hidden relative">
                   <Image 
                     src={member.image} 
                     alt={member.name} 
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
+                    className="object-cover grayscale"
                   />
                 </div>
               </div>
@@ -346,7 +349,7 @@ function SquadSection() {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-bg border border-stroke flex items-center justify-center text-muted hover:text-black hover:bg-accent hover:border-accent transition-all duration-300"
+                    className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-bg border border-stroke flex items-center justify-center text-muted hover:text-black hover:bg-accent transition-colors"
                     title={link.name}
                   >
                     {link.icon}
