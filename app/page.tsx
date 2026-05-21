@@ -30,6 +30,14 @@ const LinkIcon = () => (
   </svg>
 );
 
+// NEW: Proper Arrow Icon for Book Us
+const ArrowUpRightIcon = () => (
+  <svg className="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="7" y1="17" x2="17" y2="7"></line>
+    <polyline points="7 7 17 7 17 17"></polyline>
+  </svg>
+);
+
 // --- Squad Data ---
 const squadData = [
   {
@@ -104,13 +112,13 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
   useEffect(() => {
     let start: number | null = null;
-    const duration = 2700;
+    const duration = 2000; // Sped up the loading screen slightly for better mobile feel
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 400);
+      else setTimeout(onComplete, 300);
     };
     requestAnimationFrame(step);
   }, [onComplete]);
@@ -134,14 +142,14 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       </motion.div>
 
       <div className="absolute bottom-0 left-0 w-full h-[3px] bg-stroke/50 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.7, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.5)" }} />
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.0, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.5)" }} />
       </div>
     </motion.div>
   );
 }
 
 // ==========================================
-// 2. NAVBAR (With Official IG Link)
+// 2. NAVBAR (Mobile Optimized)
 // ==========================================
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -152,11 +160,11 @@ function Navbar() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6 px-4">
-      <nav className={`inline-flex items-center rounded-full backdrop-blur-md border border-white/10 bg-surface/90 px-2 py-2 transition-shadow duration-300 ${scrolled ? "shadow-lg shadow-black/80" : ""}`}>
+    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4">
+      <nav className={`inline-flex items-center rounded-full backdrop-blur-md border border-white/10 bg-surface/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-shadow duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg shadow-black/80" : ""}`}>
         
         {/* LOGO CONTAINER */}
-        <div className="group relative w-9 h-9 rounded-full p-[2px] bg-accent-gradient cursor-pointer flex-shrink-0">
+        <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-accent-gradient cursor-pointer flex-shrink-0">
           <div className="w-full h-full bg-bg rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
             <img 
               src="/Tekkrew.jpg" 
@@ -164,15 +172,15 @@ function Navbar() {
               className="w-full h-full object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
-                (e.target as HTMLImageElement).parentElement!.innerHTML = '<span class="text-[13px] font-display italic tracking-tighter text-text">TK</span>';
+                (e.target as HTMLImageElement).parentElement!.innerHTML = '<span class="text-[12px] font-display italic tracking-tighter text-text">TK</span>';
               }}
             />
           </div>
         </div>
 
-        <div className="hidden sm:block w-px h-5 bg-stroke mx-3" />
+        <div className="hidden sm:block w-px h-5 bg-stroke mx-2 md:mx-3" />
 
-        <div className="flex items-center gap-1 sm:gap-2 px-2">
+        <div className="flex items-center gap-0.5 sm:gap-2 px-1 md:px-2">
           {["Home", "Crew", "Events"].map((link, i) => (
             <button
               key={link}
@@ -180,27 +188,27 @@ function Navbar() {
                 if (link === "Crew") document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" });
                 if (link === "Home") window.scrollTo({ top: 0, behavior: "smooth" });
               }}
-              className={`text-xs sm:text-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2 transition-colors ${i === 0 ? "text-text bg-stroke/50" : "text-muted hover:text-text hover:bg-stroke/50"}`}
+              className={`text-[11px] sm:text-xs md:text-sm rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 transition-colors whitespace-nowrap ${i === 0 ? "text-text bg-stroke/50" : "text-muted hover:text-text hover:bg-stroke/50"}`}
             >
               {link}
             </button>
           ))}
         </div>
 
-        <div className="w-px h-5 bg-stroke mx-3" />
+        <div className="w-px h-4 md:h-5 bg-stroke mx-1.5 md:mx-3" />
 
-        <div className="flex items-center gap-2">
-          {/* Official Tekkrew IG Link */}
+        <div className="flex items-center gap-1 md:gap-2">
           <a 
             href="https://www.instagram.com/tekkrew_/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-muted hover:text-accent p-1.5 transition-colors"
+            className="text-muted hover:text-accent p-1.5 transition-colors hidden sm:block"
           >
             <InstagramIcon />
           </a>
-          <button className="btn-gradient-ring relative text-xs sm:text-sm text-text bg-surface rounded-full px-4 py-1.5 sm:py-2 flex items-center gap-1 transition-transform hover:scale-105">
-            Book Us ↗
+          {/* UPDATED: Book Us Button with Icon */}
+          <button className="btn-gradient-ring relative text-[11px] sm:text-xs md:text-sm text-text bg-surface rounded-full px-3 sm:px-4 py-1.5 sm:py-2 flex items-center justify-center transition-transform hover:scale-105 whitespace-nowrap">
+            Book Us <ArrowUpRightIcon />
           </button>
         </div>
       </nav>
@@ -209,7 +217,7 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO (Lively Background & Glow)
+// 3. HERO (Performance Optimized)
 // ==========================================
 function Hero({ isLoading }: { isLoading: boolean }) {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
@@ -223,39 +231,40 @@ function Hero({ isLoading }: { isLoading: boolean }) {
   useEffect(() => {
     if (!isLoading) {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.fromTo(".name-reveal", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.2 }, 0.1)
-        .fromTo(".blur-in", { opacity: 0, filter: "blur(10px)", y: 20 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 1, stagger: 0.1 }, 0.3);
+      tl.fromTo(".name-reveal", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1.0 }, 0.1)
+        .fromTo(".blur-in", { opacity: 0, filter: "blur(5px)", y: 15 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.8, stagger: 0.1 }, 0.2);
     }
   }, [isLoading]);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center w-full">
+    <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
       
       {/* Dynamic Stadium Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-accent/15 blur-[120px] rounded-full pointer-events-none z-0" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-accent/15 blur-[100px] rounded-full pointer-events-none z-0" />
 
-      {/* Brighter Video Background */}
+      {/* PERFORMANCE FIX: Swapped .m3u8 for direct .mp4 so it natively plays on Android/iOS mobile */}
       <div className="absolute inset-0 z-0 overflow-hidden mix-blend-screen">
         <video
-          autoPlay muted loop playsInline
-          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-60 grayscale contrast-125"
-          src="https://stream.mux.com/Gs3wZfrtz6ZfqZqQ02c02Z7lugV00FGZvRpcqFTel66r3g.m3u8"
+          autoPlay muted loop playsInline preload="auto"
+          poster="https://image.mux.com/Gs3wZfrtz6ZfqZqQ02c02Z7lugV00FGZvRpcqFTel66r3g/thumbnail.jpg?time=0"
+          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-50 md:opacity-60 grayscale contrast-125"
+          src="https://stream.mux.com/Gs3wZfrtz6ZfqZqQ02c02Z7lugV00FGZvRpcqFTel66r3g/medium.mp4"
         />
-        {/* Softened the overlay from black/60 to a gradient so the center is brighter */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/30 to-black/90" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90" />
+        <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-bg to-transparent" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center text-center px-6">
-        <span className="blur-in text-xs text-white/80 uppercase tracking-[0.3em] mb-8 font-bold">
+      <div className="relative z-10 flex flex-col items-center text-center px-4 w-full">
+        <span className="blur-in text-[10px] md:text-xs text-white/80 uppercase tracking-[0.3em] mb-4 md:mb-8 font-bold">
           Road to World Cup '26
         </span>
 
-        <h1 className="name-reveal text-7xl md:text-8xl lg:text-[10rem] font-display italic leading-[0.9] tracking-tight text-white mb-6 drop-shadow-2xl">
+        {/* LAYOUT FIX: Scaled text down perfectly for mobile screens (text-6xl) */}
+        <h1 className="name-reveal text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-display italic leading-[0.9] tracking-tight text-white mb-4 md:mb-6 drop-shadow-2xl">
           Tekkrew
         </h1>
 
-        <p className="blur-in text-lg md:text-xl lg:text-2xl text-white/90 mb-8 font-medium">
+        <p className="blur-in text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-6 md:mb-8 font-medium">
           A squad of{" "}
           <span key={roleIndex} className="font-display italic text-transparent bg-clip-text bg-accent-gradient inline-block animate-fade-in font-bold px-1 drop-shadow-md">
             {roles[roleIndex]}
@@ -263,23 +272,23 @@ function Hero({ isLoading }: { isLoading: boolean }) {
           taking over the pitch.
         </p>
 
-        <p className="blur-in text-sm md:text-base text-white/70 leading-relaxed max-w-2xl mb-12 border-l-2 border-accent pl-4 text-left mx-auto">
+        <p className="blur-in text-xs sm:text-sm md:text-base text-white/70 leading-relaxed max-w-2xl mb-8 md:mb-12 border-l-2 border-accent pl-4 text-left mx-auto">
           Born on the concrete, headed for the global stage. We built Tekkrew to elevate the beautiful game with raw street style. As the world turns its eyes to North America for World Cup '26, we are bringing gravity-defying freestyle to the masses—and we are just getting started.
         </p>
 
-        <div className="blur-in flex items-center gap-4">
-          <button className="btn-gradient-ring relative bg-text text-bg text-sm rounded-full px-7 py-3.5 font-bold transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.3)]">
+        <div className="blur-in flex flex-wrap items-center justify-center gap-3 md:gap-4">
+          <button className="btn-gradient-ring relative bg-text text-bg text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 font-bold transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.3)] w-full sm:w-auto">
             Watch Tape
           </button>
-          <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="btn-gradient-ring relative bg-black/50 backdrop-blur-sm text-text text-sm rounded-full px-7 py-3.5 border border-stroke font-bold transition-transform hover:scale-105 hover:bg-surface">
+          <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="btn-gradient-ring relative bg-black/50 backdrop-blur-sm text-text text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 border border-stroke font-bold transition-transform hover:scale-105 hover:bg-surface w-full sm:w-auto">
             Meet the Squad
           </button>
         </div>
       </div>
 
-      <div className="absolute bottom-8 z-10 flex flex-col items-center gap-2">
-        <span className="text-xs text-white/50 uppercase tracking-[0.2em]">PITCH DOWN</span>
-        <div className="w-px h-10 bg-stroke relative overflow-hidden">
+      <div className="absolute bottom-6 md:bottom-8 z-10 flex flex-col items-center gap-2">
+        <span className="text-[10px] md:text-xs text-white/50 uppercase tracking-[0.2em]">PITCH DOWN</span>
+        <div className="w-px h-8 md:h-10 bg-stroke relative overflow-hidden">
           <div className="w-full h-full bg-accent animate-scroll-dot rounded-full absolute top-0" />
         </div>
       </div>
@@ -288,31 +297,29 @@ function Hero({ isLoading }: { isLoading: boolean }) {
 }
 
 // ==========================================
-// 4. SQUAD SECTION (Freestyle Vibe Layout)
+// 4. SQUAD SECTION (Mobile Optimized Grid)
 // ==========================================
 function SquadSection() {
   return (
-    <section id="crew" className="relative w-full bg-bg py-24 px-6 border-t border-stroke/50">
+    <section id="crew" className="relative w-full bg-bg py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
       <div className="max-w-6xl mx-auto">
         
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-10 md:mb-16 gap-4 text-center md:text-left">
           <div>
-            <h2 className="text-5xl md:text-7xl font-display italic font-black text-white mb-2">The Roster</h2>
-            <p className="text-accent text-sm md:text-base uppercase tracking-widest font-bold">Houston, Texas</p>
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-1 md:mb-2">The Roster</h2>
+            <p className="text-accent text-xs md:text-sm uppercase tracking-widest font-bold">Houston, Texas</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {squadData.map((member, index) => (
             <div 
               key={index}
-              className="bg-surface/80 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-8 flex flex-col transition-all duration-300 hover:-translate-y-2 hover:border-accent/50 hover:shadow-[0_10px_30px_rgba(255,230,0,0.1)] group relative overflow-hidden"
+              className="bg-surface/80 backdrop-blur-sm border border-stroke rounded-2xl p-5 md:p-8 flex flex-col transition-all duration-300 hover:-translate-y-2 hover:border-accent/50 hover:shadow-[0_10px_30px_rgba(255,230,0,0.1)] group relative overflow-hidden"
             >
-              {/* Dynamic Freestyle Background Accent */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-bl-full -z-0 transition-transform duration-500 group-hover:scale-150" />
+              <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-accent/5 rounded-bl-full -z-0 transition-transform duration-500 group-hover:scale-150" />
 
-              {/* Profile Avatar */}
-              <div className="w-24 h-24 rounded-full p-[2px] bg-stroke group-hover:bg-accent-gradient transition-all duration-500 mb-6 relative z-10">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-[2px] bg-stroke group-hover:bg-accent-gradient transition-all duration-500 mb-4 md:mb-6 relative z-10 mx-auto md:mx-0">
                 <div className="w-full h-full rounded-full bg-bg border-4 border-surface overflow-hidden">
                   <img 
                     src={member.image} 
@@ -326,29 +333,28 @@ function SquadSection() {
                 </div>
               </div>
               
-              <div className="relative z-10">
-                <h3 className="text-3xl font-display italic text-text mb-1">{member.name}</h3>
-                <p className="text-xs font-bold text-transparent bg-clip-text bg-accent-gradient mb-4 uppercase tracking-widest">{member.role}</p>
+              <div className="relative z-10 text-center md:text-left">
+                <h3 className="text-2xl md:text-3xl font-display italic text-text mb-1">{member.name}</h3>
+                <p className="text-[10px] md:text-xs font-bold text-transparent bg-clip-text bg-accent-gradient mb-3 md:mb-4 uppercase tracking-widest">{member.role}</p>
                 
-                <div className="flex gap-2 mb-6">
-                  <span className="text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">{member.heritage}</span>
-                  <span className="text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">{member.location}</span>
+                <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4 md:mb-6">
+                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">{member.heritage}</span>
+                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">{member.location}</span>
                 </div>
                 
-                <p className="text-muted text-sm leading-relaxed mb-8 italic">
+                <p className="text-muted text-xs md:text-sm leading-relaxed mb-6 md:mb-8 italic">
                   "{member.story}"
                 </p>
               </div>
 
-              {/* Social Links */}
-              <div className="mt-auto flex items-center gap-3 relative z-10 pt-6 border-t border-stroke/50">
+              <div className="mt-auto flex items-center justify-center md:justify-start gap-3 relative z-10 pt-4 md:pt-6 border-t border-stroke/50">
                 {member.links.map((link, i) => (
                   <a 
                     key={i}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-bg border border-stroke flex items-center justify-center text-muted hover:text-black hover:bg-accent hover:border-accent transition-all duration-300"
+                    className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-bg border border-stroke flex items-center justify-center text-muted hover:text-black hover:bg-accent hover:border-accent transition-all duration-300"
                     title={link.name}
                   >
                     {link.icon}
