@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
-import Image from "next/image"; // IMPORTED NEXT.JS NATIVE IMAGE OPTIMIZER
+import Image from "next/image";
 
 // --- SVG Icons ---
 const InstagramIcon = () => (
@@ -30,7 +30,6 @@ const LinkIcon = () => (
     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
   </svg>
 );
-
 const ArrowUpRightIcon = () => (
   <svg className="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <line x1="7" y1="17" x2="17" y2="7"></line>
@@ -98,7 +97,7 @@ export default function Page() {
 }
 
 // ==========================================
-// 1. LOADING SCREEN (SPEED OPTIMIZED)
+// 1. FAST LOADING SCREEN
 // ==========================================
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [count, setCount] = useState(0);
@@ -106,52 +105,50 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
-    // Sped up word rotation
-    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 400);
+    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 150);
     return () => clearInterval(interval);
   }, [words.length]);
 
   useEffect(() => {
     let start: number | null = null;
-    // PERFORMANCE FIX: Cut artificial load time down to 1.2s to prevent mobile drop-off
-    const duration = 1200; 
+    const duration = 500; 
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 200);
+      else setTimeout(onComplete, 100);
     };
     requestAnimationFrame(step);
   }, [onComplete]);
 
   return (
-    <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.4 }} className="fixed inset-0 z-[9999] bg-bg flex flex-col justify-between">
-      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }} className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-muted uppercase tracking-[0.3em]">
+    <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-[9999] bg-bg flex flex-col justify-between">
+      <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.2 }} className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-muted uppercase tracking-[0.3em]">
         Tekkrew
       </motion.div>
 
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div key={wordIndex} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.2 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-text/80 absolute">
+          <motion.div key={wordIndex} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-text/80 absolute">
             {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display text-text tabular-nums leading-none">
+      <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display text-text tabular-nums leading-none">
         {count.toString().padStart(3, "0")}
       </motion.div>
 
       <div className="absolute bottom-0 left-0 w-full h-[3px] bg-stroke/50 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.2, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.5)" }} />
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.5, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.5)" }} />
       </div>
     </motion.div>
   );
 }
 
 // ==========================================
-// 2. NAVBAR (IMAGE OPTIMIZED)
+// 2. NAVBAR (Mobile Optimized)
 // ==========================================
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -165,7 +162,6 @@ function Navbar() {
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4">
       <nav className={`inline-flex items-center rounded-full backdrop-blur-md border border-white/10 bg-surface/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-shadow duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg shadow-black/80" : ""}`}>
         
-        {/* LOGO CONTAINER: Using Next.js Image for immediate mobile rendering */}
         <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-accent-gradient cursor-pointer flex-shrink-0">
           <div className="w-full h-full bg-bg rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 group-hover:scale-110 relative">
             <Image 
@@ -217,7 +213,7 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO (MOBILE OPTIMIZED)
+// 3. HERO (Local Video + Stadium Glow)
 // ==========================================
 function Hero({ isLoading }: { isLoading: boolean }) {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
@@ -239,15 +235,15 @@ function Hero({ isLoading }: { isLoading: boolean }) {
   return (
     <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
       
+      {/* Stadium Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-accent/15 blur-[100px] rounded-full pointer-events-none z-0" />
 
-      {/* VIDEO FIX: Added hardware acceleration hints and fallback image optimization */}
+      {/* Optimized Local Video */}
       <div className="absolute inset-0 z-0 overflow-hidden mix-blend-screen" style={{ transform: "translateZ(0)" }}>
         <video
-          autoPlay muted loop playsInline
-          poster="https://image.mux.com/Gs3wZfrtz6ZfqZqQ02c02Z7lugV00FGZvRpcqFTel66r3g/thumbnail.jpg?time=0"
+          autoPlay muted loop playsInline preload="auto"
           className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-50 md:opacity-60 grayscale contrast-125"
-          src="https://stream.mux.com/Gs3wZfrtz6ZfqZqQ02c02Z7lugV00FGZvRpcqFTel66r3g/medium.mp4"
+          src="/Dark_Portfolio_Hero_0.mp4" 
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90" />
         <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-bg to-transparent" />
@@ -295,7 +291,7 @@ function Hero({ isLoading }: { isLoading: boolean }) {
 }
 
 // ==========================================
-// 4. SQUAD SECTION (IMAGE OPTIMIZED)
+// 4. SQUAD SECTION (Next.js Image Optimized)
 // ==========================================
 function SquadSection() {
   return (
@@ -319,7 +315,6 @@ function SquadSection() {
 
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-[2px] bg-stroke group-hover:bg-accent-gradient transition-all duration-500 mb-4 md:mb-6 relative z-10 mx-auto md:mx-0">
                 <div className="w-full h-full rounded-full bg-bg border-4 border-surface overflow-hidden relative">
-                  {/* PERFORMANCE FIX: Next.js Image component handles compression and lazy loading */}
                   <Image 
                     src={member.image} 
                     alt={member.name} 

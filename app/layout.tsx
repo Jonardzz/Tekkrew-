@@ -15,7 +15,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Michael Smith | Portfolio",
+  title: "Tekkrew",
   description: "Collection '26",
 };
 
