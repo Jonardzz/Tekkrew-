@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
+import Image from "next/image"; // IMPORTED NEXT.JS NATIVE IMAGE OPTIMIZER
 
 // --- SVG Icons ---
 const InstagramIcon = () => (
@@ -30,7 +31,6 @@ const LinkIcon = () => (
   </svg>
 );
 
-// NEW: Proper Arrow Icon for Book Us
 const ArrowUpRightIcon = () => (
   <svg className="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <line x1="7" y1="17" x2="17" y2="7"></line>
@@ -48,10 +48,10 @@ const squadData = [
     image: "/Joseph.jpg",
     story: "Bringing pure Colombian flair mixed with American hustle. Joseph hits combos that shouldn't be possible, turning the street into his personal stage.",
     links: [
-      { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd?igsh=MTFqaThucWVyNjdybA==", icon: <InstagramIcon /> },
-      { name: "TikTok", url: "https://www.tiktok.com/@freestyle_jrd?lang=en&is_from_webapp=1&sender_device=mobile&sender_web_id=7642235223417980447", icon: <TikTokIcon /> },
+      { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd", icon: <InstagramIcon /> },
+      { name: "TikTok", url: "https://www.tiktok.com/@freestyle_jrd", icon: <TikTokIcon /> },
       { name: "Email", url: "mailto:joecr768@gmail.com", icon: <EmailIcon /> },
-      { name: "Linktree", url: "https://linktr.ee/freestyle_jrd?utm_source=linktree_profile_share&ltsid=80816e68-4e22-4b29-9b14-547daafbbe97", icon: <LinkIcon /> },
+      { name: "Linktree", url: "https://linktr.ee/freestyle_jrd", icon: <LinkIcon /> },
     ]
   },
   {
@@ -62,7 +62,7 @@ const squadData = [
     image: "/Chaymae Qaddouri.jpg",
     story: "Fusing Moroccan football heritage with absolute technical precision. Chaymae's flow is unmatched, redefining what ball control looks like on the concrete.",
     links: [
-      { name: "Instagram", url: "https://www.instagram.com/c.qaddouri?igsh=MW9zenlqZHdiZWV1cA==", icon: <InstagramIcon /> },
+      { name: "Instagram", url: "https://www.instagram.com/c.qaddouri", icon: <InstagramIcon /> },
       { name: "Collabs", url: "mailto:chaimaequa@gmail.com", icon: <EmailIcon /> },
     ]
   },
@@ -74,7 +74,7 @@ const squadData = [
     image: "/Chuy.jpg",
     story: "Mexican-American street legend in the making. Chuy brings aggressive, high-energy tricks that hype the crowd and leave defenders lost.",
     links: [
-      { name: "Instagram", url: "https://www.instagram.com/streetchuy?igsh=MWR3dzUwdjFvY2lpbg==", icon: <InstagramIcon /> },
+      { name: "Instagram", url: "https://www.instagram.com/streetchuy", icon: <InstagramIcon /> },
     ]
   }
 ];
@@ -83,12 +83,12 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <main className="relative min-h-screen bg-bg text-text overflow-hidden selection:bg-accent selection:text-black">
+    <main className="relative min-h-[100svh] bg-bg text-text overflow-hidden selection:bg-accent selection:text-black">
       <AnimatePresence mode="wait">
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      <div className={`transition-opacity duration-500 ease-out ${isLoading ? "opacity-0" : "opacity-100"}`}>
+      <div className={`transition-opacity duration-300 ease-out ${isLoading ? "opacity-0" : "opacity-100"}`}>
         <Navbar />
         <Hero isLoading={isLoading} />
         <SquadSection />
@@ -98,7 +98,7 @@ export default function Page() {
 }
 
 // ==========================================
-// 1. LOADING SCREEN
+// 1. LOADING SCREEN (SPEED OPTIMIZED)
 // ==========================================
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [count, setCount] = useState(0);
@@ -106,32 +106,34 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 900);
+    // Sped up word rotation
+    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 400);
     return () => clearInterval(interval);
   }, [words.length]);
 
   useEffect(() => {
     let start: number | null = null;
-    const duration = 2000; // Sped up the loading screen slightly for better mobile feel
+    // PERFORMANCE FIX: Cut artificial load time down to 1.2s to prevent mobile drop-off
+    const duration = 1200; 
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 300);
+      else setTimeout(onComplete, 200);
     };
     requestAnimationFrame(step);
   }, [onComplete]);
 
   return (
-    <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.6 }} className="fixed inset-0 z-[9999] bg-bg flex flex-col justify-between">
-      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6, delay: 0.1 }} className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-muted uppercase tracking-[0.3em]">
+    <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.4 }} className="fixed inset-0 z-[9999] bg-bg flex flex-col justify-between">
+      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }} className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-muted uppercase tracking-[0.3em]">
         Tekkrew
       </motion.div>
 
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div key={wordIndex} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-text/80 absolute">
+          <motion.div key={wordIndex} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.2 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-text/80 absolute">
             {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
@@ -142,14 +144,14 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       </motion.div>
 
       <div className="absolute bottom-0 left-0 w-full h-[3px] bg-stroke/50 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.0, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.5)" }} />
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.2, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.5)" }} />
       </div>
     </motion.div>
   );
 }
 
 // ==========================================
-// 2. NAVBAR (Mobile Optimized)
+// 2. NAVBAR (IMAGE OPTIMIZED)
 // ==========================================
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -163,17 +165,16 @@ function Navbar() {
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4">
       <nav className={`inline-flex items-center rounded-full backdrop-blur-md border border-white/10 bg-surface/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-shadow duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg shadow-black/80" : ""}`}>
         
-        {/* LOGO CONTAINER */}
+        {/* LOGO CONTAINER: Using Next.js Image for immediate mobile rendering */}
         <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-accent-gradient cursor-pointer flex-shrink-0">
-          <div className="w-full h-full bg-bg rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-            <img 
+          <div className="w-full h-full bg-bg rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 group-hover:scale-110 relative">
+            <Image 
               src="/Tekkrew.jpg" 
               alt="Tekkrew Logo" 
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-                (e.target as HTMLImageElement).parentElement!.innerHTML = '<span class="text-[12px] font-display italic tracking-tighter text-text">TK</span>';
-              }}
+              fill
+              sizes="40px"
+              priority
+              className="object-cover"
             />
           </div>
         </div>
@@ -206,7 +207,6 @@ function Navbar() {
           >
             <InstagramIcon />
           </a>
-          {/* UPDATED: Book Us Button with Icon */}
           <button className="btn-gradient-ring relative text-[11px] sm:text-xs md:text-sm text-text bg-surface rounded-full px-3 sm:px-4 py-1.5 sm:py-2 flex items-center justify-center transition-transform hover:scale-105 whitespace-nowrap">
             Book Us <ArrowUpRightIcon />
           </button>
@@ -217,7 +217,7 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO (Performance Optimized)
+// 3. HERO (MOBILE OPTIMIZED)
 // ==========================================
 function Hero({ isLoading }: { isLoading: boolean }) {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
@@ -231,21 +231,20 @@ function Hero({ isLoading }: { isLoading: boolean }) {
   useEffect(() => {
     if (!isLoading) {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.fromTo(".name-reveal", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1.0 }, 0.1)
-        .fromTo(".blur-in", { opacity: 0, filter: "blur(5px)", y: 15 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.8, stagger: 0.1 }, 0.2);
+      tl.fromTo(".name-reveal", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8 }, 0.1)
+        .fromTo(".blur-in", { opacity: 0, filter: "blur(5px)", y: 15 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.6, stagger: 0.1 }, 0.2);
     }
   }, [isLoading]);
 
   return (
     <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
       
-      {/* Dynamic Stadium Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-accent/15 blur-[100px] rounded-full pointer-events-none z-0" />
 
-      {/* PERFORMANCE FIX: Swapped .m3u8 for direct .mp4 so it natively plays on Android/iOS mobile */}
-      <div className="absolute inset-0 z-0 overflow-hidden mix-blend-screen">
+      {/* VIDEO FIX: Added hardware acceleration hints and fallback image optimization */}
+      <div className="absolute inset-0 z-0 overflow-hidden mix-blend-screen" style={{ transform: "translateZ(0)" }}>
         <video
-          autoPlay muted loop playsInline preload="auto"
+          autoPlay muted loop playsInline
           poster="https://image.mux.com/Gs3wZfrtz6ZfqZqQ02c02Z7lugV00FGZvRpcqFTel66r3g/thumbnail.jpg?time=0"
           className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-50 md:opacity-60 grayscale contrast-125"
           src="https://stream.mux.com/Gs3wZfrtz6ZfqZqQ02c02Z7lugV00FGZvRpcqFTel66r3g/medium.mp4"
@@ -259,7 +258,6 @@ function Hero({ isLoading }: { isLoading: boolean }) {
           Road to World Cup '26
         </span>
 
-        {/* LAYOUT FIX: Scaled text down perfectly for mobile screens (text-6xl) */}
         <h1 className="name-reveal text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-display italic leading-[0.9] tracking-tight text-white mb-4 md:mb-6 drop-shadow-2xl">
           Tekkrew
         </h1>
@@ -297,7 +295,7 @@ function Hero({ isLoading }: { isLoading: boolean }) {
 }
 
 // ==========================================
-// 4. SQUAD SECTION (Mobile Optimized Grid)
+// 4. SQUAD SECTION (IMAGE OPTIMIZED)
 // ==========================================
 function SquadSection() {
   return (
@@ -320,15 +318,14 @@ function SquadSection() {
               <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-accent/5 rounded-bl-full -z-0 transition-transform duration-500 group-hover:scale-150" />
 
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-[2px] bg-stroke group-hover:bg-accent-gradient transition-all duration-500 mb-4 md:mb-6 relative z-10 mx-auto md:mx-0">
-                <div className="w-full h-full rounded-full bg-bg border-4 border-surface overflow-hidden">
-                  <img 
+                <div className="w-full h-full rounded-full bg-bg border-4 border-surface overflow-hidden relative">
+                  {/* PERFORMANCE FIX: Next.js Image component handles compression and lazy loading */}
+                  <Image 
                     src={member.image} 
                     alt={member.name} 
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                      (e.target as HTMLImageElement).parentElement!.innerHTML = '<span class="font-display italic text-2xl text-muted w-full h-full flex items-center justify-center">' + member.name.charAt(0) + '</span>';
-                    }}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
                   />
                 </div>
               </div>
@@ -343,7 +340,7 @@ function SquadSection() {
                 </div>
                 
                 <p className="text-muted text-xs md:text-sm leading-relaxed mb-6 md:mb-8 italic">
-                  "{member.story}"
+                  &ldquo;{member.story}&rdquo;
                 </p>
               </div>
 
