@@ -17,6 +17,10 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   title: "Tekkrew",
   description: "Collection '26",
+  // This line tells Next.js to use your logo as the favicon
+  icons: {
+    icon: "/Tekkrew.jpg", 
+  },
 };
 
 export default function RootLayout({
