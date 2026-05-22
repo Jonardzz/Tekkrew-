@@ -43,23 +43,8 @@ const LetterboxdIcon = () => (
   </svg>
 );
 
-// --- Squad Data ---
+// --- Squad Data (Alphabetical Order) ---
 const squadData = [
-  {
-    name: "Joseph Diaz",
-    role: "Football Freestyler",
-    heritage: "Colombian American",
-    location: "Houston, Texas",
-    image: "/Joseph.jpg",
-    story: "Bringing pure Colombian flair mixed with American hustle. Joseph hits combos that shouldn't be possible, turning the street into his personal stage.",
-    links: [
-      { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd", icon: <InstagramIcon /> },
-      { name: "TikTok", url: "https://www.tiktok.com/@freestyle_jrd", icon: <TikTokIcon /> },
-      { name: "Letterboxd", url: "https://letterboxd.com/freestyle_jrd/", icon: <LetterboxdIcon /> },
-      { name: "Email", url: "mailto:joecr768@gmail.com", icon: <EmailIcon /> },
-      { name: "Linktree", url: "https://linktr.ee/freestyle_jrd", icon: <LinkIcon /> },
-    ]
-  },
   {
     name: "Chaymae Qaddouri",
     role: "Football Freestyler",
@@ -85,15 +70,18 @@ const squadData = [
     ]
   },
   {
-    name: "Zein زین Khitamy",
+    name: "Joseph Diaz",
     role: "Football Freestyler",
-    heritage: "Global Talent",
+    heritage: "Colombian American",
     location: "Houston, Texas",
-    image: "/Zein.jpg",
-    story: "A master of flow and creative transitions. Zein brings an international freestyle flavor to the streets, pushing the boundaries of what's possible with a football.",
+    image: "/Joseph.jpg",
+    story: "Bringing pure Colombian flair mixed with American hustle. Joseph hits combos that shouldn't be possible, turning the street into his personal stage.",
     links: [
-      { name: "Instagram", url: "https://www.instagram.com/zeinkhitamy?igsh=MmRlY3UzYWdtejFz", icon: <InstagramIcon /> },
-      { name: "TikTok", url: "https://www.tiktok.com/@zein.khitamy?_r=1&_t=ZP-96YG9S8jBGx", icon: <TikTokIcon /> },
+      { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd", icon: <InstagramIcon /> },
+      { name: "TikTok", url: "https://www.tiktok.com/@freestyle_jrd", icon: <TikTokIcon /> },
+      { name: "Letterboxd", url: "https://letterboxd.com/freestyle_jrd/", icon: <LetterboxdIcon /> },
+      { name: "Email", url: "mailto:joecr768@gmail.com", icon: <EmailIcon /> },
+      { name: "Linktree", url: "https://linktr.ee/freestyle_jrd", icon: <LinkIcon /> },
     ]
   },
   {
@@ -105,6 +93,18 @@ const squadData = [
     story: "Bringing unique rhythm and unmatched energy to the crew. Yami's style is all about expressing freedom through every movement on the pitch.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/groovyami?igsh=MXg2emphOHlzbjdxdQ==", icon: <InstagramIcon /> },
+    ]
+  },
+  {
+    name: "Zein زین Khitamy",
+    role: "Football Freestyler",
+    heritage: "Global Talent",
+    location: "Houston, Texas",
+    image: "/Zein.jpg",
+    story: "A master of flow and creative transitions. Zein brings an international freestyle flavor to the streets, pushing the boundaries of what's possible with a football.",
+    links: [
+      { name: "Instagram", url: "https://www.instagram.com/zeinkhitamy?igsh=MmRlY3UzYWdtejFz", icon: <InstagramIcon /> },
+      { name: "TikTok", url: "https://www.tiktok.com/@zein.khitamy?_r=1&_t=ZP-96YG9S8jBGx", icon: <TikTokIcon /> },
     ]
   }
 ];
@@ -127,6 +127,14 @@ const initialGalleryImages = [
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
+
+  // Force scroll to top on page refresh
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <main className="relative min-h-[100svh] bg-[#050505] text-text overflow-hidden selection:bg-accent selection:text-black">
@@ -167,7 +175,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
   useEffect(() => {
     let start: number | null = null;
-    const duration = 2500; 
+    const duration = 2200; 
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
@@ -267,7 +275,7 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO (Background is now transparent to show Global Background)
+// 3. HERO
 // ==========================================
 function Hero() {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
@@ -280,6 +288,16 @@ function Hero() {
 
   return (
     <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
+      <div className="absolute inset-0 z-0 overflow-hidden mix-blend-screen" style={{ transform: "translateZ(0)" }}>
+        <video
+          autoPlay muted loop playsInline preload="auto"
+          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-50 md:opacity-60 grayscale contrast-125"
+          src="/Dark_Portfolio_Hero_0.mp4" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90" />
+        <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-bg to-transparent" />
+      </div>
+
       <div className="relative z-10 flex flex-col items-center text-center px-4 w-full pt-10">
         <motion.span 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
