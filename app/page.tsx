@@ -139,27 +139,26 @@ export default function Page() {
   return (
     <main className="relative min-h-[100svh] bg-[#050505] text-text overflow-hidden selection:bg-accent selection:text-black">
       
-      {/* GLOBAL DYNAMIC "STADIUM ENERGY" BACKGROUND (Fixed) */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-[#050505]">
+      {/* GLOBAL DYNAMIC "STADIUM ENERGY" BACKGROUND */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#050505]">
+        {/* Subtle Pitch Grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff04_1px,transparent_1px),linear-gradient(to_bottom,#ffffff04_1px,transparent_1px)] bg-[size:4rem_4rem]" />
         
-        {/* Subtle Pitch Grid (Increased visibility so it's not pure black) */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff15_1px,transparent_1px),linear-gradient(to_bottom,#ffffff15_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-        
-        {/* Animated Yellow/Gold Energy Orbs (Fixed Opacities & Colors) */}
+        {/* Animated Yellow/Gold Energy Orbs */}
         <motion.div 
-          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
+          animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-40 right-[-10%] w-[50rem] h-[50rem] bg-[#ffe600] rounded-full blur-[140px]" 
+          className="absolute -top-40 right-[-10%] w-[50rem] h-[50rem] bg-accent/20 rounded-full blur-[140px]" 
         />
         <motion.div 
-          animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.2, 0.1] }}
+          animate={{ scale: [1, 1.25, 1], opacity: [0.04, 0.08, 0.04] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute top-[30%] -left-32 w-[40rem] h-[40rem] bg-[#ffaa00] rounded-full blur-[130px]" 
+          className="absolute top-[30%] -left-32 w-[40rem] h-[40rem] bg-[#ffaa00]/10 rounded-full blur-[130px]" 
         />
         <motion.div 
-          animate={{ y: [0, -50, 0], opacity: [0.12, 0.22, 0.12] }}
+          animate={{ y: [0, -40, 0], opacity: [0.05, 0.1, 0.05] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -bottom-40 left-1/4 w-[60rem] h-[40rem] bg-[#ffe600] rounded-full blur-[150px]" 
+          className="absolute -bottom-40 left-1/3 w-[60rem] h-[40rem] bg-accent/10 rounded-full blur-[150px]" 
         />
       </div>
 
@@ -304,7 +303,7 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO (Removed Broken Video Code)
+// 3. HERO 
 // ==========================================
 function Hero() {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
@@ -317,8 +316,16 @@ function Hero() {
 
   return (
     <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
-      {/* Background is now perfectly transparent so the gorgeous Global Energy background shines through */}
-      
+      <div className="absolute inset-0 z-0 overflow-hidden mix-blend-screen" style={{ transform: "translateZ(0)" }}>
+        <video
+          autoPlay muted loop playsInline preload="auto"
+          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-50 md:opacity-60 grayscale contrast-125"
+          src="/Dark_Portfolio_Hero_0.mp4" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/80 via-[#050505]/40 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#050505] to-transparent" />
+      </div>
+
       <div className="relative z-10 flex flex-col items-center text-center px-4 w-full pt-10">
         <motion.span 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
