@@ -139,17 +139,40 @@ export default function Page() {
   return (
     <main className="relative min-h-[100svh] bg-[#050505] text-text overflow-hidden selection:bg-accent selection:text-black">
       
-      {/* GLOBAL PREMIUM BACKGROUND (Fixed while scrolling) */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,230,0,0.08)_0%,transparent_60%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff04_1px,transparent_1px),linear-gradient(to_bottom,#ffffff04_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      {/* GLOBAL DYNAMIC "STADIUM ENERGY" BACKGROUND (Fixed) */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-[#050505]">
+        
+        {/* Subtle Pitch Grid (Increased visibility so it's not pure black) */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff15_1px,transparent_1px),linear-gradient(to_bottom,#ffffff15_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+        
+        {/* Animated Yellow/Gold Energy Orbs (Fixed Opacities & Colors) */}
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-40 right-[-10%] w-[50rem] h-[50rem] bg-[#ffe600] rounded-full blur-[140px]" 
+        />
+        <motion.div 
+          animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute top-[30%] -left-32 w-[40rem] h-[40rem] bg-[#ffaa00] rounded-full blur-[130px]" 
+        />
+        <motion.div 
+          animate={{ y: [0, -50, 0], opacity: [0.12, 0.22, 0.12] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -bottom-40 left-1/4 w-[60rem] h-[40rem] bg-[#ffe600] rounded-full blur-[150px]" 
+        />
       </div>
 
       <AnimatePresence mode="wait">
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      <div className={`relative z-10 transition-opacity duration-700 ease-in-out ${isLoading ? "opacity-0" : "opacity-100"}`}>
+      {/* SMOOTHER BLUR/SLIDE REVEAL TRANSITION */}
+      <div 
+        className={`relative z-10 transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isLoading ? "opacity-0 translate-y-8 blur-sm" : "opacity-100 translate-y-0 blur-0"
+        }`}
+      >
         <Navbar />
         <Hero />
         <SquadSection />
@@ -161,7 +184,7 @@ export default function Page() {
 }
 
 // ==========================================
-// 1. DELIBERATE, PROFESSIONAL LOADING SCREEN (2.5s)
+// 1. DELIBERATE, PROFESSIONAL LOADING SCREEN (Exactly 2.2s)
 // ==========================================
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [count, setCount] = useState(0);
@@ -169,25 +192,31 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 833);
+    // 733ms per word to perfectly fit a 2.2s duration
+    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 733);
     return () => clearInterval(interval);
   }, [words.length]);
 
   useEffect(() => {
     let start: number | null = null;
-    const duration = 2200; 
+    const duration = 2200; // 2.2 seconds
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 400); 
+      else setTimeout(onComplete, 200); 
     };
     requestAnimationFrame(step);
   }, [onComplete]);
 
   return (
-    <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.6 }} className="fixed inset-0 z-[9999] bg-bg flex flex-col justify-between">
+    // Smoother "zoom out and blur" exit transition for the loader
+    <motion.div 
+      exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }} 
+      transition={{ duration: 0.8, ease: "easeInOut" }} 
+      className="fixed inset-0 z-[9999] bg-[#050505] flex flex-col justify-between"
+    >
       <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-muted uppercase tracking-[0.3em]">
         Tekkrew
       </div>
@@ -205,7 +234,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       </div>
 
       <div className="absolute bottom-0 left-0 w-full h-[3px] bg-stroke/50 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.5, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.4)" }} />
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.4)" }} />
       </div>
     </motion.div>
   );
@@ -275,7 +304,7 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO
+// 3. HERO (Removed Broken Video Code)
 // ==========================================
 function Hero() {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
@@ -288,16 +317,8 @@ function Hero() {
 
   return (
     <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
-      <div className="absolute inset-0 z-0 overflow-hidden mix-blend-screen" style={{ transform: "translateZ(0)" }}>
-        <video
-          autoPlay muted loop playsInline preload="auto"
-          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-50 md:opacity-60 grayscale contrast-125"
-          src="/Dark_Portfolio_Hero_0.mp4" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90" />
-        <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-bg to-transparent" />
-      </div>
-
+      {/* Background is now perfectly transparent so the gorgeous Global Energy background shines through */}
+      
       <div className="relative z-10 flex flex-col items-center text-center px-4 w-full pt-10">
         <motion.span 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
@@ -372,7 +393,7 @@ function SquadSection() {
           {squadData.map((member, index) => (
             <div 
               key={index}
-              className="bg-surface/80 backdrop-blur-sm border border-stroke rounded-2xl p-5 md:p-6 flex flex-col relative overflow-hidden"
+              className="bg-surface/80 backdrop-blur-sm border border-stroke rounded-2xl p-5 md:p-6 flex flex-col relative overflow-hidden transition-all duration-300 hover:border-accent/30 hover:bg-surface"
             >
               <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-accent/5 rounded-bl-full -z-0" />
 
@@ -433,7 +454,7 @@ function EventsSection() {
       <div className="max-w-5xl mx-auto space-y-12 md:space-y-20">
         
         {/* Telemundo Event */}
-        <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden">
+        <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden transition-all duration-300 hover:border-accent/30">
            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
            <div className="relative z-10">
               <h2 className="text-3xl md:text-5xl font-display italic font-black text-white mb-6">Telemundo 30 Day Countdown to the World Cup '26</h2>
@@ -445,7 +466,7 @@ function EventsSection() {
         </div>
 
         {/* Stella Artois Event */}
-        <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden">
+        <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden transition-all duration-300 hover:border-accent/30">
            <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
            <div className="relative z-10">
               <h2 className="text-3xl md:text-5xl font-display italic font-black text-white mb-6">FIFA x Stella Artois Event</h2>
@@ -476,7 +497,6 @@ function GallerySection() {
   return (
     <section id="gallery" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
       
-      {/* Lightbox Modal for Fullscreen Image Viewing */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
