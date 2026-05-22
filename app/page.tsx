@@ -35,6 +35,13 @@ const ArrowUpRightIcon = () => (
     <polyline points="7 7 17 7 17 17"></polyline>
   </svg>
 );
+const LetterboxdIcon = () => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="12" cy="12" r="3" />
+    <circle cx="18" cy="12" r="3" />
+  </svg>
+);
 
 // --- Squad Data ---
 const squadData = [
@@ -48,6 +55,7 @@ const squadData = [
     links: [
       { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd", icon: <InstagramIcon /> },
       { name: "TikTok", url: "https://www.tiktok.com/@freestyle_jrd", icon: <TikTokIcon /> },
+      { name: "Letterboxd", url: "https://letterboxd.com/freestyle_jrd/", icon: <LetterboxdIcon /> },
       { name: "Email", url: "mailto:joecr768@gmail.com", icon: <EmailIcon /> },
       { name: "Linktree", url: "https://linktr.ee/freestyle_jrd", icon: <LinkIcon /> },
     ]
@@ -57,10 +65,11 @@ const squadData = [
     role: "Football Freestyler",
     heritage: "Moroccan",
     location: "Houston, Texas",
-    image: "/Chaymae Qaddouri.jpg",
+    image: "/Chaymae Qaddouri.jpeg",
     story: "Fusing Moroccan football heritage with absolute technical precision. Chaymae's flow is unmatched, redefining what ball control looks like on the concrete.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/c.qaddouri", icon: <InstagramIcon /> },
+      { name: "TikTok", url: "https://www.tiktok.com/@chaymaeqaddouri?_r=1&_t=ZP-96YGPralUgJ", icon: <TikTokIcon /> },
       { name: "Collabs", url: "mailto:chaimaequa@gmail.com", icon: <EmailIcon /> },
     ]
   },
@@ -69,55 +78,102 @@ const squadData = [
     role: "Football Freestyler",
     heritage: "Mexican American",
     location: "Houston, Texas",
-    image: "/Chuy.jpg",
+    image: "/Chuy.jpeg",
     story: "Mexican-American street legend in the making. Chuy brings aggressive, high-energy tricks that hype the crowd and leave defenders lost.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/streetchuy", icon: <InstagramIcon /> },
     ]
+  },
+  {
+    name: "Zein زین Khitamy",
+    role: "Football Freestyler",
+    heritage: "Global Talent",
+    location: "Houston, Texas",
+    image: "/Zein.jpg",
+    story: "A master of flow and creative transitions. Zein brings an international freestyle flavor to the streets, pushing the boundaries of what's possible with a football.",
+    links: [
+      { name: "Instagram", url: "https://www.instagram.com/zeinkhitamy?igsh=MmRlY3UzYWdtejFz", icon: <InstagramIcon /> },
+      { name: "TikTok", url: "https://www.tiktok.com/@zein.khitamy?_r=1&_t=ZP-96YG9S8jBGx", icon: <TikTokIcon /> },
+    ]
+  },
+  {
+    name: "Yami",
+    role: "Football Freestyler",
+    heritage: "Street Talent",
+    location: "Houston, Texas",
+    image: "/Yami.jpg", 
+    story: "Bringing unique rhythm and unmatched energy to the crew. Yami's style is all about expressing freedom through every movement on the pitch.",
+    links: [
+      { name: "Instagram", url: "https://www.instagram.com/groovyami?igsh=MXg2emphOHlzbjdxdQ==", icon: <InstagramIcon /> },
+    ]
   }
+];
+
+// --- Gallery Image Pool ---
+const initialGalleryImages = [
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14871.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14863.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14853.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14822.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14761.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14501.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14544.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14562.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14623.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14664.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14716.jpg",
+  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14705.jpg",
 ];
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <main className="relative min-h-[100svh] bg-bg text-text overflow-hidden selection:bg-accent selection:text-black">
+    <main className="relative min-h-[100svh] bg-[#050505] text-text overflow-hidden selection:bg-accent selection:text-black">
+      
+      {/* GLOBAL PREMIUM BACKGROUND (Fixed while scrolling) */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,230,0,0.08)_0%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff04_1px,transparent_1px),linear-gradient(to_bottom,#ffffff04_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      </div>
+
       <AnimatePresence mode="wait">
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      <div className={`transition-opacity duration-700 ease-in-out ${isLoading ? "opacity-0" : "opacity-100"}`}>
+      <div className={`relative z-10 transition-opacity duration-700 ease-in-out ${isLoading ? "opacity-0" : "opacity-100"}`}>
         <Navbar />
         <Hero />
         <SquadSection />
+        <EventsSection />
+        <GallerySection />
       </div>
     </main>
   );
 }
 
 // ==========================================
-// 1. DELIBERATE, PROFESSIONAL LOADING SCREEN
+// 1. DELIBERATE, PROFESSIONAL LOADING SCREEN (2.5s)
 // ==========================================
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [count, setCount] = useState(0);
-  const words = ["Skill", "Style", "Street"];
+  const words = ["Skill", "Street", "Passion"];
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
-    // 800ms per word gives a clean, readable pace
-    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 800);
+    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 833);
     return () => clearInterval(interval);
   }, [words.length]);
 
   useEffect(() => {
     let start: number | null = null;
-    const duration = 2400; // 2.4 seconds for a premium, intentional load sequence
+    const duration = 2500; 
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 400); // Brief pause at 100% before fading out
+      else setTimeout(onComplete, 400); 
     };
     requestAnimationFrame(step);
   }, [onComplete]);
@@ -141,14 +197,14 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       </div>
 
       <div className="absolute bottom-0 left-0 w-full h-[3px] bg-stroke/50 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.4, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.4)" }} />
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.5, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.4)" }} />
       </div>
     </motion.div>
   );
 }
 
 // ==========================================
-// 2. NAVBAR
+// 2. NAVBAR 
 // ==========================================
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -183,6 +239,7 @@ function Navbar() {
               key={link}
               onClick={() => {
                 if (link === "Crew") document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" });
+                if (link === "Events") document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
                 if (link === "Home") window.scrollTo({ top: 0, behavior: "smooth" });
               }}
               className={`text-[11px] sm:text-xs md:text-sm rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 transition-colors whitespace-nowrap ${i === 0 ? "text-text bg-stroke/50" : "text-muted hover:text-text hover:bg-stroke/50"}`}
@@ -199,13 +256,10 @@ function Navbar() {
             href="https://www.instagram.com/tekkrew_/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-muted hover:text-accent p-1.5 transition-colors hidden sm:block"
+            className="btn-gradient-ring relative text-[11px] sm:text-xs md:text-sm text-text bg-surface rounded-full px-3 sm:px-4 py-1.5 sm:py-2 flex items-center justify-center transition-transform hover:scale-105 whitespace-nowrap"
           >
-            <InstagramIcon />
+            Contact Us <ArrowUpRightIcon />
           </a>
-          <button className="btn-gradient-ring relative text-[11px] sm:text-xs md:text-sm text-text bg-surface rounded-full px-3 sm:px-4 py-1.5 sm:py-2 flex items-center justify-center transition-transform hover:scale-105 whitespace-nowrap">
-            Book Us <ArrowUpRightIcon />
-          </button>
         </div>
       </nav>
     </div>
@@ -213,7 +267,7 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO (NO VIDEO - Premium CSS Stadium Pitch)
+// 3. HERO (Background is now transparent to show Global Background)
 // ==========================================
 function Hero() {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
@@ -225,18 +279,7 @@ function Hero() {
   }, [roles.length]);
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full bg-[#050505]">
-      
-      {/* PREMIUM BACKGROUND: 
-        Replaced the heavy video with a lightweight, hardware-accelerated CSS pattern.
-        It features a subtle "tactical grid" and a soft yellow stadium spotlight in the center.
-      */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,230,0,0.06)_0%,transparent_60%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg to-transparent" />
-      </div>
-
+    <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
       <div className="relative z-10 flex flex-col items-center text-center px-4 w-full pt-10">
         <motion.span 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
@@ -274,8 +317,8 @@ function Hero() {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
           className="flex flex-wrap items-center justify-center gap-3 md:gap-4"
         >
-          <button className="btn-gradient-ring relative bg-text text-bg text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 font-bold transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.2)] w-full sm:w-auto">
-            Watch Tape
+          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="btn-gradient-ring relative bg-text text-bg text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 font-bold transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.2)] w-full sm:w-auto">
+            Latest Events
           </button>
           <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="btn-gradient-ring relative bg-black/50 backdrop-blur-sm text-text text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 border border-stroke font-bold transition-transform hover:scale-105 hover:bg-surface w-full sm:w-auto">
             Meet the Squad
@@ -294,17 +337,16 @@ function Hero() {
 }
 
 // ==========================================
-// 4. SQUAD SECTION
+// 4. SQUAD SECTION 
 // ==========================================
 function SquadSection() {
   return (
-    <section id="crew" className="relative w-full bg-bg py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
+    <section id="crew" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
       <div className="max-w-6xl mx-auto">
         
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-10 md:mb-16 gap-4 text-center md:text-left">
           <div>
-            <h2 className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-1 md:mb-2">The Roster</h2>
-            <p className="text-accent text-xs md:text-sm uppercase tracking-widest font-bold">Houston, Texas</p>
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-1 md:mb-2">The Tekkrew</h2>
           </div>
         </div>
 
@@ -312,7 +354,7 @@ function SquadSection() {
           {squadData.map((member, index) => (
             <div 
               key={index}
-              className="bg-surface/80 backdrop-blur-sm border border-stroke rounded-2xl p-5 md:p-8 flex flex-col relative overflow-hidden"
+              className="bg-surface/80 backdrop-blur-sm border border-stroke rounded-2xl p-5 md:p-6 flex flex-col relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-accent/5 rounded-bl-full -z-0" />
 
@@ -323,13 +365,13 @@ function SquadSection() {
                     alt={member.name} 
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover grayscale"
+                    className="object-cover object-top" 
                   />
                 </div>
               </div>
               
               <div className="relative z-10 text-center md:text-left">
-                <h3 className="text-2xl md:text-3xl font-display italic text-text mb-1">{member.name}</h3>
+                <h3 className="text-xl md:text-2xl font-display italic text-text mb-1">{member.name}</h3>
                 <p className="text-[10px] md:text-xs font-bold text-transparent bg-clip-text bg-accent-gradient mb-3 md:mb-4 uppercase tracking-widest">{member.role}</p>
                 
                 <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4 md:mb-6">
@@ -342,7 +384,7 @@ function SquadSection() {
                 </p>
               </div>
 
-              <div className="mt-auto flex items-center justify-center md:justify-start gap-3 relative z-10 pt-4 md:pt-6 border-t border-stroke/50">
+              <div className="mt-auto flex flex-wrap items-center justify-center md:justify-start gap-3 relative z-10 pt-4 md:pt-6 border-t border-stroke/50">
                 {member.links.map((link, i) => (
                   <a 
                     key={i}
@@ -358,6 +400,137 @@ function SquadSection() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ==========================================
+// 5. EVENTS & FEATURES SECTION
+// ==========================================
+function EventsSection() {
+  return (
+    <section id="events" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
+      <div className="max-w-5xl mx-auto space-y-12 md:space-y-20">
+        
+        {/* Telemundo Event */}
+        <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden">
+           <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
+           <div className="relative z-10">
+              <h2 className="text-3xl md:text-5xl font-display italic font-black text-white mb-6">Telemundo 30 Day Countdown to the World Cup '26</h2>
+              <p className="text-muted text-sm md:text-base leading-relaxed mb-8 border-l-2 border-accent pl-4">
+                From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas. <br/><br/>
+                A massive thank you to <a href="https://www.instagram.com/sergguerrero?igsh=MTdoN3o4cjd5ZThpag==" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@sergguerrero</a> and <a href="https://www.instagram.com/ubmartinez?igsh=NDhmYmVibTVyYW9m" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@ubmartinez</a> for this incredible opportunity and for allowing us to share our passion with the Latin community on <a href="https://www.instagram.com/telemundohou?igsh=b2xsd2ZiemU0c2dk" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@telemundohou</a>. We have so much planned and are beyond excited for what's to come. ¡Listos para el Mundial!
+              </p>
+           </div>
+        </div>
+
+        {/* Stella Artois Event */}
+        <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden">
+           <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
+           <div className="relative z-10">
+              <h2 className="text-3xl md:text-5xl font-display italic font-black text-white mb-6">FIFA x Stella Artois Event</h2>
+              <p className="text-muted text-sm md:text-base leading-relaxed mb-8 border-l-2 border-accent pl-4">
+                This event was truly unforgettable. A huge thank you to everyone who showed such kindness and support—it gives me so much extra motivation to keep elevating my game. I love seeing freestyle appreciated by everyone, and it's amazing to know that the craft is admired regardless of the style. I will cherish moments like this and can't wait for what's next. <br/><br/>
+                A massive shoutout to <a href="https://www.instagram.com/elgrandynamo" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@elgrandynamo</a> for tagging along—I had an absolute blast, man. Y también muchísimas gracias a <a href="https://www.instagram.com/allthingsmarlon" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@allthingsmarlon</a> por estar atento de mí. I'm telling y'all, this year is about to go crazy.
+              </p>
+           </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+// ==========================================
+// 6. GALLERY SECTION (Clickable Lightbox)
+// ==========================================
+function GallerySection() {
+  const [images, setImages] = useState<string[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const shuffled = [...initialGalleryImages].sort(() => 0.5 - Math.random());
+    setImages(shuffled);
+  }, []);
+
+  return (
+    <section id="gallery" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
+      
+      {/* Lightbox Modal for Fullscreen Image Viewing */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedImage(null)}
+            className="fixed inset-0 z-[99999] bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-12 cursor-zoom-out"
+          >
+            <button 
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-6 right-6 md:top-10 md:right-10 w-12 h-12 bg-white/10 hover:bg-accent hover:text-black text-white rounded-full flex items-center justify-center transition-colors z-50"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-5xl max-h-[85vh] h-full flex items-center justify-center pointer-events-none"
+            >
+              <Image 
+                src={selectedImage} 
+                alt="Enlarged Freestyle Image" 
+                fill
+                className="object-contain drop-shadow-2xl"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col items-center mb-10 md:mb-16 text-center">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-display italic font-black text-white mb-1">Freestylers - HOU - 4.24.26</h2>
+          <p className="text-accent text-xs md:text-sm uppercase tracking-widest font-bold mt-2">Houston, Texas</p>
+          <div className="w-16 h-1 bg-accent rounded-full mt-4" />
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+          {images.map((src, index) => (
+            <div 
+              key={index} 
+              onClick={() => setSelectedImage(src)}
+              className="relative w-full aspect-square rounded-xl overflow-hidden bg-surface border border-stroke group cursor-pointer"
+            >
+              <Image 
+                src={src} 
+                alt={`Freestyle event moment ${index + 1}`} 
+                fill
+                sizes="(max-width: 768px) 50vw, 20vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full border border-white/50 flex items-center justify-center text-white">
+                  <ArrowUpRightIcon />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="mt-12 flex justify-center">
+           <a 
+              href="https://www.instagram.com/tekkrew_/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-xs md:text-sm font-bold uppercase tracking-widest text-muted hover:text-accent transition-colors flex items-center gap-2"
+            >
+              See More on Instagram <ArrowUpRightIcon />
+            </a>
         </div>
       </div>
     </section>
