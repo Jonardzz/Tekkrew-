@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
+// --- Fonts ---
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
@@ -14,10 +15,10 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-display",
 });
 
+// --- Metadata & Favicon ---
 export const metadata: Metadata = {
-  title: "Tekkrew",
-  description: "Collection '26",
-  // This line tells Next.js to use your logo as the favicon
+  title: "Tekkrew | Freestylers",
+  description: "Road to World Cup '26 - Houston, Texas",
   icons: {
     icon: "/Tekkrew.jpg", 
   },
@@ -29,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="dark">
-      <body className={`${inter.variable} ${instrumentSerif.variable} font-body antialiased`}>
+    <html lang="en" className="scroll-smooth">
+      <body className={`${inter.variable} ${instrumentSerif.variable} font-body antialiased bg-[#050505] text-white`}>
         {children}
       </body>
     </html>
