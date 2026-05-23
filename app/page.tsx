@@ -12,34 +12,29 @@ const InstagramIcon = () => (
     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
   </svg>
 );
-
 const TikTokIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
   </svg>
 );
-
 const EmailIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
     <polyline points="22,6 12,13 2,6"></polyline>
   </svg>
 );
-
 const LinkIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
   </svg>
 );
-
 const ArrowUpRightIcon = () => (
   <svg className="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <line x1="7" y1="17" x2="17" y2="7"></line>
     <polyline points="7 7 17 7 17 17"></polyline>
   </svg>
 );
-
 const LetterboxdIcon = () => (
   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
     <circle cx="6" cy="12" r="3" />
@@ -94,7 +89,7 @@ const squadData = [
     role: "Football Freestyler",
     heritage: "Street Talent",
     location: "Houston, Texas",
-    image: "/Yami.jpg",
+    image: "/Yami.jpg", 
     story: "Bringing unique rhythm and unmatched energy to the crew. Yami's style is all about expressing freedom through every movement on the pitch.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/groovyami?igsh=MXg2emphOHlzbjdxdQ==", icon: <InstagramIcon /> },
@@ -133,17 +128,19 @@ const initialGalleryImages = [
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
 
+  // Force scroll to top on page refresh
   useEffect(() => {
-    if ("scrollRestoration" in window.history) {
-      window.history.scrollRestoration = "manual";
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
     }
     window.scrollTo(0, 0);
   }, []);
 
   return (
+    // Fixed: changed overflow-hidden to overflow-x-hidden
     <main className="relative min-h-[100svh] bg-[#050505] text-text overflow-x-hidden selection:bg-accent selection:text-black">
-
-      {/* GLOBAL LIGHTWEIGHT "WORLD CUP ENERGY" BACKGROUND (No Lag/Animations) */}
+      
+      {/* GLOBAL LIGHTWEIGHT "WORLD CUP ENERGY" BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none bg-[#050505]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_30%,rgba(255,230,0,0.06),transparent_40%),radial-gradient(circle_at_85%_70%,rgba(16,185,129,0.04),transparent_40%),radial-gradient(circle_at_50%_90%,rgba(59,130,246,0.04),transparent_50%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem]" />
@@ -153,7 +150,8 @@ export default function Page() {
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      <div
+      {/* Fixed: Only transitioning opacity, removed transform/blur */}
+      <div 
         className={`relative z-10 transition-opacity duration-700 ease-out ${
           isLoading ? "opacity-0" : "opacity-100"
         }`}
@@ -169,7 +167,7 @@ export default function Page() {
 }
 
 // ==========================================
-// 1. LOADING SCREEN
+// 1. DELIBERATE, PROFESSIONAL LOADING SCREEN 
 // ==========================================
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [count, setCount] = useState(0);
@@ -177,41 +175,27 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
-    const firstTimeout = setTimeout(() => setWordIndex(1), 733);
-    const secondTimeout = setTimeout(() => setWordIndex(2), 1466);
-
-    return () => {
-      clearTimeout(firstTimeout);
-      clearTimeout(secondTimeout);
-    };
-  }, []);
+    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 733);
+    return () => clearInterval(interval);
+  }, [words.length]);
 
   useEffect(() => {
     let start: number | null = null;
-    let frameId: number;
-    const duration = 2200;
-
+    const duration = 2200; // 2.2 seconds
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
-
-      if (progress < 1) {
-        frameId = requestAnimationFrame(step);
-      } else {
-        setTimeout(onComplete, 150);
-      }
+      if (progress < 1) requestAnimationFrame(step);
+      else setTimeout(onComplete, 150); 
     };
-
-    frameId = requestAnimationFrame(step);
-
-    return () => cancelAnimationFrame(frameId);
+    requestAnimationFrame(step);
   }, [onComplete]);
 
   return (
-    <motion.div
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+    <motion.div 
+      exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }} 
+      transition={{ duration: 0.7, ease: "easeInOut" }} 
       className="fixed inset-0 z-[9999] bg-[#050505] flex flex-col justify-between"
     >
       <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-muted uppercase tracking-[0.3em]">
@@ -220,14 +204,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={wordIndex}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-display italic text-text absolute"
-          >
+          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-text absolute">
             {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
@@ -238,42 +215,32 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       </div>
 
       <div className="absolute bottom-0 left-0 w-full h-[3px] bg-stroke/50 origin-left">
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 2.2, ease: "linear" }}
-          className="w-full h-full bg-accent-gradient origin-left"
-          style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.4)" }}
-        />
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.4)" }} />
       </div>
     </motion.div>
   );
 }
 
 // ==========================================
-// 2. NAVBAR
+// 2. NAVBAR 
 // ==========================================
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 100);
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4">
       <nav className={`inline-flex items-center rounded-full backdrop-blur-md border border-white/10 bg-surface/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-shadow duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg shadow-black/80" : ""}`}>
-
+        
         <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-accent-gradient cursor-pointer flex-shrink-0">
           <div className="w-full h-full bg-bg rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 relative">
-            <Image
-              src="/Tekkrew.jpg"
-              alt="Tekkrew Logo"
+            <Image 
+              src="/Tekkrew.jpg" 
+              alt="Tekkrew Logo" 
               fill
               sizes="40px"
               priority
@@ -303,9 +270,9 @@ function Navbar() {
         <div className="w-px h-4 md:h-5 bg-stroke mx-1.5 md:mx-3" />
 
         <div className="flex items-center gap-1 md:gap-2">
-          <a
-            href="https://www.instagram.com/tekkrew_/"
-            target="_blank"
+          <a 
+            href="https://www.instagram.com/tekkrew_/" 
+            target="_blank" 
             rel="noopener noreferrer"
             className="btn-gradient-ring relative text-[11px] sm:text-xs md:text-sm text-text bg-surface rounded-full px-3 sm:px-4 py-1.5 sm:py-2 flex items-center justify-center transition-transform hover:scale-105 whitespace-nowrap"
           >
@@ -332,28 +299,22 @@ function Hero() {
   return (
     <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
       <div className="relative z-10 flex flex-col items-center text-center px-4 w-full pt-10">
-        <motion.span
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+        <motion.span 
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
           className="text-[10px] md:text-xs text-white/80 uppercase tracking-[0.3em] mb-4 md:mb-8 font-bold"
         >
           Road to World Cup '26
         </motion.span>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}
           className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-display italic leading-[0.9] tracking-tight text-white mb-4 md:mb-6 drop-shadow-2xl"
         >
           Tekkrew
         </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}
           className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-6 md:mb-8 font-medium"
         >
           A squad of{" "}
@@ -363,41 +324,28 @@ function Hero() {
           taking over the pitch.
         </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
+        <motion.p 
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.7 }}
           className="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed max-w-2xl mb-8 md:mb-12 border-l-2 border-accent pl-4 text-left mx-auto"
         >
           Born on the concrete, headed for the global stage. We built Tekkrew to elevate the beautiful game with raw street style. As the world turns its eyes to North America for World Cup '26, we are bringing gravity-defying freestyle to the masses—and we are just getting started.
         </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.9 }}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
           className="flex flex-wrap items-center justify-center gap-3 md:gap-4"
         >
-          <button
-            onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })}
-            className="btn-gradient-ring relative bg-text text-bg text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 font-bold transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.2)] w-full sm:w-auto"
-          >
+          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="btn-gradient-ring relative bg-text text-bg text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 font-bold transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.2)] w-full sm:w-auto">
             Latest Events
           </button>
-
-          <button
-            onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })}
-            className="btn-gradient-ring relative bg-black/50 backdrop-blur-sm text-text text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 border border-stroke font-bold transition-transform hover:scale-105 hover:bg-surface w-full sm:w-auto"
-          >
+          <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="btn-gradient-ring relative bg-black/50 backdrop-blur-sm text-text text-xs md:text-sm rounded-full px-6 md:px-7 py-3 md:py-3.5 border border-stroke font-bold transition-transform hover:scale-105 hover:bg-surface w-full sm:w-auto">
             Meet the Squad
           </button>
         </motion.div>
       </div>
 
       <div className="absolute bottom-6 md:bottom-8 z-10 flex flex-col items-center gap-2">
-        <span className="text-[10px] md:text-xs text-white/50 uppercase tracking-[0.2em]">
-          PITCH DOWN
-        </span>
+        <span className="text-[10px] md:text-xs text-white/50 uppercase tracking-[0.2em]">PITCH DOWN</span>
         <div className="w-px h-8 md:h-10 bg-stroke relative overflow-hidden">
           <div className="w-full h-full bg-accent animate-scroll-dot rounded-full absolute top-0" />
         </div>
@@ -407,24 +355,22 @@ function Hero() {
 }
 
 // ==========================================
-// 4. SQUAD SECTION
+// 4. SQUAD SECTION 
 // ==========================================
 function SquadSection() {
   return (
     <section id="crew" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
       <div className="max-w-6xl mx-auto">
-
+        
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-10 md:mb-16 gap-4 text-center md:text-left">
           <div>
-            <h2 className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-1 md:mb-2">
-              The Tekkrew
-            </h2>
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-1 md:mb-2">The Tekkrew</h2>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {squadData.map((member, index) => (
-            <div
+            <div 
               key={index}
               className="bg-surface/80 backdrop-blur-sm border border-stroke rounded-2xl p-5 md:p-6 flex flex-col relative overflow-hidden transition-all duration-300 hover:border-accent/30 hover:bg-surface"
             >
@@ -432,34 +378,25 @@ function SquadSection() {
 
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-[2px] bg-stroke mb-4 md:mb-6 relative z-10 mx-auto md:mx-0">
                 <div className="w-full h-full rounded-full bg-bg border-4 border-surface overflow-hidden relative">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
+                  <Image 
+                    src={member.image} 
+                    alt={member.name} 
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover object-top"
+                    className="object-cover object-top" 
                   />
                 </div>
               </div>
-
+              
               <div className="relative z-10 text-center md:text-left">
-                <h3 className="text-xl md:text-2xl font-display italic text-text mb-1">
-                  {member.name}
-                </h3>
-
-                <p className="text-[10px] md:text-xs font-bold text-transparent bg-clip-text bg-accent-gradient mb-3 md:mb-4 uppercase tracking-widest">
-                  {member.role}
-                </p>
-
+                <h3 className="text-xl md:text-2xl font-display italic text-text mb-1">{member.name}</h3>
+                <p className="text-[10px] md:text-xs font-bold text-transparent bg-clip-text bg-accent-gradient mb-3 md:mb-4 uppercase tracking-widest">{member.role}</p>
+                
                 <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4 md:mb-6">
-                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">
-                    {member.heritage}
-                  </span>
-                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">
-                    {member.location}
-                  </span>
+                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">{member.heritage}</span>
+                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">{member.location}</span>
                 </div>
-
+                
                 <p className="text-muted text-xs md:text-sm leading-relaxed mb-6 md:mb-8 italic">
                   &ldquo;{member.story}&rdquo;
                 </p>
@@ -467,7 +404,7 @@ function SquadSection() {
 
               <div className="mt-auto flex flex-wrap items-center justify-center md:justify-start gap-3 relative z-10 pt-4 md:pt-6 border-t border-stroke/50">
                 {member.links.map((link, i) => (
-                  <a
+                  <a 
                     key={i}
                     href={link.url}
                     target="_blank"
@@ -494,33 +431,29 @@ function EventsSection() {
   return (
     <section id="events" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
       <div className="max-w-5xl mx-auto space-y-12 md:space-y-20">
-
+        
         {/* Telemundo Event */}
         <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden transition-all duration-300 hover:border-accent/30">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
-          <div className="relative z-10">
-            <h2 className="text-3xl md:text-5xl font-display italic font-black text-white mb-6">
-              Telemundo 30 Day Countdown to the World Cup '26
-            </h2>
-            <p className="text-muted text-sm md:text-base leading-relaxed mb-8 border-l-2 border-accent pl-4">
-              From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas. <br /><br />
-              A massive thank you to <a href="https://www.instagram.com/sergguerrero?igsh=MTdoN3o4cjd5ZThpag==" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@sergguerrero</a> and <a href="https://www.instagram.com/ubmartinez?igsh=NDhmYmVibTVyYW9m" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@ubmartinez</a> for this incredible opportunity and for allowing us to share our passion with the Latin community on <a href="https://www.instagram.com/telemundohou?igsh=b2xsd2ZiemU0c2dk" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@telemundohou</a>. We have so much planned and are beyond excited for what's to come. ¡Listos para el Mundial!
-            </p>
-          </div>
+           <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
+           <div className="relative z-10">
+              <h2 className="text-3xl md:text-5xl font-display italic font-black text-white mb-6">Telemundo 30 Day Countdown to the World Cup '26</h2>
+              <p className="text-muted text-sm md:text-base leading-relaxed mb-8 border-l-2 border-accent pl-4">
+                From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas. <br/><br/>
+                A massive thank you to <a href="https://www.instagram.com/sergguerrero?igsh=MTdoN3o4cjd5ZThpag==" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@sergguerrero</a> and <a href="https://www.instagram.com/ubmartinez?igsh=NDhmYmVibTVyYW9m" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@ubmartinez</a> for this incredible opportunity and for allowing us to share our passion with the Latin community on <a href="https://www.instagram.com/telemundohou?igsh=b2xsd2ZiemU0c2dk" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@telemundohou</a>. We have so much planned and are beyond excited for what's to come. ¡Listos para el Mundial!
+              </p>
+           </div>
         </div>
 
         {/* Stella Artois Event */}
         <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden transition-all duration-300 hover:border-accent/30">
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
-          <div className="relative z-10">
-            <h2 className="text-3xl md:text-5xl font-display italic font-black text-white mb-6">
-              FIFA x Stella Artois Event
-            </h2>
-            <p className="text-muted text-sm md:text-base leading-relaxed mb-8 border-l-2 border-accent pl-4">
-              This event was truly unforgettable. A huge thank you to everyone who showed such kindness and support—it gives me so much extra motivation to keep elevating my game. I love seeing freestyle appreciated by everyone, and it's amazing to know that the craft is admired regardless of the style. I will cherish moments like this and can't wait for what's next. <br /><br />
-              A massive shoutout to <a href="https://www.instagram.com/elgrandynamo" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@elgrandynamo</a> for tagging along—I had an absolute blast, man. Y también muchísimas gracias a <a href="https://www.instagram.com/allthingsmarlon" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@allthingsmarlon</a> por estar atento de mí. I'm telling y'all, this year is about to go crazy.
-            </p>
-          </div>
+           <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
+           <div className="relative z-10">
+              <h2 className="text-3xl md:text-5xl font-display italic font-black text-white mb-6">FIFA x Stella Artois Event</h2>
+              <p className="text-muted text-sm md:text-base leading-relaxed mb-8 border-l-2 border-accent pl-4">
+                This event was truly unforgettable. A huge thank you to everyone who showed such kindness and support—it gives me so much extra motivation to keep elevating my game. I love seeing freestyle appreciated by everyone, and it's amazing to know that the craft is admired regardless of the style. I will cherish moments like this and can't wait for what's next. <br/><br/>
+                A massive shoutout to <a href="https://www.instagram.com/elgrandynamo" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@elgrandynamo</a> for tagging along—I had an absolute blast, man. Y también muchísimas gracias a <a href="https://www.instagram.com/allthingsmarlon" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@allthingsmarlon</a> por estar atento de mí. I'm telling y'all, this year is about to go crazy.
+              </p>
+           </div>
         </div>
 
       </div>
@@ -529,113 +462,112 @@ function EventsSection() {
 }
 
 // ==========================================
-// 6. GALLERY SECTION (Fixed Clickable Lightbox)
+// 6. GALLERY SECTION (Fixed Fullscreen Modal)
 // ==========================================
 function GallerySection() {
   const [images, setImages] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
+    // Fixed: Kept images in exactly the same order
     setImages(initialGalleryImages);
   }, []);
 
+  // Fixed: Lock body scroll while the image is open
   useEffect(() => {
     if (selectedImage) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflow = "unset";
     }
-
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = "unset";
     };
   }, [selectedImage]);
 
   return (
-    <>
-      {selectedImage && (
-        <div
-          className="fixed inset-0 z-[999999] bg-black/95 flex items-center justify-center p-4"
-          onClick={() => setSelectedImage(null)}
-        >
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedImage(null);
-            }}
-            className="absolute top-4 right-4 z-[1000000] w-11 h-11 rounded-full bg-white text-black flex items-center justify-center font-bold hover:bg-accent transition-colors"
-            aria-label="Close image preview"
+    <section id="gallery" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
+      
+      {/* Fixed: Simple, bulletproof fullscreen modal */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setSelectedImage(null)}
+            className="fixed inset-0 z-[99999] bg-black/95 flex flex-col items-center justify-center p-4 sm:p-8 cursor-zoom-out"
           >
-            X
-          </button>
+            {/* Close Button */}
+            <button 
+              onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
+              className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 hover:bg-accent hover:text-black text-white rounded-full flex items-center justify-center transition-colors z-50 cursor-pointer"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
 
-          <div
-            className="relative w-full h-full max-w-6xl max-h-[85vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={selectedImage}
-              alt="Enlarged Freestyle Image"
-              fill
-              sizes="100vw"
-              className="object-contain"
-              priority
-            />
-          </div>
+            {/* Image Container */}
+            <div 
+              className="relative w-full h-full max-w-7xl mx-auto flex items-center justify-center cursor-default"
+              onClick={(e) => e.stopPropagation()} 
+            >
+              <Image 
+                src={selectedImage} 
+                alt="Enlarged Freestyle Image" 
+                fill
+                sizes="100vw"
+                className="object-contain"
+                priority 
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col items-center mb-10 md:mb-16 text-center">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-display italic font-black text-white mb-1">Freestylers - HOU - 4.24.26</h2>
+          <p className="text-accent text-xs md:text-sm uppercase tracking-widest font-bold mt-2">Houston, Texas</p>
+          <div className="w-16 h-1 bg-accent rounded-full mt-4" />
         </div>
-      )}
 
-      <section id="gallery" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col items-center mb-10 md:mb-16 text-center">
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-display italic font-black text-white mb-1">
-              Freestylers - HOU - 4.24.26
-            </h2>
-            <p className="text-accent text-xs md:text-sm uppercase tracking-widest font-bold mt-2">
-              Houston, Texas
-            </p>
-            <div className="w-16 h-1 bg-accent rounded-full mt-4" />
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
-            {images.map((src, index) => (
-              <button
-                key={src}
-                type="button"
-                onClick={() => setSelectedImage(src)}
-                className="relative w-full aspect-square rounded-xl overflow-hidden bg-surface border border-stroke group cursor-pointer"
-              >
-                <Image
-                  src={src}
-                  alt={`Freestyle event moment ${index + 1}`}
-                  fill
-                  loading="lazy"
-                  sizes="(max-width: 768px) 50vw, 20vw"
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="w-8 h-8 rounded-full border border-white/50 flex items-center justify-center text-white">
-                    <ArrowUpRightIcon />
-                  </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+          {images.map((src, index) => (
+            // Fixed: Changed from div to button for perfect click handling
+            <button 
+              key={index} 
+              onClick={() => setSelectedImage(src)}
+              className="relative w-full aspect-square rounded-xl overflow-hidden bg-surface border border-stroke group cursor-pointer block text-left"
+              aria-label={`View photo ${index + 1}`}
+            >
+              <Image 
+                src={src} 
+                alt={`Freestyle event moment ${index + 1}`} 
+                fill
+                sizes="(max-width: 768px) 50vw, 20vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full border border-white/50 flex items-center justify-center text-white">
+                  <ArrowUpRightIcon />
                 </div>
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-12 flex justify-center">
-            <a
-              href="https://www.instagram.com/tekkrew_/"
-              target="_blank"
+              </div>
+            </button>
+          ))}
+        </div>
+        
+        <div className="mt-12 flex justify-center">
+           <a 
+              href="https://www.instagram.com/tekkrew_/" 
+              target="_blank" 
               rel="noopener noreferrer"
               className="text-xs md:text-sm font-bold uppercase tracking-widest text-muted hover:text-accent transition-colors flex items-center gap-2"
             >
               See More on Instagram <ArrowUpRightIcon />
             </a>
-          </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
