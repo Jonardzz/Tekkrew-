@@ -139,12 +139,9 @@ export default function Page() {
   return (
     <main className="relative min-h-[100svh] bg-[#050505] text-text overflow-hidden selection:bg-accent selection:text-black">
       
-      {/* GLOBAL LIGHTWEIGHT "WORLD CUP ENERGY" BACKGROUND (No Lag/Animations) */}
+      {/* GLOBAL LIGHTWEIGHT "WORLD CUP ENERGY" BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none bg-[#050505]">
-        {/* Subtle Static Radial Gradients for Life & Energy without GPU strain */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_30%,rgba(255,230,0,0.06),transparent_40%),radial-gradient(circle_at_85%_70%,rgba(16,185,129,0.04),transparent_40%),radial-gradient(circle_at_50%_90%,rgba(59,130,246,0.04),transparent_50%)]" />
-
-        {/* Clean, lightweight pitch grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
@@ -152,7 +149,6 @@ export default function Page() {
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      {/* LIGHTWEIGHT, BUTTERY SMOOTH REVEAL TRANSITION */}
       <div 
         className={`relative z-10 transition-all duration-1000 ease-out ${
           isLoading ? "opacity-0 translate-y-4 blur-sm" : "opacity-100 translate-y-0 blur-0"
@@ -177,26 +173,24 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
-    // 733ms per word to perfectly fit a 2.2s duration
     const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 733);
     return () => clearInterval(interval);
   }, [words.length]);
 
   useEffect(() => {
     let start: number | null = null;
-    const duration = 2200; // 2.2 seconds
+    const duration = 2200; 
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 150); // Minimal buffer before triggering reveal
+      else setTimeout(onComplete, 150); 
     };
     requestAnimationFrame(step);
   }, [onComplete]);
 
   return (
-    // Smoother "zoom out and blur" exit transition for the loader
     <motion.div 
       exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }} 
       transition={{ duration: 0.7, ease: "easeInOut" }} 
@@ -289,7 +283,7 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO (Lightweight, No Video)
+// 3. HERO 
 // ==========================================
 function Hero() {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
@@ -466,20 +460,34 @@ function EventsSection() {
 }
 
 // ==========================================
-// 6. GALLERY SECTION (Clickable Lightbox)
+// 6. GALLERY SECTION (Super Responsive Lightbox)
 // ==========================================
 function GallerySection() {
   const [images, setImages] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
+  // Randomize the gallery images on load
   useEffect(() => {
     const shuffled = [...initialGalleryImages].sort(() => 0.5 - Math.random());
     setImages(shuffled);
   }, []);
 
+  // Lock background scrolling when the image viewer is open
+  useEffect(() => {
+    if (selectedImage) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [selectedImage]);
+
   return (
     <section id="gallery" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
       
+      {/* Super Responsive Lightbox Modal */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
@@ -487,26 +495,30 @@ function GallerySection() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 z-[99999] bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-12 cursor-zoom-out"
+            className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center p-2 sm:p-4 md:p-8 cursor-zoom-out"
           >
+            {/* Close Button scales for mobile and desktop */}
             <button 
               onClick={() => setSelectedImage(null)}
-              className="absolute top-6 right-6 md:top-10 md:right-10 w-12 h-12 bg-white/10 hover:bg-accent hover:text-black text-white rounded-full flex items-center justify-center transition-colors z-50"
+              className="absolute top-4 right-4 md:top-8 md:right-8 w-10 h-10 md:w-12 md:h-12 bg-white/10 hover:bg-accent hover:text-black text-white rounded-full flex items-center justify-center transition-colors z-50"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
+
             <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-5xl max-h-[85vh] h-full flex items-center justify-center pointer-events-none"
+              className="relative w-full max-w-7xl h-full max-h-[90vh] flex items-center justify-center pointer-events-none"
             >
               <Image 
                 src={selectedImage} 
                 alt="Enlarged Freestyle Image" 
                 fill
+                sizes="100vw"
                 className="object-contain drop-shadow-2xl"
+                priority
               />
             </motion.div>
           </motion.div>
@@ -534,6 +546,7 @@ function GallerySection() {
                 sizes="(max-width: 768px) 50vw, 20vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
               />
+              {/* Overlay hover effect indicating it is clickable */}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <div className="w-8 h-8 rounded-full border border-white/50 flex items-center justify-center text-white">
                   <ArrowUpRightIcon />
