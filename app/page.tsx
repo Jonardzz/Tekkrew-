@@ -139,37 +139,23 @@ export default function Page() {
   return (
     <main className="relative min-h-[100svh] bg-[#050505] text-text overflow-hidden selection:bg-accent selection:text-black">
       
-      {/* GLOBAL DYNAMIC "STADIUM ENERGY" BACKGROUND */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#050505]">
-        {/* Subtle Pitch Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff04_1px,transparent_1px),linear-gradient(to_bottom,#ffffff04_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-        
-        {/* Animated Yellow/Gold Energy Orbs */}
-        <motion.div 
-          animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-40 right-[-10%] w-[50rem] h-[50rem] bg-accent/20 rounded-full blur-[140px]" 
-        />
-        <motion.div 
-          animate={{ scale: [1, 1.25, 1], opacity: [0.04, 0.08, 0.04] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute top-[30%] -left-32 w-[40rem] h-[40rem] bg-[#ffaa00]/10 rounded-full blur-[130px]" 
-        />
-        <motion.div 
-          animate={{ y: [0, -40, 0], opacity: [0.05, 0.1, 0.05] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -bottom-40 left-1/3 w-[60rem] h-[40rem] bg-accent/10 rounded-full blur-[150px]" 
-        />
+      {/* GLOBAL LIGHTWEIGHT "WORLD CUP ENERGY" BACKGROUND (No Lag/Animations) */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-[#050505]">
+        {/* Subtle Static Radial Gradients for Life & Energy without GPU strain */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_30%,rgba(255,230,0,0.06),transparent_40%),radial-gradient(circle_at_85%_70%,rgba(16,185,129,0.04),transparent_40%),radial-gradient(circle_at_50%_90%,rgba(59,130,246,0.04),transparent_50%)]" />
+
+        {/* Clean, lightweight pitch grid overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
       <AnimatePresence mode="wait">
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      {/* SMOOTHER BLUR/SLIDE REVEAL TRANSITION */}
+      {/* LIGHTWEIGHT, BUTTERY SMOOTH REVEAL TRANSITION */}
       <div 
-        className={`relative z-10 transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          isLoading ? "opacity-0 translate-y-8 blur-sm" : "opacity-100 translate-y-0 blur-0"
+        className={`relative z-10 transition-all duration-1000 ease-out ${
+          isLoading ? "opacity-0 translate-y-4 blur-sm" : "opacity-100 translate-y-0 blur-0"
         }`}
       >
         <Navbar />
@@ -204,7 +190,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 200); 
+      else setTimeout(onComplete, 150); // Minimal buffer before triggering reveal
     };
     requestAnimationFrame(step);
   }, [onComplete]);
@@ -212,8 +198,8 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   return (
     // Smoother "zoom out and blur" exit transition for the loader
     <motion.div 
-      exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }} 
-      transition={{ duration: 0.8, ease: "easeInOut" }} 
+      exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }} 
+      transition={{ duration: 0.7, ease: "easeInOut" }} 
       className="fixed inset-0 z-[9999] bg-[#050505] flex flex-col justify-between"
     >
       <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-muted uppercase tracking-[0.3em]">
@@ -303,7 +289,7 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO 
+// 3. HERO (Lightweight, No Video)
 // ==========================================
 function Hero() {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
@@ -316,16 +302,6 @@ function Hero() {
 
   return (
     <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
-      <div className="absolute inset-0 z-0 overflow-hidden mix-blend-screen" style={{ transform: "translateZ(0)" }}>
-        <video
-          autoPlay muted loop playsInline preload="auto"
-          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-50 md:opacity-60 grayscale contrast-125"
-          src="/Dark_Portfolio_Hero_0.mp4" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/80 via-[#050505]/40 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#050505] to-transparent" />
-      </div>
-
       <div className="relative z-10 flex flex-col items-center text-center px-4 w-full pt-10">
         <motion.span 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
