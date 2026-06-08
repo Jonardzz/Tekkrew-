@@ -106,6 +106,19 @@ const squadData = [
       { name: "Instagram", url: "https://www.instagram.com/zeinkhitamy?igsh=MmRlY3UzYWdtejFz", icon: <InstagramIcon /> },
       { name: "TikTok", url: "https://www.tiktok.com/@zein.khitamy?_r=1&_t=ZP-96YG9S8jBGx", icon: <TikTokIcon /> },
     ]
+  },
+  {
+    name: "Zohair Ali",
+    role: "Football Freestyler",
+    heritage: "Street Talent",
+    location: "Houston, Texas",
+    image: "/Zo.jpg",
+    story: "Bringing precise technical skills and creative rhythm to the crew. Zohair elevates the freestyle scene with his unique flow and dedication.",
+    links: [
+      { name: "Instagram", url: "https://www.instagram.com/zostyler", icon: <InstagramIcon /> },
+      { name: "TikTok", url: "https://www.tiktok.com/@zostyler?_r=1&_t=ZP-972sk7kVEkw", icon: <TikTokIcon /> },
+      { name: "Email", url: "mailto:Zostyler.n02@gmail.com", icon: <EmailIcon /> },
+    ]
   }
 ];
 
@@ -128,7 +141,6 @@ const initialGalleryImages = [
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
 
-  // Force scroll to top on page refresh
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual';
@@ -137,7 +149,6 @@ export default function Page() {
   }, []);
 
   return (
-    // Fixed: changed overflow-hidden to overflow-x-hidden
     <main className="relative min-h-[100svh] bg-[#050505] text-text overflow-x-hidden selection:bg-accent selection:text-black">
       
       {/* GLOBAL LIGHTWEIGHT "WORLD CUP ENERGY" BACKGROUND */}
@@ -150,7 +161,6 @@ export default function Page() {
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      {/* Fixed: Only transitioning opacity, removed transform/blur */}
       <div 
         className={`relative z-10 transition-opacity duration-700 ease-out ${
           isLoading ? "opacity-0" : "opacity-100"
@@ -181,7 +191,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
   useEffect(() => {
     let start: number | null = null;
-    const duration = 2200; // 2.2 seconds
+    const duration = 2200; 
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
@@ -432,6 +442,62 @@ function EventsSection() {
     <section id="events" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
       <div className="max-w-5xl mx-auto space-y-12 md:space-y-20">
         
+        {/* KHOU 11 Feature Event with TWO Responsive Vertical Videos */}
+        <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden transition-all duration-300 hover:border-accent/30">
+           <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
+           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              <div>
+                <h2 className="text-3xl md:text-5xl font-display italic font-black text-white mb-6">KHOU 11 Feature</h2>
+                <p className="text-muted text-sm md:text-base leading-relaxed mb-6 border-l-2 border-accent pl-4">
+                  Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.
+                  <br/><br/>
+                  Thank you <a href="https://www.instagram.com/troyklesst" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@troyklesst</a> on Instagram for interviewing us and giving TekKrew the opportunity to share our passion for freestyle soccer and the World Cup festivities in Houston.
+                </p>
+                <div className="pt-2">
+                  <a 
+                    href="https://www.instagram.com/reel/DZT_hohjukI/?igsh=MTl6cXBxN2JrM2RueA==" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="btn-gradient-ring relative inline-flex items-center gap-2 bg-text text-bg text-xs md:text-sm rounded-full px-6 py-3 font-bold transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.2)]"
+                  >
+                    Watch the Interview <ArrowUpRightIcon />
+                  </a>
+                </div>
+              </div>
+              
+              {/* Flex Container: Stacks on Mobile (flex-col), Side-by-Side on Desktop (sm:flex-row) */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+                
+                {/* Video 1 */}
+                <div className="relative w-full max-w-[280px] sm:max-w-xs mx-auto aspect-[9/16] rounded-xl overflow-hidden border border-stroke bg-black/50 shadow-2xl flex items-center justify-center">
+                  <video 
+                    controls 
+                    playsInline 
+                    preload="metadata"
+                    className="w-full h-full object-contain"
+                    src="/Houston Interview 2.mp4"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+
+                {/* Video 2 */}
+                <div className="relative w-full max-w-[280px] sm:max-w-xs mx-auto aspect-[9/16] rounded-xl overflow-hidden border border-stroke bg-black/50 shadow-2xl flex items-center justify-center">
+                  <video 
+                    controls 
+                    playsInline 
+                    preload="metadata"
+                    className="w-full h-full object-contain"
+                    src="/Houston Interview.mp4"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+
+              </div>
+           </div>
+        </div>
+
         {/* Telemundo Event */}
         <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden transition-all duration-300 hover:border-accent/30">
            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
@@ -469,11 +535,9 @@ function GallerySection() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fixed: Kept images in exactly the same order
     setImages(initialGalleryImages);
   }, []);
 
-  // Fixed: Lock body scroll while the image is open
   useEffect(() => {
     if (selectedImage) {
       document.body.style.overflow = "hidden";
@@ -488,7 +552,6 @@ function GallerySection() {
   return (
     <section id="gallery" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
       
-      {/* Fixed: Simple, bulletproof fullscreen modal */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
@@ -499,7 +562,6 @@ function GallerySection() {
             onClick={() => setSelectedImage(null)}
             className="fixed inset-0 z-[99999] bg-black/95 flex flex-col items-center justify-center p-4 sm:p-8 cursor-zoom-out"
           >
-            {/* Close Button */}
             <button 
               onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
               className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 hover:bg-accent hover:text-black text-white rounded-full flex items-center justify-center transition-colors z-50 cursor-pointer"
@@ -507,7 +569,6 @@ function GallerySection() {
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
-            {/* Image Container */}
             <div 
               className="relative w-full h-full max-w-7xl mx-auto flex items-center justify-center cursor-default"
               onClick={(e) => e.stopPropagation()} 
@@ -534,7 +595,6 @@ function GallerySection() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
           {images.map((src, index) => (
-            // Fixed: Changed from div to button for perfect click handling
             <button 
               key={index} 
               onClick={() => setSelectedImage(src)}
