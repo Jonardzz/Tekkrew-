@@ -451,7 +451,7 @@ function EventsSection() {
                 <p className="text-muted text-sm md:text-base leading-relaxed mb-6 border-l-2 border-accent pl-4">
                   Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.
                   <br/><br/>
-                  Thank you <a href="https://www.instagram.com/troyklesst" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@troyklesst</a> on Instagram for interviewing us and giving TekKrew the opportunity to share our passion for freestyle soccer and the World Cup festivities in Houston.
+                  Thank you <a href="https://www.instagram.com/troyklesstv" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@troyklesstv</a> on Instagram for interviewing us and giving TekKrew the opportunity to share our passion for freestyle soccer and the World Cup festivities in Houston.
                 </p>
                 <div className="pt-2">
                   <a 
