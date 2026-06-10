@@ -81,7 +81,7 @@ const squadData = [
     role: "Football Freestyler",
     heritage: "Colombian • American",
     flags: ["🇨🇴", "🇺🇸"],
-    imageClass: "scale-[1.35] origin-[50%_15%]", // Zooms in on his face
+    imageClass: "scale-[1.9] origin-[55%_1%]", // Zooms in on his face
     location: "Houston, Texas",
     image: "/Joseph.jpg",
     story: "Bringing pure Colombian flair mixed with American hustle. Joseph hits combos that shouldn't be possible, turning the street into his personal stage.",
