@@ -54,6 +54,7 @@ const squadData = [
     name: "Chaymae Qaddouri",
     role: "Football Freestyler",
     heritage: "Moroccan",
+    flags: ["🇲🇦"],
     location: "Houston, Texas",
     image: "/Chaymae Qaddouri.jpeg",
     story: "Fusing Moroccan football heritage with absolute technical precision. Chaymae's flow is unmatched, redefining what ball control looks like on the concrete.",
@@ -66,7 +67,8 @@ const squadData = [
   {
     name: "Chuy",
     role: "Football Freestyler",
-    heritage: "Mexican American",
+    heritage: "Mexican • American",
+    flags: ["🇲🇽", "🇺🇸"],
     location: "Houston, Texas",
     image: "/Chuy.jpeg",
     story: "Mexican-American street legend in the making. Chuy brings aggressive, high-energy tricks that hype the crowd and leave defenders lost.",
@@ -77,7 +79,8 @@ const squadData = [
   {
     name: "Joseph Diaz",
     role: "Football Freestyler",
-    heritage: "Colombian American",
+    heritage: "Colombian • Honduran • American",
+    flags: ["🇨🇴", "🇭🇳", "🇺🇸"],
     location: "Houston, Texas",
     image: "/Joseph.jpg",
     story: "Bringing pure Colombian flair mixed with American hustle. Joseph hits combos that shouldn't be possible, turning the street into his personal stage.",
@@ -93,6 +96,7 @@ const squadData = [
     name: "Yami",
     role: "Football Freestyler",
     heritage: "Street Talent",
+    flags: [],
     location: "Houston, Texas",
     image: "/Yami.jpg",
     story: "Bringing unique rhythm and unmatched energy to the crew. Yami's style is all about expressing freedom through every movement on the pitch.",
@@ -103,7 +107,8 @@ const squadData = [
   {
     name: "Zein زین Khitamy",
     role: "Football Freestyler",
-    heritage: "Global Talent",
+    heritage: "Kenyan",
+    flags: ["🇰🇪"],
     location: "Houston, Texas",
     image: "/Zein.jpg",
     story: "A master of flow and creative transitions. Zein brings an international freestyle flavor to the streets, pushing the boundaries of what's possible with a football.",
@@ -116,6 +121,7 @@ const squadData = [
     name: "Zohair Ali",
     role: "Football Freestyler",
     heritage: "Street Talent",
+    flags: [],
     location: "Houston, Texas",
     image: "/Zo.jpg",
     story: "Bringing precise technical skills and creative rhythm to the crew. Zohair elevates the freestyle scene with his unique flow and dedication.",
@@ -406,7 +412,22 @@ function SquadSection() {
               
               <div className="relative z-10 text-center md:text-left">
                 <h3 className="text-xl md:text-2xl font-display italic text-text mb-1">{member.name}</h3>
-                <p className="text-[10px] md:text-xs font-bold text-transparent bg-clip-text bg-accent-gradient mb-3 md:mb-4 uppercase tracking-widest">{member.role}</p>
+                <p className="text-[10px] md:text-xs font-bold text-transparent bg-clip-text bg-accent-gradient mb-4 uppercase tracking-widest">{member.role}</p>
+
+                {/* --- NEW FLAG BADGES --- */}
+                {member.flags && member.flags.length > 0 && (
+                  <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-3">
+                    {member.flags.map((flag, idx) => (
+                      <div 
+                        key={idx} 
+                        className="w-7 h-7 rounded-full border border-white/20 bg-white/10 shadow-lg flex items-center justify-center text-sm transition-transform hover:scale-110"
+                        title="Heritage Flag"
+                      >
+                        {flag}
+                      </div>
+                    ))}
+                  </div>
+                )}
                 
                 <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4 md:mb-6">
                   <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">{member.heritage}</span>
@@ -448,7 +469,7 @@ function EventsSection() {
     <section id="events" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
       <div className="max-w-5xl mx-auto space-y-12 md:space-y-20">
         
-        {/* KHOU 11 Feature Event with TWO Responsive Vertical Videos */}
+        {/* KHOU 11 Feature Event (Vertical 9:16) */}
         <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden transition-all duration-300 hover:border-accent/30">
            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -471,42 +492,28 @@ function EventsSection() {
                 </div>
               </div>
               
-              {/* Flex Container: Stacks on Mobile (flex-col), Side-by-Side on Desktop (sm:flex-row) */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-                
-                {/* Video 1: KHOU Interview 2 */}
+                {/* Vertical Video 1 */}
                 <div className="relative w-full max-w-[280px] sm:max-w-xs mx-auto aspect-[9/16] flex items-center justify-center">
-                  <video
-                    controls
-                    playsInline
-                    preload="metadata"
-                    poster="/houston-interview-2-thumbnail.jpg"
+                  <video 
+                    controls playsInline preload="metadata" poster="/houston-interview-2-thumbnail.jpg"
                     className="aspect-[9/16] h-full w-full rounded-2xl border border-white/10 bg-black object-contain shadow-2xl"
                     src="/Houston Interview 2.mp4"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
+                  />
                 </div>
-
-                {/* Video 2: KHOU Interview 1 */}
+                {/* Vertical Video 2 */}
                 <div className="relative w-full max-w-[280px] sm:max-w-xs mx-auto aspect-[9/16] flex items-center justify-center">
-                  <video
-                    controls
-                    playsInline
-                    preload="metadata"
-                    poster="/houston-interview-thumbnail.jpg"
+                  <video 
+                    controls playsInline preload="metadata" poster="/houston-interview-thumbnail.jpg"
                     className="aspect-[9/16] h-full w-full rounded-2xl border border-white/10 bg-black object-contain shadow-2xl"
                     src="/Houston Interview.mp4"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
+                  />
                 </div>
-
               </div>
            </div>
         </div>
 
-        {/* Telemundo Event with Responsive Horizontal Video */}
+        {/* Telemundo Event (Horizontal 16:9) */}
         <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden transition-all duration-300 hover:border-accent/30">
            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -517,24 +524,18 @@ function EventsSection() {
                   A massive thank you to <a href="https://www.instagram.com/sergguerrero?igsh=MTdoN3o4cjd5ZThpag==" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@sergguerrero</a> and <a href="https://www.instagram.com/ubmartinez?igsh=NDhmYmVibTVyYW9m" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@ubmartinez</a> for this incredible opportunity and for allowing us to share our passion with the Latin community on <a href="https://www.instagram.com/telemundohou?igsh=b2xsd2ZiemU0c2dk" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@telemundohou</a>. We have so much planned and are beyond excited for what's to come. ¡Listos para el Mundial!
                 </p>
               </div>
-
-              {/* Video: Telemundo */}
+              {/* Horizontal Video */}
               <div className="relative w-full max-w-3xl mx-auto aspect-video flex items-center justify-center">
-                <video
-                  controls
-                  playsInline
-                  preload="metadata"
-                  poster="/telemundo-thumbnail.jpg"
+                <video 
+                  controls playsInline preload="metadata" poster="/telemundo-thumbnail.jpg"
                   className="aspect-video h-full w-full rounded-2xl border border-white/10 bg-black object-contain shadow-2xl"
                   src="/Telemundo Interview.mp4"
-                >
-                  Your browser does not support the video tag.
-                </video>
+                />
               </div>
            </div>
         </div>
 
-        {/* Stella Artois Event with Responsive Vertical Video */}
+        {/* FIFA x Stella Artois Event (Vertical 9:16) */}
         <div className="bg-surface/60 backdrop-blur-sm border border-stroke rounded-2xl p-6 md:p-10 relative overflow-hidden transition-all duration-300 hover:border-accent/30">
            <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0" />
            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -545,19 +546,13 @@ function EventsSection() {
                   A massive shoutout to <a href="https://www.instagram.com/elgrandynamo" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@elgrandynamo</a> for tagging along—I had an absolute blast, man. Y también muchísimas gracias a <a href="https://www.instagram.com/allthingsmarlon" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors">@allthingsmarlon</a> por estar atento de mí. I'm telling y'all, this year is about to go crazy.
                 </p>
               </div>
-
-              {/* Video: Stella Artois */}
+              {/* Vertical Video */}
               <div className="relative w-full max-w-[280px] sm:max-w-xs mx-auto aspect-[9/16] flex items-center justify-center">
-                <video
-                  controls
-                  playsInline
-                  preload="metadata"
-                  poster="/fifa-stella-thumbnail.jpg"
+                <video 
+                  controls playsInline preload="metadata" poster="/fifa-stella-thumbnail.jpg"
                   className="aspect-[9/16] h-full w-full rounded-2xl border border-white/10 bg-black object-contain shadow-2xl"
                   src="/FIFA x Stella Artois Event.mp4"
-                >
-                  Your browser does not support the video tag.
-                </video>
+                />
               </div>
            </div>
         </div>
@@ -568,7 +563,7 @@ function EventsSection() {
 }
 
 // ==========================================
-// 6. GALLERY SECTION (Fixed Fullscreen Modal)
+// 6. GALLERY SECTION 
 // ==========================================
 function GallerySection() {
   const [images, setImages] = useState<string[]>([]);
