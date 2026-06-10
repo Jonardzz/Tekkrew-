@@ -65,7 +65,7 @@ const squadData = [
     ]
   },
   {
-    name: "Chuy",
+    name: "Chuy Navarro",
     role: "Football Freestyler",
     heritage: "Mexican • American",
     flags: ["🇲🇽", "🇺🇸"],
@@ -79,8 +79,9 @@ const squadData = [
   {
     name: "Joseph Diaz",
     role: "Football Freestyler",
-    heritage: "Colombian • Honduran • American",
-    flags: ["🇨🇴", "🇭🇳", "🇺🇸"],
+    heritage: "Colombian • American",
+    flags: ["🇨🇴", "🇺🇸"],
+    imageClass: "scale-[1.35] origin-[50%_15%]", // Zooms in on his face
     location: "Houston, Texas",
     image: "/Joseph.jpg",
     story: "Bringing pure Colombian flair mixed with American hustle. Joseph hits combos that shouldn't be possible, turning the street into his personal stage.",
@@ -98,7 +99,7 @@ const squadData = [
     heritage: "Street Talent",
     flags: [],
     location: "Houston, Texas",
-    image: "/Yami.jpg",
+    image: "/Yami.jpg", 
     story: "Bringing unique rhythm and unmatched energy to the crew. Yami's style is all about expressing freedom through every movement on the pitch.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/groovyami?igsh=MXg2emphOHlzbjdxdQ==", icon: <InstagramIcon /> },
@@ -124,7 +125,11 @@ const squadData = [
     flags: [],
     location: "Houston, Texas",
     image: "/Zo.jpg",
-    story: "Bringing precise technical skills and creative rhythm to the crew. Zohair elevates the freestyle scene with his unique flow and dedication.",
+    story: (
+      <>
+        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold underline decoration-accent/50 underline-offset-2 transition-colors">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold underline decoration-accent/50 underline-offset-2 transition-colors">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
+      </>
+    ),
     links: [
       { name: "Instagram", url: "https://www.instagram.com/zostyler", icon: <InstagramIcon /> },
       { name: "TikTok", url: "https://www.tiktok.com/@zostyler?_r=1&_t=ZP-972sk7kVEkw", icon: <TikTokIcon /> },
@@ -377,7 +382,7 @@ function Hero() {
 }
 
 // ==========================================
-// 4. SQUAD SECTION 
+// 4. SQUAD SECTION (FUT-Inspired Player Cards)
 // ==========================================
 function SquadSection() {
   return (
@@ -394,34 +399,47 @@ function SquadSection() {
           {squadData.map((member, index) => (
             <div
               key={index}
-              className="bg-surface/80 backdrop-blur-sm border border-stroke rounded-2xl p-5 md:p-6 flex flex-col relative overflow-hidden transition-all duration-300 hover:border-accent/30 hover:bg-surface"
+              className="relative bg-[#0d0d0d] rounded-2xl overflow-hidden border border-stroke shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:border-accent/60 hover:shadow-[0_10px_40px_rgba(255,230,0,0.15)] group flex flex-col"
             >
-              <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-accent/5 rounded-bl-full -z-0" />
+              {/* Subtle metallic inner gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
 
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-[2px] bg-stroke mb-4 md:mb-6 relative z-10 mx-auto md:mx-0">
-                <div className="w-full h-full rounded-full bg-bg border-4 border-surface overflow-hidden relative">
+              {/* TOP HALF: Large Player Image */}
+              <div className="relative w-full h-[280px] md:h-[320px] overflow-hidden">
+                {/* Wrapped Image to support specific face zoom alongside group hover */}
+                <div className="w-full h-full relative transition-transform duration-700 group-hover:scale-105">
                   <Image
                     src={member.image}
                     alt={member.name}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover object-top"
+                    className={`object-cover ${member.imageClass || "object-top"}`}
                   />
+                </div>
+                
+                {/* Smooth fade from image into the dark card bottom */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/30 to-transparent" />
+                
+                {/* Floating Location Badge */}
+                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 text-[9px] md:text-[10px] uppercase tracking-widest text-white/80 px-3 py-1.5 rounded-full">
+                  {member.location}
                 </div>
               </div>
               
-              <div className="relative z-10 text-center md:text-left">
-                <h3 className="text-xl md:text-2xl font-display italic text-text mb-1">{member.name}</h3>
-                <p className="text-[10px] md:text-xs font-bold text-transparent bg-clip-text bg-accent-gradient mb-4 uppercase tracking-widest">{member.role}</p>
+              {/* BOTTOM HALF: Card Stats & Info */}
+              <div className="relative z-10 flex flex-col flex-1 p-6 pt-0 -mt-10 text-center items-center">
+                
+                <h3 className="text-2xl md:text-3xl font-display italic font-black text-white drop-shadow-md mb-1">{member.name}</h3>
+                <div className="w-12 h-[2px] bg-accent mb-2 rounded-full" />
+                <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-widest mb-4">{member.role}</p>
 
-                {/* --- NEW FLAG BADGES --- */}
+                {/* --- BOLD RECTANGULAR FLAG BADGES --- */}
                 {member.flags && member.flags.length > 0 && (
-                  <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-3">
+                  <div className="flex flex-wrap justify-center gap-3 mb-5">
                     {member.flags.map((flag, idx) => (
                       <div 
                         key={idx} 
-                        className="w-7 h-7 rounded-full border border-white/20 bg-white/10 shadow-lg flex items-center justify-center text-sm transition-transform hover:scale-110"
-                        title="Heritage Flag"
+                        className="w-12 h-8 rounded-md border border-white/20 bg-black shadow-[0_4px_12px_rgba(0,0,0,0.4)] flex items-center justify-center text-3xl leading-none transition-transform duration-300 hover:-translate-y-1 hover:border-accent hover:shadow-[0_4px_15px_rgba(255,230,0,0.25)]"
                       >
                         {flag}
                       </div>
@@ -429,29 +447,32 @@ function SquadSection() {
                   </div>
                 )}
                 
-                <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4 md:mb-6">
-                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">{member.heritage}</span>
-                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-2 py-1 rounded-md border border-white/5">{member.location}</span>
+                {/* Heritage Label */}
+                <div className="flex flex-wrap justify-center gap-2 mb-6">
+                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/60 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 shadow-sm">
+                    {member.heritage}
+                  </span>
                 </div>
                 
-                <p className="text-muted text-xs md:text-sm leading-relaxed mb-6 md:mb-8 italic">
+                <div className="text-muted text-xs md:text-sm leading-relaxed mb-8 italic flex-1">
                   &ldquo;{member.story}&rdquo;
-                </p>
-              </div>
+                </div>
 
-              <div className="mt-auto flex flex-wrap items-center justify-center md:justify-start gap-3 relative z-10 pt-4 md:pt-6 border-t border-stroke/50">
-                {member.links.map((link, i) => (
-                  <a
-                    key={i}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-bg border border-stroke flex items-center justify-center text-muted hover:text-black hover:bg-accent transition-colors"
-                    title={link.name}
-                  >
-                    {link.icon}
-                  </a>
-                ))}
+                {/* Social Links Row */}
+                <div className="mt-auto flex flex-wrap items-center justify-center gap-3 pt-5 w-full border-t border-stroke/50">
+                  {member.links.map((link, i) => (
+                    <a
+                      key={i}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 rounded-full bg-surface border border-stroke flex items-center justify-center text-white/70 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm"
+                      title={link.name}
+                    >
+                      {link.icon}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
