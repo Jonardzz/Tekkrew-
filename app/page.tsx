@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -48,8 +48,26 @@ const LetterboxdIcon = () => (
   </svg>
 );
 
+// --- TypeScript Definitions ---
+interface SquadMember {
+  name: string;
+  role: string;
+  heritage: string;
+  flags: string[];
+  location: string;
+  image: string;
+  gifImage?: string;
+  imageClass?: string;
+  story: React.ReactNode;
+  links: {
+    name: string;
+    url: string;
+    icon: React.ReactNode;
+  }[];
+}
+
 // --- Squad Data (Alphabetical Order) ---
-const squadData = [
+const squadData: SquadMember[] = [
   {
     name: "Chaymae Qaddouri",
     role: "Football Freestyler",
@@ -57,6 +75,7 @@ const squadData = [
     flags: ["🇲🇦"],
     location: "Houston, Texas",
     image: "/Chaymae Qaddouri.jpeg",
+    gifImage: "/Chaymae Qaddouri.gif",
     story: "Fusing Moroccan football heritage with absolute technical precision. Chaymae's flow is unmatched, redefining what ball control looks like on the concrete.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/c.qaddouri", icon: <InstagramIcon /> },
@@ -71,6 +90,7 @@ const squadData = [
     flags: ["🇲🇽", "🇺🇸"],
     location: "Houston, Texas",
     image: "/Chuy.jpeg",
+    gifImage: "/Chuy.gif",
     story: "Mexican-American street legend in the making. Chuy brings aggressive, high-energy tricks that hype the crowd and leave defenders lost.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/streetchuy", icon: <InstagramIcon /> },
@@ -81,9 +101,10 @@ const squadData = [
     role: "Football Freestyler",
     heritage: "Colombian • American",
     flags: ["🇨🇴", "🇺🇸"],
-    imageClass: "scale-[1.15] sm:scale-[1.25] md:scale-[1.35] origin-[50%_20%] object-[50%_20%]", // Responsive zoom & positioning
+    imageClass: "scale-[1.15] sm:scale-[1.25] md:scale-[1.35] origin-[50%_20%] object-[50%_20%]",
     location: "Houston, Texas",
     image: "/Joseph.jpg",
+    gifImage: "/Joseph.gif",
     story: "Bringing pure Colombian flair mixed with American hustle. Joseph hits combos that shouldn't be possible, turning the street into his personal stage.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd", icon: <InstagramIcon /> },
@@ -112,6 +133,7 @@ const squadData = [
     flags: ["🇰🇪"],
     location: "Houston, Texas",
     image: "/Zein.jpg",
+    gifImage: "/Zein.gif",
     story: "A master of flow and creative transitions. Zein brings an international freestyle flavor to the streets, pushing the boundaries of what's possible with a football.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/zeinkhitamy?igsh=MmRlY3UzYWdtejFz", icon: <InstagramIcon /> },
@@ -125,9 +147,10 @@ const squadData = [
     flags: [],
     location: "Houston, Texas",
     image: "/Zo.jpg",
+    gifImage: "/Zo.gif",
     story: (
       <>
-        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold underline decoration-accent/50 underline-offset-2 transition-colors">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold underline decoration-accent/50 underline-offset-2 transition-colors">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
+        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-semibold underline decoration-accent/50 underline-offset-2 transition-colors">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-semibold underline decoration-accent/50 underline-offset-2 transition-colors">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
       </>
     ),
     links: [
@@ -382,9 +405,40 @@ function Hero() {
 }
 
 // ==========================================
-// 4. SQUAD SECTION (FUT-Inspired Player Cards)
+// 4. SQUAD SECTION (FUT-Inspired Player Cards with Interactive GIFs)
 // ==========================================
 function SquadSection() {
+  const [activeGifIndex, setActiveGifIndex] = useState<number | null>(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  // Detect if the user is actively using a touch screen
+  useEffect(() => {
+    const handleTouchStart = () => {
+      setIsTouchDevice(true);
+      window.removeEventListener("touchstart", handleTouchStart);
+    };
+    window.addEventListener("touchstart", handleTouchStart);
+    return () => window.removeEventListener("touchstart", handleTouchStart);
+  }, []);
+
+  const handleCardEnter = (index: number) => {
+    if (!isTouchDevice) {
+      setActiveGifIndex(index);
+    }
+  };
+
+  const handleCardLeave = () => {
+    if (!isTouchDevice) {
+      setActiveGifIndex(null);
+    }
+  };
+
+  const handleCardClick = (index: number) => {
+    if (isTouchDevice) {
+      setActiveGifIndex((current) => (current === index ? null : index));
+    }
+  };
+
   return (
     <section id="crew" className="relative w-full py-16 md:py-24 px-4 md:px-6 border-t border-stroke/50">
       <div className="max-w-6xl mx-auto">
@@ -396,86 +450,114 @@ function SquadSection() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {squadData.map((member, index) => (
-            <div
-              key={index}
-              className="relative bg-[#0d0d0d] rounded-2xl overflow-hidden border border-stroke shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:border-accent/60 hover:shadow-[0_10px_40px_rgba(255,230,0,0.15)] group flex flex-col"
-            >
-              {/* Subtle metallic inner gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
+          {squadData.map((member, index) => {
+            const isActive = activeGifIndex === index;
 
-              {/* TOP HALF: Large Player Image */}
-              <div className="relative w-full h-[280px] md:h-[320px] overflow-hidden">
-                {/* Wrapped Image to support specific face zoom alongside group hover */}
-                <div className="w-full h-full relative transition-transform duration-700 group-hover:scale-105">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className={`object-cover ${member.imageClass || "object-top"}`}
-                  />
+            return (
+              <div
+                key={index}
+                onMouseEnter={() => handleCardEnter(index)}
+                onMouseLeave={handleCardLeave}
+                onClick={() => handleCardClick(index)}
+                className="relative bg-[#0d0d0d] rounded-2xl overflow-hidden border border-stroke shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:border-accent/60 hover:shadow-[0_10px_40px_rgba(255,230,0,0.15)] group flex flex-col cursor-pointer"
+              >
+                {/* Subtle metallic inner gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
+
+                {/* TOP HALF: Large Player Image Container */}
+                <div className="relative w-full h-[280px] md:h-[320px] overflow-hidden">
+                  
+                  {/* Image Wrapper to support specific face zoom alongside group hover */}
+                  <div className="w-full h-full relative transition-transform duration-700 group-hover:scale-105 bg-black">
+                    
+                    {/* Default Static Image */}
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className={`object-cover transition-opacity duration-500 ease-in-out ${member.imageClass || "object-top"} ${
+                        isActive && member.gifImage ? "opacity-0" : "opacity-100"
+                      }`}
+                    />
+
+                    {/* Interactive Animated GIF Overlay */}
+                    {member.gifImage && (
+                      <Image
+                        src={member.gifImage}
+                        alt={`${member.name} Animated`}
+                        fill
+                        unoptimized // Next.js requires unoptimized true to render raw GIFs without breaking them
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className={`object-cover absolute inset-0 transition-opacity duration-500 ease-in-out ${member.imageClass || "object-top"} ${
+                          isActive ? "opacity-100" : "opacity-0"
+                        }`}
+                      />
+                    )}
+                  </div>
+                  
+                  {/* Smooth fade from image into the dark card bottom */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/30 to-transparent pointer-events-none" />
+                  
+                  {/* Floating Location Badge */}
+                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 text-[9px] md:text-[10px] uppercase tracking-widest text-white/80 px-3 py-1.5 rounded-full pointer-events-none">
+                    {member.location}
+                  </div>
                 </div>
                 
-                {/* Smooth fade from image into the dark card bottom */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/30 to-transparent" />
-                
-                {/* Floating Location Badge */}
-                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 text-[9px] md:text-[10px] uppercase tracking-widest text-white/80 px-3 py-1.5 rounded-full">
-                  {member.location}
-                </div>
-              </div>
-              
-              {/* BOTTOM HALF: Card Stats & Info */}
-              <div className="relative z-10 flex flex-col flex-1 p-6 pt-0 -mt-10 text-center items-center">
-                
-                <h3 className="text-2xl md:text-3xl font-display italic font-black text-white drop-shadow-md mb-1">{member.name}</h3>
-                <div className="w-12 h-[2px] bg-accent mb-2 rounded-full" />
-                <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-widest mb-4">{member.role}</p>
+                {/* BOTTOM HALF: Card Stats & Info */}
+                <div className="relative z-10 flex flex-col flex-1 p-6 pt-0 -mt-10 text-center items-center pointer-events-none">
+                  
+                  <h3 className="text-2xl md:text-3xl font-display italic font-black text-white drop-shadow-md mb-1">{member.name}</h3>
+                  <div className="w-12 h-[2px] bg-accent mb-2 rounded-full" />
+                  <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-widest mb-4">{member.role}</p>
 
-                {/* --- BOLD RECTANGULAR FLAG BADGES --- */}
-                {member.flags && member.flags.length > 0 && (
-                  <div className="flex flex-wrap justify-center gap-3 mb-5">
-                    {member.flags.map((flag, idx) => (
-                      <div 
-                        key={idx} 
-                        className="w-12 h-8 rounded-md border border-white/20 bg-black shadow-[0_4px_12px_rgba(0,0,0,0.4)] flex items-center justify-center text-3xl leading-none transition-transform duration-300 hover:-translate-y-1 hover:border-accent hover:shadow-[0_4px_15px_rgba(255,230,0,0.25)]"
+                  {/* --- BOLD RECTANGULAR FLAG BADGES --- */}
+                  {member.flags && member.flags.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-3 mb-5">
+                      {member.flags.map((flag, idx) => (
+                        <div 
+                          key={idx} 
+                          className="w-12 h-8 rounded-md border border-white/20 bg-black shadow-[0_4px_12px_rgba(0,0,0,0.4)] flex items-center justify-center text-3xl leading-none transition-transform duration-300 group-hover:-translate-y-1 group-hover:border-accent group-hover:shadow-[0_4px_15px_rgba(255,230,0,0.25)]"
+                        >
+                          {flag}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Heritage Label */}
+                  <div className="flex flex-wrap justify-center gap-2 mb-6">
+                    <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/60 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 shadow-sm">
+                      {member.heritage}
+                    </span>
+                  </div>
+                  
+                  {/* Story Text (pointer-events-auto allows links inside to be clickable) */}
+                  <div className="text-muted text-xs md:text-sm leading-relaxed mb-8 italic flex-1 pointer-events-auto">
+                    &ldquo;{member.story}&rdquo;
+                  </div>
+
+                  {/* Social Links Row (pointer-events-auto allows interaction) */}
+                  <div className="mt-auto flex flex-wrap items-center justify-center gap-3 pt-5 w-full border-t border-stroke/50 pointer-events-auto">
+                    {member.links.map((link, i) => (
+                      <a
+                        key={i}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()} // Stop link tap from flipping the GIF on mobile
+                        className="w-10 h-10 rounded-full bg-surface border border-stroke flex items-center justify-center text-white/70 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm"
+                        title={link.name}
                       >
-                        {flag}
-                      </div>
+                        {link.icon}
+                      </a>
                     ))}
                   </div>
-                )}
-                
-                {/* Heritage Label */}
-                <div className="flex flex-wrap justify-center gap-2 mb-6">
-                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/60 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 shadow-sm">
-                    {member.heritage}
-                  </span>
-                </div>
-                
-                <div className="text-muted text-xs md:text-sm leading-relaxed mb-8 italic flex-1">
-                  &ldquo;{member.story}&rdquo;
-                </div>
-
-                {/* Social Links Row */}
-                <div className="mt-auto flex flex-wrap items-center justify-center gap-3 pt-5 w-full border-t border-stroke/50">
-                  {member.links.map((link, i) => (
-                    <a
-                      key={i}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-full bg-surface border border-stroke flex items-center justify-center text-white/70 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm"
-                      title={link.name}
-                    >
-                      {link.icon}
-                    </a>
-                  ))}
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
