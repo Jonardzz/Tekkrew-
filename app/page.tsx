@@ -37,13 +37,6 @@ const ArrowUpRightIcon = () => (
     <polyline points="7 7 17 7 17 17"></polyline>
   </svg>
 );
-const LetterboxdIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-    <circle cx="6" cy="12" r="3" />
-    <circle cx="12" cy="12" r="3" />
-    <circle cx="18" cy="12" r="3" />
-  </svg>
-);
 
 // ==========================================
 // 2. TYPES & DATA STRUCTURES
@@ -129,7 +122,6 @@ const squadData: SquadMember[] = [
     links: [
       { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd", icon: <InstagramIcon /> },
       { name: "TikTok", url: "https://www.tiktok.com/@freestyle_jrd", icon: <TikTokIcon /> },
-      { name: "Letterboxd", url: "https://letterboxd.com/freestyle_jrd/", icon: <LetterboxdIcon /> },
       { name: "Email", url: "mailto:joecr768@gmail.com", icon: <EmailIcon /> },
       { name: "Linktree", url: "https://linktr.ee/freestyle_jrd", icon: <LinkIcon /> },
     ]
@@ -170,7 +162,7 @@ const squadData: SquadMember[] = [
     gifImage: "/Zo.gif",
     story: (
       <>
-        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
+        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
       </>
     ),
     links: [
@@ -186,7 +178,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "khou",
     tag: "Broadcast Feature",
-    tagIconClass: "bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,0.8)]",
+    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)]",
     title: "KHOU 11 Network",
     desc1: "Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.",
     desc2: (
@@ -203,7 +195,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "telemundo",
     tag: "Live Coverage",
-    tagIconClass: "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]",
+    tagIconClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
     title: "Telemundo Countdown",
     desc1: "From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.",
     desc2: (
@@ -219,7 +211,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "stella",
     tag: "VIP Event",
-    tagIconClass: "bg-accent shadow-[0_0_10px_rgba(255,230,0,0.8)]",
+    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)]",
     title: "FIFA x Stella Artois",
     desc1: "This event was truly unforgettable. A huge thank you to everyone who showed such kindness and support—it gives me so much extra motivation to keep elevating my game. I love seeing freestyle appreciated by everyone, and it's amazing to know that the craft is admired regardless of the style.",
     desc2: (
@@ -288,32 +280,31 @@ export default function Page() {
 function BackgroundElements() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
-      {/* Intense but clean Yellow Spotlights */}
-      <div className="absolute top-[-10%] left-[20%] w-[800px] h-[600px] bg-[radial-gradient(circle,rgba(255,230,0,0.1)_0%,rgba(255,230,0,0)_60%)] blur-[90px]" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[600px] h-[800px] bg-[radial-gradient(circle,rgba(255,230,0,0.06)_0%,rgba(255,230,0,0)_70%)] blur-[120px]" />
+      {/* Clean Yellow Spotlights */}
+      <div className="absolute top-[-10%] left-[20%] w-[900px] h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[100px]" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[700px] h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[120px]" />
       
-      {/* Tactical Pitch SVG Pattern with more Yellow Energy */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.08]" xmlns="http://www.w3.org/2000/svg">
+      {/* Premium Tactical Pitch SVG Pattern */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="netMesh" width="60" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#FFE600" strokeWidth="0.5" opacity="0.4" />
+          <pattern id="netMesh" width="80" height="80" patternUnits="userSpaceOnUse">
+            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#FFE600" strokeWidth="0.5" opacity="0.3" />
           </pattern>
         </defs>
         
         <rect width="100%" height="100%" fill="url(#netMesh)" />
         
         {/* Field Markings */}
-        <circle cx="50%" cy="50%" r="350" fill="none" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="6 12" opacity="0.4" />
+        <circle cx="50%" cy="50%" r="350" fill="none" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.5" />
         <circle cx="50%" cy="50%" r="6" fill="#FFE600" opacity="0.9" />
-        <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff" strokeWidth="1" opacity="0.1" />
-        <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#FFE600" strokeWidth="1" strokeDasharray="6 12" opacity="0.4" />
+        <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff" strokeWidth="1" opacity="0.15" />
+        <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.3" />
 
         {/* Dynamic Freestyle Curves */}
-        <path d="M-100 200 Q 400 300 500 700 T 1300 600" fill="none" stroke="#FFE600" strokeWidth="2.5" opacity="0.5" strokeDasharray="4 8" />
-        <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#FFE600" strokeWidth="1.5" opacity="0.4" />
+        <path d="M-100 200 Q 400 300 500 700 T 1300 600" fill="none" stroke="#FFE600" strokeWidth="3" opacity="0.5" strokeDasharray="4 12" />
+        <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#ffffff" strokeWidth="1.5" opacity="0.2" />
       </svg>
 
-      {/* Fade at bottom */}
       <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent" />
     </div>
   );
@@ -354,17 +345,17 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white absolute drop-shadow-md">
+          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white absolute drop-shadow-[0_0_20px_rgba(255,230,0,0.4)]">
             {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display text-white tabular-nums leading-none opacity-90">
+      <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display text-white tabular-nums leading-none opacity-90 drop-shadow-md">
         {count.toString().padStart(3, "0")}
       </div>
 
-      <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/10 origin-left">
+      <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/5 origin-left">
         <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent origin-left shadow-[0_0_20px_rgba(255,230,0,0.8)]" />
       </div>
     </motion.div>
@@ -418,7 +409,7 @@ function Navbar() {
             href="https://www.instagram.com/tekkrew_/"
             target="_blank"
             rel="noopener noreferrer"
-            className="relative text-[11px] sm:text-xs md:text-sm font-bold text-white bg-white/5 border border-white/10 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex items-center justify-center transition-all hover:bg-accent hover:text-black hover:border-accent hover:shadow-[0_0_15px_rgba(255,230,0,0.4)] whitespace-nowrap"
+            className="relative text-[11px] sm:text-xs md:text-sm font-bold text-white bg-white/5 border border-white/10 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex items-center justify-center transition-all hover:bg-accent hover:text-black hover:border-accent hover:shadow-[0_0_15px_rgba(255,230,0,0.5)] whitespace-nowrap"
           >
             Contact <ArrowUpRightIcon />
           </a>
@@ -443,12 +434,12 @@ function Hero() {
   return (
     <section className="relative min-h-[100svh] flex flex-col w-full overflow-hidden pt-24 pb-8">
       
-      {/* Central Content */}
+      {/* Central Content Container - Flex-1 ensures perfect centering & keeps scroll indicator pinned to bottom naturally */}
       <div className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full z-10">
         
         <motion.div 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/40 bg-black/60 mb-6 md:mb-10 backdrop-blur-md shadow-[0_0_15px_rgba(255,230,0,0.2)]"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/40 bg-black/60 mb-6 md:mb-10 backdrop-blur-md shadow-[0_0_20px_rgba(255,230,0,0.2)]"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,1)]" />
           <span className="text-[10px] md:text-xs text-accent uppercase tracking-[0.25em] font-bold">Target: World Cup '26</span>
@@ -456,7 +447,7 @@ function Hero() {
 
         <motion.h1
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] font-display italic font-black leading-[0.85] tracking-tight text-white mb-6 drop-shadow-2xl"
+          className="text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] font-display italic font-black leading-[0.85] tracking-tight text-white mb-6 drop-shadow-[0_0_35px_rgba(255,230,0,0.15)]"
         >
           Tekkrew
         </motion.h1>
@@ -466,7 +457,7 @@ function Hero() {
           className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 mb-10 font-bold tracking-wide drop-shadow-md"
         >
           A squad of{" "}
-          <span className="font-display italic text-transparent bg-clip-text bg-gradient-to-r from-accent to-[#fff170] drop-shadow-[0_0_15px_rgba(255,230,0,0.5)] inline-block px-1 min-w-[120px] md:min-w-[180px]">
+          <span className="font-display italic text-transparent bg-clip-text bg-gradient-to-r from-accent to-[#fff170] drop-shadow-[0_0_15px_rgba(255,230,0,0.4)] inline-block px-1 min-w-[120px] md:min-w-[180px]">
             {roles[roleIndex]}
           </span>{" "}
           taking over the pitch.
@@ -483,20 +474,20 @@ function Hero() {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
           className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
         >
-          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-accent text-black text-xs md:text-sm rounded-full px-8 py-4 font-black uppercase tracking-widest transition-all hover:scale-105 hover:bg-white shadow-[0_0_20px_rgba(255,230,0,0.4)] w-full sm:w-auto">
+          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-accent text-black text-xs md:text-sm rounded-full px-8 py-4 font-black uppercase tracking-widest transition-all hover:scale-105 hover:bg-white shadow-[0_0_25px_rgba(255,230,0,0.3)] w-full sm:w-auto">
             Media Showcase
           </button>
-          <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-black/60 backdrop-blur-sm text-white text-xs md:text-sm rounded-full px-8 py-4 border border-accent/30 font-bold uppercase tracking-widest transition-all hover:scale-105 hover:bg-white/10 hover:border-accent hover:shadow-[0_0_15px_rgba(255,230,0,0.2)] w-full sm:w-auto">
+          <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-black/60 backdrop-blur-sm text-white text-xs md:text-sm rounded-full px-8 py-4 border border-accent/40 font-bold uppercase tracking-widest transition-all hover:scale-105 hover:bg-white/10 hover:border-accent hover:shadow-[0_0_15px_rgba(255,230,0,0.2)] w-full sm:w-auto">
             Meet the Squad
           </button>
         </motion.div>
       </div>
 
       {/* Scroll Indicator */}
-      <div className="mt-auto z-10 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity">
+      <div className="mt-auto z-10 flex flex-col items-center gap-3 opacity-80 hover:opacity-100 transition-opacity">
         <span className="text-[9px] md:text-[10px] text-accent uppercase tracking-[0.3em] font-bold">Scroll Down</span>
-        <div className="w-px h-10 md:h-14 bg-white/10 relative overflow-hidden">
-          <div className="w-full h-full bg-accent animate-scroll-dot rounded-full absolute top-0 shadow-[0_0_10px_rgba(255,230,0,1)]" />
+        <div className="w-px h-10 md:h-14 bg-white/20 relative overflow-hidden">
+          <div className="w-full h-full bg-accent animate-scroll-dot rounded-full absolute top-0 shadow-[0_0_15px_rgba(255,230,0,1)]" />
         </div>
       </div>
     </section>
@@ -504,22 +495,22 @@ function Hero() {
 }
 
 // ==========================================
-// 7. SQUAD SECTION & COMPONENT CARDS
+// 7. SQUAD SECTION & CARDS (Optimized Mobile Logic)
 // ==========================================
-function SquadCard({ member, isActive, onInteract, onLeave }: { member: SquadMember; isActive: boolean; onInteract: () => void; onLeave: () => void }) {
+function SquadCard({ member, isActive, onInteract, onLeave, isTouchDevice }: { member: SquadMember; isActive: boolean; onInteract: () => void; onLeave: () => void; isTouchDevice: boolean }) {
   return (
     <div
-      onPointerDown={onInteract}
-      onPointerEnter={onInteract}
-      onPointerLeave={onLeave}
-      className={`relative bg-[#111214] rounded-[2rem] overflow-hidden border transition-all duration-500 hover:-translate-y-2 group flex flex-col cursor-pointer ${
-        isActive ? 'border-accent shadow-[0_15px_40px_rgba(255,230,0,0.15)]' : 'border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.8)]'
+      onPointerEnter={!isTouchDevice ? onInteract : undefined}
+      onPointerLeave={!isTouchDevice ? onLeave : undefined}
+      onClick={isTouchDevice ? onInteract : undefined}
+      className={`relative bg-[#111214] rounded-[2rem] overflow-hidden border transition-all duration-500 group flex flex-col cursor-pointer ${
+        isActive ? 'border-accent/80 shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:-translate-y-2 hover:border-accent/40 hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
       }`}
     >
       {/* Top Yellow Accent Line */}
-      <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : ''}`} />
+      <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
 
-      {/* TOP HALF: Player Image */}
+      {/* TOP HALF: Player Image Container */}
       <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-black z-0 border-b border-white/5">
         <div className="w-full h-full relative transition-transform duration-1000 group-hover:scale-105">
           
@@ -529,30 +520,31 @@ function SquadCard({ member, isActive, onInteract, onLeave }: { member: SquadMem
             alt={member.name}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
-            className={`object-cover transition-opacity duration-700 ease-in-out ${member.imageClass || "object-top"} ${
+            className={`object-cover transition-opacity duration-500 ease-in-out ${member.imageClass || "object-top"} ${
               isActive && member.gifImage ? "opacity-0" : "opacity-100"
             }`}
           />
 
-          {/* Interactive Animated GIF */}
-          {member.gifImage && (
-            <Image
-              src={member.gifImage}
-              alt={`${member.name} Animated`}
-              fill
-              unoptimized
-              sizes="(max-width: 768px) 100vw, 33vw"
-              className={`object-cover absolute inset-0 transition-opacity duration-700 ease-in-out ${member.imageClass || "object-top"} ${
-                isActive ? "opacity-100" : "opacity-0"
-              }`}
-            />
-          )}
+          {/* Interactive Animated GIF (Conditionally Rendered to save CPU/Memory) */}
+          <AnimatePresence>
+            {isActive && member.gifImage && (
+              <motion.img
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                src={member.gifImage}
+                alt={`${member.name} Animated`}
+                className={`absolute inset-0 w-full h-full object-cover z-10 ${member.imageClass || "object-top"}`}
+              />
+            )}
+          </AnimatePresence>
         </div>
         
         <div className="absolute inset-0 bg-gradient-to-t from-[#111214] via-[#111214]/40 to-transparent pointer-events-none" />
         
         {/* Location Badge */}
-        <div className="absolute top-5 right-5 bg-black/60 backdrop-blur-md border border-accent/20 text-[9px] md:text-[10px] uppercase tracking-widest text-white/90 font-bold px-4 py-2 rounded-full pointer-events-none shadow-md">
+        <div className="absolute top-5 right-5 bg-black/60 backdrop-blur-md border border-accent/30 text-[9px] md:text-[10px] uppercase tracking-widest text-white/90 font-bold px-4 py-2 rounded-full pointer-events-none shadow-[0_0_10px_rgba(255,230,0,0.1)]">
           {member.location}
         </div>
       </div>
@@ -571,7 +563,7 @@ function SquadCard({ member, isActive, onInteract, onLeave }: { member: SquadMem
             {member.flags.map((flag, idx) => (
               <div 
                 key={idx} 
-                className="w-14 h-9 rounded-md border border-white/10 bg-[#0a0a0a] shadow-[0_5px_15px_rgba(0,0,0,0.6)] flex items-center justify-center text-3xl leading-none transition-all duration-300 group-hover:-translate-y-1 group-hover:border-accent group-hover:shadow-[0_5px_15px_rgba(255,230,0,0.2)]"
+                className="w-14 h-9 rounded-md border border-white/20 bg-[#0a0a0a] shadow-[0_5px_15px_rgba(0,0,0,0.6)] flex items-center justify-center text-3xl leading-none transition-all duration-300 group-hover:-translate-y-1 group-hover:border-accent group-hover:shadow-[0_5px_15px_rgba(255,230,0,0.3)]"
               >
                 {flag}
               </div>
@@ -589,16 +581,16 @@ function SquadCard({ member, isActive, onInteract, onLeave }: { member: SquadMem
           {member.story}
         </div>
 
-        {/* Social Links Row */}
-        <div className="mt-auto flex flex-wrap items-center justify-center gap-4 pt-6 w-full border-t border-white/5 pointer-events-auto">
+        {/* Social Links */}
+        <div className="mt-auto flex flex-wrap items-center justify-center gap-4 pt-6 w-full border-t border-white/10 pointer-events-auto">
           {member.links.map((link, i) => (
             <a
               key={i}
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              onPointerDown={(e) => e.stopPropagation()} // Prevents the GIF from toggling when clicking a link on mobile
-              className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(255,230,0,0.4)]"
+              onClick={(e) => e.stopPropagation()} // Crucial: Prevents tapping link from toggling GIF
+              className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(255,230,0,0.5)]"
               title={link.name}
             >
               {link.icon}
@@ -612,10 +604,24 @@ function SquadCard({ member, isActive, onInteract, onLeave }: { member: SquadMem
 
 function SquadSection() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-  // Single state toggle function built for pointer events
+  useEffect(() => {
+    // Robust touch detection specifically to prevent the iOS Safari "Hover-Click" bug
+    const checkTouch = () => {
+      setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches || 'ontouchstart' in window);
+    };
+    checkTouch();
+    window.addEventListener('resize', checkTouch);
+    return () => window.removeEventListener('resize', checkTouch);
+  }, []);
+
   const handleInteraction = (index: number) => {
-    setActiveIndex((current) => (current === index ? null : index));
+    if (isTouchDevice) {
+      setActiveIndex((current) => (current === index ? null : index));
+    } else {
+      setActiveIndex(index);
+    }
   };
 
   return (
@@ -633,11 +639,7 @@ function SquadSection() {
           </div>
         </div>
 
-        {/* PointerLeave clears active GIF if you scroll/drag off the grid entirely */}
-        <div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
-          onPointerLeave={() => setActiveIndex(null)} 
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
           {squadData.map((member, index) => (
             <SquadCard 
               key={index} 
@@ -645,6 +647,7 @@ function SquadSection() {
               isActive={activeIndex === index} 
               onInteract={() => handleInteraction(index)} 
               onLeave={() => setActiveIndex(null)}
+              isTouchDevice={isTouchDevice}
             />
           ))}
         </div>
@@ -658,21 +661,21 @@ function SquadSection() {
 // ==========================================
 function MediaCard({ feature }: { feature: MediaFeature }) {
   return (
-    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-accent/30 hover:shadow-[0_15px_50px_rgba(255,230,0,0.08)]`}>
+    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-accent/40 hover:shadow-[0_15px_50px_rgba(255,230,0,0.1)]`}>
        
-       {/* Decorative Viewfinder Corners */}
-       <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-accent/50 rounded-tl-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_2px_2px_10px_rgba(255,230,0,0.1)]" />
-       <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent/50 rounded-br-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.1)]" />
+       {/* Decorative Yellow Viewfinder Corners */}
+       <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-accent/60 rounded-tl-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_2px_2px_10px_rgba(255,230,0,0.2)]" />
+       <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent/60 rounded-br-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.2)]" />
        
        {/* Text Content */}
        <div className="flex-1 z-10 w-full lg:w-1/2">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-black/60 text-white/90 text-[10px] font-bold tracking-[0.2em] uppercase mb-8 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-white/90 text-[10px] font-bold tracking-[0.2em] uppercase mb-8 shadow-[0_0_15px_rgba(255,230,0,0.1)]">
              <span className={`w-2 h-2 rounded-full ${feature.tagIconClass || "bg-accent"}`} />
              {feature.tag}
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-white mb-6 leading-tight italic drop-shadow-sm">{feature.title}</h2>
           
-          <div className="border-l-4 border-accent pl-5 mb-4 py-1">
+          <div className="border-l-4 border-accent/80 pl-5 mb-4 py-1">
             <p className="text-white/80 text-sm md:text-base leading-relaxed mb-4 font-light">
               {feature.desc1}
             </p>
@@ -687,7 +690,7 @@ function MediaCard({ feature }: { feature: MediaFeature }) {
           {feature.videos.map((vid, i) => (
             <div 
               key={i} 
-              className={`relative ${feature.videos.length > 1 ? 'w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 shadow-2xl border border-white/10 rounded-[1.5rem] bg-black p-1 transition-colors duration-500 group-hover:border-accent/40 ${vid.offset ? 'translate-y-6 sm:translate-y-12' : ''}`}
+              className={`relative ${feature.videos.length > 1 ? 'w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 shadow-[0_15px_30px_rgba(0,0,0,0.9)] border border-white/10 rounded-[1.5rem] bg-black p-1 transition-colors duration-500 group-hover:border-accent/60 ${vid.offset ? 'translate-y-6 sm:translate-y-12' : ''}`}
             >
               <video controls playsInline preload="metadata" poster={vid.poster} className={`${vid.aspect} h-full w-full rounded-[1.3rem] bg-black object-contain`} src={vid.src} />
             </div>
@@ -701,8 +704,8 @@ function MediaSection() {
   return (
     <section id="events" className="relative w-full py-16 md:py-32 px-4 md:px-6">
       
-      {/* Background Accent Divider */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent pointer-events-none" />
+      {/* Yellow Background Accent Divider */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent pointer-events-none" />
 
       <div className="max-w-6xl mx-auto space-y-16 md:space-y-24 relative z-10">
         
@@ -747,7 +750,7 @@ function GallerySection() {
   }, [selectedImage]);
 
   return (
-    <section id="gallery" className="relative w-full py-20 md:py-32 px-4 md:px-6 border-t border-accent/10 bg-[#08090a]">
+    <section id="gallery" className="relative w-full py-20 md:py-32 px-4 md:px-6 border-t border-accent/20 bg-[#08090a]">
       
       <AnimatePresence>
         {selectedImage && (
@@ -761,7 +764,7 @@ function GallerySection() {
           >
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-              className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-accent hover:bg-white text-black rounded-full flex items-center justify-center transition-all z-50 cursor-pointer shadow-[0_0_15px_rgba(255,230,0,0.4)]"
+              className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-accent hover:bg-white text-black rounded-full flex items-center justify-center transition-all z-50 cursor-pointer shadow-[0_0_20px_rgba(255,230,0,0.5)]"
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -798,7 +801,7 @@ function GallerySection() {
             <button
               key={index}
               onClick={() => setSelectedImage(src)}
-              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/5 group cursor-pointer block text-left shadow-lg hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)] transition-all duration-300"
+              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/10 group cursor-pointer block text-left shadow-lg hover:border-accent/60 hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)] transition-all duration-300"
               aria-label={`View photo ${index + 1}`}
             >
               <Image
