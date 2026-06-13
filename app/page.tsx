@@ -70,9 +70,9 @@ interface SquadMember {
 interface MediaVideo {
   src: string;
   poster: string;
-  aspect: string; // e.g., "aspect-[9/16]"
-  maxWidth: string; // e.g., "max-w-[280px]"
-  offset?: boolean; // For masonry/staggered layout
+  aspect: string;
+  maxWidth: string;
+  offset?: boolean;
 }
 
 interface MediaFeature {
@@ -83,7 +83,7 @@ interface MediaFeature {
   desc1: React.ReactNode;
   desc2: React.ReactNode;
   videos: MediaVideo[];
-  reverse?: boolean; // Alternates layout on desktop
+  reverse?: boolean;
 }
 
 // --- Squad Data ---
@@ -170,7 +170,7 @@ const squadData: SquadMember[] = [
     gifImage: "/Zo.gif",
     story: (
       <>
-        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-semibold underline decoration-accent/50 underline-offset-2 transition-colors">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-semibold underline decoration-accent/50 underline-offset-2 transition-colors">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
+        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
       </>
     ),
     links: [
@@ -191,7 +191,7 @@ const mediaData: MediaFeature[] = [
     desc1: "Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.",
     desc2: (
       <>
-        Thank you <a href="https://www.instagram.com/troyklesstv" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@troyklesstv</a> on Instagram for interviewing us and giving TekKrew the opportunity to share our passion for freestyle soccer and the World Cup festivities in Houston.
+        Thank you <a href="https://www.instagram.com/troyklesstv" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@troyklesstv</a> on Instagram for interviewing us and giving TekKrew the opportunity to share our passion for freestyle soccer and the World Cup festivities in Houston.
       </>
     ),
     videos: [
@@ -208,7 +208,7 @@ const mediaData: MediaFeature[] = [
     desc1: "From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.",
     desc2: (
       <>
-        A massive thank you to <a href="https://www.instagram.com/sergguerrero?igsh=MTdoN3o4cjd5ZThpag==" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@sergguerrero</a> and <a href="https://www.instagram.com/ubmartinez?igsh=NDhmYmVibTVyYW9m" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@ubmartinez</a> for sharing our passion with the Latin community on <a href="https://www.instagram.com/telemundohou?igsh=b2xsd2ZiemU0c2dk" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@telemundohou</a>. ¡Listos para el Mundial!
+        A massive thank you to <a href="https://www.instagram.com/sergguerrero?igsh=MTdoN3o4cjd5ZThpag==" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@sergguerrero</a> and <a href="https://www.instagram.com/ubmartinez?igsh=NDhmYmVibTVyYW9m" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@ubmartinez</a> for sharing our passion with the Latin community on <a href="https://www.instagram.com/telemundohou?igsh=b2xsd2ZiemU0c2dk" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@telemundohou</a>. ¡Listos para el Mundial!
       </>
     ),
     videos: [
@@ -219,12 +219,12 @@ const mediaData: MediaFeature[] = [
   {
     id: "stella",
     tag: "VIP Event",
-    tagIconClass: "bg-accent/80",
+    tagIconClass: "bg-accent shadow-[0_0_10px_rgba(255,230,0,0.8)]",
     title: "FIFA x Stella Artois",
     desc1: "This event was truly unforgettable. A huge thank you to everyone who showed such kindness and support—it gives me so much extra motivation to keep elevating my game. I love seeing freestyle appreciated by everyone, and it's amazing to know that the craft is admired regardless of the style.",
     desc2: (
       <>
-        Shoutout to <a href="https://www.instagram.com/elgrandynamo" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@elgrandynamo</a> for tagging along. Y también muchísimas gracias a <a href="https://www.instagram.com/allthingsmarlon" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@allthingsmarlon</a> por estar atento de mí. I'm telling y'all, this year is about to go crazy.
+        Shoutout to <a href="https://www.instagram.com/elgrandynamo" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@elgrandynamo</a> for tagging along. Y también muchísimas gracias a <a href="https://www.instagram.com/allthingsmarlon" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@allthingsmarlon</a> por estar atento de mí. I'm telling y'all, this year is about to go crazy.
       </>
     ),
     videos: [
@@ -288,33 +288,32 @@ export default function Page() {
 function BackgroundElements() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
-      {/* Warm Yellow Spotlights (Balanced, not overpowering) */}
-      <div className="absolute top-[-10%] left-[20%] w-[800px] h-[600px] bg-[radial-gradient(circle,rgba(255,230,0,0.06)_0%,rgba(255,230,0,0)_60%)] blur-[90px]" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[600px] h-[800px] bg-[radial-gradient(circle,rgba(255,230,0,0.03)_0%,rgba(255,230,0,0)_70%)] blur-[120px]" />
+      {/* Intense but clean Yellow Spotlights */}
+      <div className="absolute top-[-10%] left-[20%] w-[800px] h-[600px] bg-[radial-gradient(circle,rgba(255,230,0,0.1)_0%,rgba(255,230,0,0)_60%)] blur-[90px]" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[600px] h-[800px] bg-[radial-gradient(circle,rgba(255,230,0,0.06)_0%,rgba(255,230,0,0)_70%)] blur-[120px]" />
       
-      {/* Subtle Tactical Pitch SVG Pattern */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.05]" xmlns="http://www.w3.org/2000/svg">
+      {/* Tactical Pitch SVG Pattern with more Yellow Energy */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.08]" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="netMesh" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFE600" strokeWidth="0.5" opacity="0.3" />
+          <pattern id="netMesh" width="60" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#FFE600" strokeWidth="0.5" opacity="0.4" />
           </pattern>
         </defs>
         
-        {/* Base Mesh */}
         <rect width="100%" height="100%" fill="url(#netMesh)" />
         
         {/* Field Markings */}
-        <circle cx="50%" cy="50%" r="350" fill="none" stroke="#ffffff" strokeWidth="1.5" strokeDasharray="6 12" opacity="0.5" />
-        <circle cx="50%" cy="50%" r="6" fill="#FFE600" opacity="0.8" />
-        <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff" strokeWidth="1" opacity="0.2" />
-        <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#ffffff" strokeWidth="1" strokeDasharray="6 12" opacity="0.3" />
+        <circle cx="50%" cy="50%" r="350" fill="none" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="6 12" opacity="0.4" />
+        <circle cx="50%" cy="50%" r="6" fill="#FFE600" opacity="0.9" />
+        <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff" strokeWidth="1" opacity="0.1" />
+        <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#FFE600" strokeWidth="1" strokeDasharray="6 12" opacity="0.4" />
 
         {/* Dynamic Freestyle Curves */}
-        <path d="M-100 200 Q 400 300 500 700 T 1300 600" fill="none" stroke="#FFE600" strokeWidth="2" opacity="0.4" strokeDasharray="4 8" />
-        <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#ffffff" strokeWidth="1" opacity="0.3" />
+        <path d="M-100 200 Q 400 300 500 700 T 1300 600" fill="none" stroke="#FFE600" strokeWidth="2.5" opacity="0.5" strokeDasharray="4 8" />
+        <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#FFE600" strokeWidth="1.5" opacity="0.4" />
       </svg>
 
-      {/* Fade at bottom to ground content */}
+      {/* Fade at bottom */}
       <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent" />
     </div>
   );
@@ -349,7 +348,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       transition={{ duration: 0.7, ease: "easeInOut" }}
       className="fixed inset-0 z-[9999] bg-[#08090a] flex flex-col justify-between"
     >
-      <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-white/50 uppercase tracking-[0.3em] font-bold">
+      <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-accent uppercase tracking-[0.3em] font-bold">
         Tekkrew
       </div>
 
@@ -365,8 +364,8 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
         {count.toString().padStart(3, "0")}
       </div>
 
-      <div className="absolute bottom-0 left-0 w-full h-[3px] bg-white/5 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent origin-left shadow-[0_0_15px_rgba(255,230,0,0.5)]" />
+      <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/10 origin-left">
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent origin-left shadow-[0_0_20px_rgba(255,230,0,0.8)]" />
       </div>
     </motion.div>
   );
@@ -386,9 +385,9 @@ function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 pointer-events-none">
-      <nav className={`pointer-events-auto inline-flex items-center rounded-full backdrop-blur-md border border-white/10 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-shadow duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-[0_10px_30px_rgba(0,0,0,0.8)]" : ""}`}>
+      <nav className={`pointer-events-auto inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-all duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-accent/50" : ""}`}>
         
-        <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-white/20 to-white/5 cursor-pointer flex-shrink-0 hover:from-accent hover:to-[#ccb800] transition-colors duration-300">
+        <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-accent to-[#ccb800] cursor-pointer flex-shrink-0 hover:shadow-[0_0_15px_rgba(255,230,0,0.6)] transition-all duration-300">
           <div className="w-full h-full bg-black rounded-full overflow-hidden flex items-center justify-center relative">
             <Image src="/Tekkrew.jpg" alt="Tekkrew Logo" fill sizes="40px" priority className="object-cover" />
           </div>
@@ -405,7 +404,7 @@ function Navbar() {
                 if (link === "Media") document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
                 if (link === "Home") window.scrollTo({ top: 0, behavior: "smooth" });
               }}
-              className={`text-[11px] sm:text-xs md:text-sm rounded-full px-3 sm:px-5 py-1.5 sm:py-2 transition-all font-bold whitespace-nowrap ${i === 0 ? "text-black bg-accent shadow-[0_0_15px_rgba(255,230,0,0.3)]" : "text-white/70 hover:text-white hover:bg-white/5"}`}
+              className={`text-[11px] sm:text-xs md:text-sm rounded-full px-3 sm:px-5 py-1.5 sm:py-2 transition-all font-bold whitespace-nowrap ${i === 0 ? "text-black bg-accent shadow-[0_0_15px_rgba(255,230,0,0.4)]" : "text-white/70 hover:text-accent hover:bg-white/5"}`}
             >
               {link}
             </button>
@@ -419,7 +418,7 @@ function Navbar() {
             href="https://www.instagram.com/tekkrew_/"
             target="_blank"
             rel="noopener noreferrer"
-            className="relative text-[11px] sm:text-xs md:text-sm font-bold text-white bg-white/5 border border-white/10 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex items-center justify-center transition-all hover:bg-accent hover:text-black hover:border-accent whitespace-nowrap"
+            className="relative text-[11px] sm:text-xs md:text-sm font-bold text-white bg-white/5 border border-white/10 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex items-center justify-center transition-all hover:bg-accent hover:text-black hover:border-accent hover:shadow-[0_0_15px_rgba(255,230,0,0.4)] whitespace-nowrap"
           >
             Contact <ArrowUpRightIcon />
           </a>
@@ -444,16 +443,15 @@ function Hero() {
   return (
     <section className="relative min-h-[100svh] flex flex-col w-full overflow-hidden pt-24 pb-8">
       
-      {/* Central Content Container - Flex-1 perfectly centers content and pushes scroll indicator to the bottom */}
+      {/* Central Content */}
       <div className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full z-10">
         
-        {/* Tactical Pre-header Badge */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/30 bg-black/60 mb-6 md:mb-10 backdrop-blur-md shadow-[0_0_15px_rgba(255,230,0,0.1)]"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/40 bg-black/60 mb-6 md:mb-10 backdrop-blur-md shadow-[0_0_15px_rgba(255,230,0,0.2)]"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,0.8)]" />
-          <span className="text-[10px] md:text-xs text-white/90 uppercase tracking-[0.25em] font-bold">Target: World Cup '26</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,1)]" />
+          <span className="text-[10px] md:text-xs text-accent uppercase tracking-[0.25em] font-bold">Target: World Cup '26</span>
         </motion.div>
 
         <motion.h1
@@ -468,7 +466,7 @@ function Hero() {
           className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 mb-10 font-bold tracking-wide drop-shadow-md"
         >
           A squad of{" "}
-          <span className="font-display italic text-transparent bg-clip-text bg-gradient-to-r from-accent to-[#fff170] drop-shadow-sm inline-block px-1 min-w-[120px] md:min-w-[180px]">
+          <span className="font-display italic text-transparent bg-clip-text bg-gradient-to-r from-accent to-[#fff170] drop-shadow-[0_0_15px_rgba(255,230,0,0.5)] inline-block px-1 min-w-[120px] md:min-w-[180px]">
             {roles[roleIndex]}
           </span>{" "}
           taking over the pitch.
@@ -476,7 +474,7 @@ function Hero() {
 
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.7 }}
-          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-white/5 py-3 pr-4 rounded-r-xl shadow-lg"
+          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-[#111214]/80 py-4 pr-4 rounded-r-xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
         >
           Born on the concrete, headed for the global stage. We built Tekkrew to elevate the beautiful game with raw street style. As the world turns its eyes to North America for World Cup '26, we are bringing gravity-defying freestyle to the masses—and we are just getting started.
         </motion.p>
@@ -485,20 +483,20 @@ function Hero() {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
           className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
         >
-          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-accent text-black text-xs md:text-sm rounded-full px-8 py-4 font-black uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.2)] w-full sm:w-auto">
+          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-accent text-black text-xs md:text-sm rounded-full px-8 py-4 font-black uppercase tracking-widest transition-all hover:scale-105 hover:bg-white shadow-[0_0_20px_rgba(255,230,0,0.4)] w-full sm:w-auto">
             Media Showcase
           </button>
-          <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-black/60 backdrop-blur-sm text-white text-xs md:text-sm rounded-full px-8 py-4 border border-white/20 font-bold uppercase tracking-widest transition-all hover:scale-105 hover:bg-white/5 w-full sm:w-auto">
+          <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-black/60 backdrop-blur-sm text-white text-xs md:text-sm rounded-full px-8 py-4 border border-accent/30 font-bold uppercase tracking-widest transition-all hover:scale-105 hover:bg-white/10 hover:border-accent hover:shadow-[0_0_15px_rgba(255,230,0,0.2)] w-full sm:w-auto">
             Meet the Squad
           </button>
         </motion.div>
       </div>
 
-      {/* Scroll Indicator - Naturally positioned at the bottom using mt-auto */}
+      {/* Scroll Indicator */}
       <div className="mt-auto z-10 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity">
         <span className="text-[9px] md:text-[10px] text-accent uppercase tracking-[0.3em] font-bold">Scroll Down</span>
         <div className="w-px h-10 md:h-14 bg-white/10 relative overflow-hidden">
-          <div className="w-full h-full bg-accent animate-scroll-dot rounded-full absolute top-0 shadow-[0_0_10px_rgba(255,230,0,0.8)]" />
+          <div className="w-full h-full bg-accent animate-scroll-dot rounded-full absolute top-0 shadow-[0_0_10px_rgba(255,230,0,1)]" />
         </div>
       </div>
     </section>
@@ -506,21 +504,26 @@ function Hero() {
 }
 
 // ==========================================
-// 7. SQUAD SECTION & CARDS
+// 7. SQUAD SECTION & COMPONENT CARDS
 // ==========================================
-function SquadCard({ member, isActive, onInteract }: { member: SquadMember; isActive: boolean; onInteract: () => void }) {
+function SquadCard({ member, isActive, onInteract, onLeave }: { member: SquadMember; isActive: boolean; onInteract: () => void; onLeave: () => void }) {
   return (
     <div
-      onMouseEnter={onInteract}
-      onClick={onInteract}
-      className="relative bg-[#111214] rounded-[2rem] overflow-hidden border border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.6)] transition-all duration-500 hover:-translate-y-2 hover:border-accent/40 hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)] group flex flex-col cursor-pointer"
+      onPointerDown={onInteract}
+      onPointerEnter={onInteract}
+      onPointerLeave={onLeave}
+      className={`relative bg-[#111214] rounded-[2rem] overflow-hidden border transition-all duration-500 hover:-translate-y-2 group flex flex-col cursor-pointer ${
+        isActive ? 'border-accent shadow-[0_15px_40px_rgba(255,230,0,0.15)]' : 'border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.8)]'
+      }`}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none z-0" />
+      {/* Top Yellow Accent Line */}
+      <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : ''}`} />
 
-      {/* TOP HALF: Player Image Container */}
+      {/* TOP HALF: Player Image */}
       <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-black z-0 border-b border-white/5">
         <div className="w-full h-full relative transition-transform duration-1000 group-hover:scale-105">
           
+          {/* Static Image */}
           <Image
             src={member.image}
             alt={member.name}
@@ -531,6 +534,7 @@ function SquadCard({ member, isActive, onInteract }: { member: SquadMember; isAc
             }`}
           />
 
+          {/* Interactive Animated GIF */}
           {member.gifImage && (
             <Image
               src={member.gifImage}
@@ -545,11 +549,10 @@ function SquadCard({ member, isActive, onInteract }: { member: SquadMember; isAc
           )}
         </div>
         
-        {/* Card Gradient Blending */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#111214] via-[#111214]/40 to-transparent pointer-events-none" />
         
         {/* Location Badge */}
-        <div className="absolute top-5 right-5 bg-black/60 backdrop-blur-md border border-white/10 text-[9px] md:text-[10px] uppercase tracking-widest text-white/90 font-bold px-4 py-2 rounded-full pointer-events-none shadow-md">
+        <div className="absolute top-5 right-5 bg-black/60 backdrop-blur-md border border-accent/20 text-[9px] md:text-[10px] uppercase tracking-widest text-white/90 font-bold px-4 py-2 rounded-full pointer-events-none shadow-md">
           {member.location}
         </div>
       </div>
@@ -558,17 +561,17 @@ function SquadCard({ member, isActive, onInteract }: { member: SquadMember; isAc
       <div className="relative z-10 flex flex-col flex-1 p-8 pt-0 -mt-12 text-center items-center pointer-events-none">
         
         <h3 className="text-3xl md:text-4xl font-display italic font-black text-white drop-shadow-md mb-2">{member.name}</h3>
-        {/* Yellow Subtle Accent Line */}
-        <div className="w-8 h-[2px] bg-accent/80 mb-3 rounded-full" />
-        <p className="text-[10px] md:text-xs font-bold text-white/50 uppercase tracking-[0.2em] mb-6">{member.role}</p>
+        {/* Yellow Accent Divider */}
+        <div className="w-12 h-[3px] bg-accent mb-3 rounded-full shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
+        <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-[0.2em] mb-6">{member.role}</p>
 
-        {/* RECTANGULAR FLAG BADGES */}
+        {/* FLAG BADGES */}
         {member.flags && member.flags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-3 mb-6">
             {member.flags.map((flag, idx) => (
               <div 
                 key={idx} 
-                className="w-14 h-9 rounded-md border border-white/10 bg-[#0a0a0a] shadow-md flex items-center justify-center text-3xl leading-none transition-all duration-300 group-hover:-translate-y-1 group-hover:border-white/20 group-hover:bg-[#1a1a1a]"
+                className="w-14 h-9 rounded-md border border-white/10 bg-[#0a0a0a] shadow-[0_5px_15px_rgba(0,0,0,0.6)] flex items-center justify-center text-3xl leading-none transition-all duration-300 group-hover:-translate-y-1 group-hover:border-accent group-hover:shadow-[0_5px_15px_rgba(255,230,0,0.2)]"
               >
                 {flag}
               </div>
@@ -577,16 +580,16 @@ function SquadCard({ member, isActive, onInteract }: { member: SquadMember; isAc
         )}
         
         <div className="flex flex-wrap justify-center gap-2 mb-6">
-          <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/40 border-b border-white/5 px-2 pb-1">
+          <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 border-b border-white/10 px-2 pb-1">
             {member.heritage}
           </span>
         </div>
         
-        <div className="text-white/60 text-xs md:text-sm leading-relaxed mb-8 font-light flex-1 pointer-events-auto px-2">
+        <div className="text-white/70 text-xs md:text-sm leading-relaxed mb-8 font-light flex-1 pointer-events-auto px-2">
           {member.story}
         </div>
 
-        {/* Social Links */}
+        {/* Social Links Row */}
         <div className="mt-auto flex flex-wrap items-center justify-center gap-4 pt-6 w-full border-t border-white/5 pointer-events-auto">
           {member.links.map((link, i) => (
             <a
@@ -594,8 +597,8 @@ function SquadCard({ member, isActive, onInteract }: { member: SquadMember; isAc
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()} // Prevent mobile tap from toggling GIF
-              className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/5 flex items-center justify-center text-white/50 hover:text-accent hover:border-accent transition-all duration-300 shadow-sm"
+              onPointerDown={(e) => e.stopPropagation()} // Prevents the GIF from toggling when clicking a link on mobile
+              className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(255,230,0,0.4)]"
               title={link.name}
             >
               {link.icon}
@@ -609,23 +612,10 @@ function SquadCard({ member, isActive, onInteract }: { member: SquadMember; isAc
 
 function SquadSection() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-  useEffect(() => {
-    const handleTouchStart = () => {
-      setIsTouchDevice(true);
-      window.removeEventListener("touchstart", handleTouchStart);
-    };
-    window.addEventListener("touchstart", handleTouchStart);
-    return () => window.removeEventListener("touchstart", handleTouchStart);
-  }, []);
-
-  const handleInteract = (index: number) => {
-    if (isTouchDevice) {
-      setActiveIndex((current) => (current === index ? null : index));
-    } else {
-      setActiveIndex(index);
-    }
+  // Single state toggle function built for pointer events
+  const handleInteraction = (index: number) => {
+    setActiveIndex((current) => (current === index ? null : index));
   };
 
   return (
@@ -636,23 +626,25 @@ function SquadSection() {
           <div>
             <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-3 drop-shadow-md">The Tekkrew</h2>
             <div className="inline-flex items-center gap-3">
-              <div className="w-8 h-[2px] bg-accent/50" />
-              <p className="text-white/70 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">Elite Roster</p>
-              <div className="w-8 h-[2px] bg-accent/50" />
+              <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
+              <p className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">Elite Roster</p>
+              <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
             </div>
           </div>
         </div>
 
+        {/* PointerLeave clears active GIF if you scroll/drag off the grid entirely */}
         <div 
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
-          onMouseLeave={() => { if (!isTouchDevice) setActiveIndex(null); }} // Clears active state when mouse leaves the grid
+          onPointerLeave={() => setActiveIndex(null)} 
         >
           {squadData.map((member, index) => (
             <SquadCard 
               key={index} 
               member={member} 
               isActive={activeIndex === index} 
-              onInteract={() => handleInteract(index)} 
+              onInteract={() => handleInteraction(index)} 
+              onLeave={() => setActiveIndex(null)}
             />
           ))}
         </div>
@@ -666,21 +658,21 @@ function SquadSection() {
 // ==========================================
 function MediaCard({ feature }: { feature: MediaFeature }) {
   return (
-    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-xl overflow-hidden transition-all duration-500 hover:border-accent/30 hover:shadow-[0_15px_40px_rgba(255,230,0,0.05)]`}>
+    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-accent/30 hover:shadow-[0_15px_50px_rgba(255,230,0,0.08)]`}>
        
-       {/* Clean Viewfinder Corners (pointer-events-none to prevent blocking video controls) */}
-       <div className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-accent/40 rounded-tl-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-       <div className="absolute bottom-0 right-0 w-10 h-10 border-b-2 border-r-2 border-accent/40 rounded-br-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+       {/* Decorative Viewfinder Corners */}
+       <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-accent/50 rounded-tl-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_2px_2px_10px_rgba(255,230,0,0.1)]" />
+       <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent/50 rounded-br-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.1)]" />
        
        {/* Text Content */}
        <div className="flex-1 z-10 w-full lg:w-1/2">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-black/50 text-white/80 text-[10px] font-bold tracking-[0.2em] uppercase mb-8 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-black/60 text-white/90 text-[10px] font-bold tracking-[0.2em] uppercase mb-8 shadow-sm">
              <span className={`w-2 h-2 rounded-full ${feature.tagIconClass || "bg-accent"}`} />
              {feature.tag}
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-white mb-6 leading-tight italic drop-shadow-sm">{feature.title}</h2>
           
-          <div className="border-l-2 border-accent/50 pl-5 mb-4 py-1">
+          <div className="border-l-4 border-accent pl-5 mb-4 py-1">
             <p className="text-white/80 text-sm md:text-base leading-relaxed mb-4 font-light">
               {feature.desc1}
             </p>
@@ -690,7 +682,7 @@ function MediaCard({ feature }: { feature: MediaFeature }) {
           </div>
        </div>
        
-       {/* Media Content (Handles 1 or 2 videos) */}
+       {/* Media Content (Handles 1 or 2 videos with Masonry Stagger) */}
        <div className="w-full lg:w-1/2 flex flex-row items-center justify-center gap-4 sm:gap-6 relative z-10">
           {feature.videos.map((vid, i) => (
             <div 
@@ -710,16 +702,16 @@ function MediaSection() {
     <section id="events" className="relative w-full py-16 md:py-32 px-4 md:px-6">
       
       {/* Background Accent Divider */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent pointer-events-none" />
 
       <div className="max-w-6xl mx-auto space-y-16 md:space-y-24 relative z-10">
         
         <div className="text-center mb-12 md:mb-24">
           <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-md">Media Showcase</h2>
           <div className="inline-flex items-center gap-3">
-             <div className="w-8 h-[2px] bg-accent/50" />
-             <p className="text-white/70 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">Press & Features</p>
-             <div className="w-8 h-[2px] bg-accent/50" />
+             <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
+             <p className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">Press & Features</p>
+             <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
           </div>
         </div>
 
@@ -755,7 +747,7 @@ function GallerySection() {
   }, [selectedImage]);
 
   return (
-    <section id="gallery" className="relative w-full py-20 md:py-32 px-4 md:px-6 border-t border-white/5 bg-[#08090a]">
+    <section id="gallery" className="relative w-full py-20 md:py-32 px-4 md:px-6 border-t border-accent/10 bg-[#08090a]">
       
       <AnimatePresence>
         {selectedImage && (
@@ -769,7 +761,7 @@ function GallerySection() {
           >
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-              className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 hover:bg-accent hover:text-black text-white/70 rounded-full flex items-center justify-center transition-all z-50 cursor-pointer shadow-lg"
+              className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-accent hover:bg-white text-black rounded-full flex items-center justify-center transition-all z-50 cursor-pointer shadow-[0_0_15px_rgba(255,230,0,0.4)]"
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -795,9 +787,9 @@ function GallerySection() {
         <div className="flex flex-col items-center mb-16 md:mb-20 text-center">
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-md">Freestylers</h2>
           <div className="inline-flex items-center gap-3">
-             <div className="w-6 h-[2px] bg-accent/50" />
-             <p className="text-white/60 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">HOU — 4.24.26</p>
-             <div className="w-6 h-[2px] bg-accent/50" />
+             <div className="w-6 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
+             <p className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">HOU — 4.24.26</p>
+             <div className="w-6 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
           </div>
         </div>
 
@@ -806,7 +798,7 @@ function GallerySection() {
             <button
               key={index}
               onClick={() => setSelectedImage(src)}
-              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/5 group cursor-pointer block text-left shadow-lg hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(255,230,0,0.1)] transition-all duration-300"
+              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/5 group cursor-pointer block text-left shadow-lg hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)] transition-all duration-300"
               aria-label={`View photo ${index + 1}`}
             >
               <Image
@@ -830,7 +822,7 @@ function GallerySection() {
               href="https://www.instagram.com/tekkrew_/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-white text-black text-xs md:text-sm rounded-full px-8 py-4 font-bold uppercase tracking-wider transition-all hover:bg-accent shadow-xl"
+              className="inline-flex items-center gap-3 bg-white text-black text-xs md:text-sm rounded-full px-8 py-4 font-bold uppercase tracking-wider transition-all hover:bg-accent hover:shadow-[0_0_20px_rgba(255,230,0,0.4)] shadow-xl"
             >
               See More on Instagram <ArrowUpRightIcon />
             </a>
