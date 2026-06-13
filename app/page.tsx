@@ -178,31 +178,26 @@ const initialGalleryImages = [
 ];
 
 // ==========================================
-// BACKGROUND COMPONENT: TACTICAL PITCH
+// BACKGROUND COMPONENT: WARM FREESTYLE PITCH
 // ==========================================
 function TacticalPitchBackground() {
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none bg-[#050505] overflow-hidden">
-      {/* Stadium Spotlight Glow */}
-      <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(circle,rgba(255,230,0,0.1)_0%,rgba(255,230,0,0)_70%)] blur-[50px]" />
+    <div className="fixed inset-0 z-0 pointer-events-none bg-[#0a0b0c] overflow-hidden">
       
-      {/* Tactical SVG Grid */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="pitchGrid" width="60" height="60" patternUnits="userSpaceOnUse">
-            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#ffffff" strokeWidth="0.5" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#pitchGrid)" />
-        
-        {/* Center Circle & Halfway Line (Positioned visually for effect) */}
-        <circle cx="50%" cy="40%" r="250" fill="none" stroke="#FFE600" strokeWidth="1" strokeDasharray="4 8" opacity="0.5" />
-        <circle cx="50%" cy="40%" r="4" fill="#FFE600" opacity="0.5" />
-        <line x1="0" y1="40%" x2="100%" y2="40%" stroke="#FFE600" strokeWidth="1" strokeDasharray="4 8" opacity="0.5" />
-      </svg>
+      {/* Massive Soft Yellow Spotlights */}
+      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1200px] h-[800px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[80px]" />
+      <div className="absolute top-[40%] right-[-20%] w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[100px]" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[900px] h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.05)_0%,rgba(255,230,0,0)_70%)] blur-[100px]" />
       
-      {/* Bottom Fade to blend into content */}
-      <div className="absolute bottom-0 left-0 w-full h-[50vh] bg-gradient-to-t from-[#050505] to-transparent" />
+      {/* Street Concrete Dot Texture */}
+      <div className="absolute inset-0 opacity-[0.04] bg-[radial-gradient(#FFE600_1px,transparent_1px)] [background-size:24px_24px]" />
+      
+      {/* Dynamic Diagonal Accents */}
+      <div className="absolute top-0 right-[15%] w-px h-full bg-gradient-to-b from-transparent via-accent/10 to-transparent rotate-[15deg] transform origin-top" />
+      <div className="absolute top-0 left-[20%] w-px h-full bg-gradient-to-b from-transparent via-accent/5 to-transparent -rotate-[25deg] transform origin-top" />
+
+      {/* Bottom Fade */}
+      <div className="absolute bottom-0 left-0 w-full h-[40vh] bg-gradient-to-t from-[#0a0b0c] to-transparent" />
     </div>
   );
 }
@@ -219,7 +214,7 @@ export default function Page() {
   }, []);
 
   return (
-    <main className="relative min-h-[100svh] bg-[#050505] text-text overflow-x-hidden selection:bg-accent selection:text-black">
+    <main className="relative min-h-[100svh] bg-[#0a0b0c] text-text overflow-x-hidden selection:bg-accent selection:text-black">
       
       <TacticalPitchBackground />
 
@@ -272,26 +267,28 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
     <motion.div
       exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
       transition={{ duration: 0.7, ease: "easeInOut" }}
-      className="fixed inset-0 z-[9999] bg-[#050505] flex flex-col justify-between"
+      className="fixed inset-0 z-[9999] bg-[#0a0b0c] flex flex-col justify-between"
     >
-      <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-muted uppercase tracking-[0.3em]">
+      <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#FFE600_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+      
+      <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-accent uppercase tracking-[0.3em] font-bold">
         Tekkrew
       </div>
 
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-text absolute">
+          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white absolute drop-shadow-[0_0_15px_rgba(255,230,0,0.5)]">
             {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display text-text tabular-nums leading-none">
+      <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display text-white tabular-nums leading-none">
         {count.toString().padStart(3, "0")}
       </div>
 
-      <div className="absolute bottom-0 left-0 w-full h-[3px] bg-stroke/50 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent-gradient origin-left" style={{ boxShadow: "0 0 15px rgba(255, 230, 0, 0.4)" }} />
+      <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/10 origin-left">
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent origin-left shadow-[0_0_20px_rgba(255,230,0,0.8)]" />
       </div>
     </motion.div>
   );
@@ -311,22 +308,15 @@ function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4">
-      <nav className={`inline-flex items-center rounded-full backdrop-blur-md border border-white/10 bg-surface/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-shadow duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg shadow-black/80" : ""}`}>
+      <nav className={`inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-shadow duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-[0_10px_30px_rgba(0,0,0,0.8)]" : ""}`}>
         
-        <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-accent-gradient cursor-pointer flex-shrink-0">
-          <div className="w-full h-full bg-bg rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 relative">
-            <Image
-              src="/Tekkrew.jpg"
-              alt="Tekkrew Logo"
-              fill
-              sizes="40px"
-              priority
-              className="object-cover"
-            />
+        <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-accent to-[#ccb800] cursor-pointer flex-shrink-0 shadow-[0_0_10px_rgba(255,230,0,0.3)]">
+          <div className="w-full h-full bg-black rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 relative">
+            <Image src="/Tekkrew.jpg" alt="Tekkrew Logo" fill sizes="40px" priority className="object-cover" />
           </div>
         </div>
 
-        <div className="hidden sm:block w-px h-5 bg-stroke mx-2 md:mx-3" />
+        <div className="hidden sm:block w-px h-5 bg-white/20 mx-2 md:mx-3" />
 
         <div className="flex items-center gap-0.5 sm:gap-2 px-1 md:px-2">
           {["Home", "Crew", "Media"].map((link, i) => (
@@ -337,23 +327,23 @@ function Navbar() {
                 if (link === "Media") document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
                 if (link === "Home") window.scrollTo({ top: 0, behavior: "smooth" });
               }}
-              className={`text-[11px] sm:text-xs md:text-sm rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 transition-colors whitespace-nowrap ${i === 0 ? "text-text bg-stroke/50" : "text-muted hover:text-text hover:bg-stroke/50"}`}
+              className={`text-[11px] sm:text-xs md:text-sm rounded-full px-3 sm:px-5 py-1.5 sm:py-2 transition-all font-bold whitespace-nowrap ${i === 0 ? "text-black bg-accent shadow-[0_0_15px_rgba(255,230,0,0.4)]" : "text-white/70 hover:text-accent hover:bg-white/5"}`}
             >
               {link}
             </button>
           ))}
         </div>
 
-        <div className="w-px h-4 md:h-5 bg-stroke mx-1.5 md:mx-3" />
+        <div className="w-px h-4 md:h-5 bg-white/20 mx-1.5 md:mx-3" />
 
         <div className="flex items-center gap-1 md:gap-2">
           <a
             href="https://www.instagram.com/tekkrew_/"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-gradient-ring relative text-[11px] sm:text-xs md:text-sm text-text bg-surface rounded-full px-3 sm:px-4 py-1.5 sm:py-2 flex items-center justify-center transition-transform hover:scale-105 whitespace-nowrap"
+            className="relative text-[11px] sm:text-xs md:text-sm font-bold text-white bg-white/5 border border-white/10 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex items-center justify-center transition-all hover:bg-accent hover:text-black hover:border-accent hover:shadow-[0_0_15px_rgba(255,230,0,0.5)] whitespace-nowrap"
           >
-            Contact Us <ArrowUpRightIcon />
+            Contact <ArrowUpRightIcon />
           </a>
         </div>
       </nav>
@@ -362,7 +352,7 @@ function Navbar() {
 }
 
 // ==========================================
-// 3. HERO (Cinematic Redesign)
+// 3. HERO (Dynamic Expressive Layout)
 // ==========================================
 function Hero() {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
@@ -374,31 +364,37 @@ function Hero() {
   }, [roles.length]);
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full">
+    <section className="relative min-h-[100svh] flex flex-col items-center justify-center w-full overflow-hidden">
+      
+      {/* Massive Background Watermark */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.02] select-none">
+         <h1 className="text-[15rem] md:text-[25rem] lg:text-[35rem] font-display italic font-black text-transparent outline-text whitespace-nowrap" style={{ WebkitTextStroke: '2px #FFE600' }}>TEKKREW</h1>
+      </div>
+
       <div className="relative z-10 flex flex-col items-center text-center px-4 w-full pt-10">
         
         {/* Tactical Pre-header Badge */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 mb-6 md:mb-8 backdrop-blur-sm shadow-[0_0_15px_rgba(255,230,0,0.1)]"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/40 bg-accent/10 mb-6 md:mb-10 backdrop-blur-md shadow-[0_0_25px_rgba(255,230,0,0.2)]"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-          <span className="text-[10px] md:text-xs text-accent uppercase tracking-[0.2em] font-bold">Target: World Cup '26</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_5px_rgba(255,230,0,1)]" />
+          <span className="text-[10px] md:text-xs text-accent uppercase tracking-[0.25em] font-black">Target: World Cup '26</span>
         </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-6xl sm:text-7xl md:text-8xl lg:text-[11rem] font-display italic font-black leading-[0.85] tracking-tight text-white mb-6 drop-shadow-2xl"
+          className="text-7xl sm:text-8xl md:text-9xl lg:text-[12rem] font-display italic font-black leading-[0.85] tracking-tight text-white mb-6 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
         >
           Tekkrew
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 mb-8 font-medium tracking-wide"
+          className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 mb-10 font-bold tracking-wide drop-shadow-md"
         >
           A squad of{" "}
-          <span className="font-display italic text-transparent bg-clip-text bg-gradient-to-r from-accent to-[#fff170] drop-shadow-md inline-block px-1 min-w-[120px] md:min-w-[180px]">
+          <span className="font-display italic text-transparent bg-clip-text bg-gradient-to-r from-accent to-[#fff170] drop-shadow-[0_0_15px_rgba(255,230,0,0.4)] inline-block px-1 min-w-[120px] md:min-w-[180px]">
             {roles[roleIndex]}
           </span>{" "}
           taking over the pitch.
@@ -406,7 +402,7 @@ function Hero() {
 
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.7 }}
-          className="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed max-w-2xl mb-10 md:mb-14 border-l-2 border-accent pl-5 text-left mx-auto backdrop-blur-sm bg-black/10 py-2 rounded-r-lg"
+          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-white/5 py-3 pr-4 rounded-r-xl shadow-lg"
         >
           Born on the concrete, headed for the global stage. We built Tekkrew to elevate the beautiful game with raw street style. As the world turns its eyes to North America for World Cup '26, we are bringing gravity-defying freestyle to the masses—and we are just getting started.
         </motion.p>
@@ -415,19 +411,19 @@ function Hero() {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
           className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
         >
-          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="btn-gradient-ring relative bg-accent text-black text-xs md:text-sm rounded-full px-8 py-3.5 md:py-4 font-black uppercase tracking-wider transition-transform hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.3)] w-full sm:w-auto">
+          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-accent text-black text-xs md:text-sm rounded-full px-8 py-4 font-black uppercase tracking-widest transition-all hover:scale-105 hover:bg-[#fff170] shadow-[0_0_25px_rgba(255,230,0,0.4)] w-full sm:w-auto">
             View Features
           </button>
-          <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="btn-gradient-ring relative bg-[#111] backdrop-blur-sm text-white text-xs md:text-sm rounded-full px-8 py-3.5 md:py-4 border border-white/20 font-bold uppercase tracking-wider transition-transform hover:scale-105 hover:bg-white/5 w-full sm:w-auto">
+          <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-black/60 backdrop-blur-sm text-white text-xs md:text-sm rounded-full px-8 py-4 border-2 border-white/20 font-bold uppercase tracking-widest transition-all hover:scale-105 hover:bg-white/10 hover:border-accent hover:text-accent hover:shadow-[0_0_20px_rgba(255,230,0,0.2)] w-full sm:w-auto">
             Meet the Squad
           </button>
         </motion.div>
       </div>
 
-      <div className="absolute bottom-6 md:bottom-8 z-10 flex flex-col items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
-        <span className="text-[9px] md:text-[10px] text-white/50 uppercase tracking-[0.3em] font-bold">Scroll Down</span>
-        <div className="w-px h-10 md:h-12 bg-white/20 relative overflow-hidden">
-          <div className="w-full h-full bg-accent animate-scroll-dot rounded-full absolute top-0" />
+      <div className="absolute bottom-6 md:bottom-8 z-10 flex flex-col items-center gap-3 opacity-80 hover:opacity-100 transition-opacity">
+        <span className="text-[9px] md:text-[10px] text-accent uppercase tracking-[0.3em] font-black">Scroll Down</span>
+        <div className="w-px h-10 md:h-14 bg-white/20 relative overflow-hidden">
+          <div className="w-full h-full bg-accent animate-scroll-dot rounded-full absolute top-0 shadow-[0_0_10px_rgba(255,230,0,1)]" />
         </div>
       </div>
     </section>
@@ -465,13 +461,16 @@ function SquadSection() {
   };
 
   return (
-    <section id="crew" className="relative w-full py-20 md:py-32 px-4 md:px-6">
+    <section id="crew" className="relative w-full py-20 md:py-32 px-4 md:px-6 z-10">
       <div className="max-w-6xl mx-auto">
         
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 md:mb-20 gap-4 text-center md:text-left">
           <div>
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-2">The Tekkrew</h2>
-            <p className="text-accent text-xs md:text-sm uppercase tracking-[0.2em] font-bold">Elite Roster</p>
+            <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-2 drop-shadow-md">The Tekkrew</h2>
+            <div className="inline-flex items-center gap-3">
+              <div className="w-8 h-[2px] bg-accent" />
+              <p className="text-accent text-xs md:text-sm uppercase tracking-[0.3em] font-black">Elite Roster</p>
+            </div>
           </div>
         </div>
 
@@ -485,12 +484,15 @@ function SquadSection() {
                 onMouseEnter={() => handleCardEnter(index)}
                 onMouseLeave={handleCardLeave}
                 onClick={() => handleCardClick(index)}
-                className="relative bg-[#0d0d0d] rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:border-accent/60 hover:shadow-[0_20px_50px_rgba(255,230,0,0.15)] group flex flex-col cursor-pointer"
+                className="relative bg-[#111] rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] transition-all duration-500 hover:-translate-y-3 hover:border-accent hover:shadow-[0_20px_50px_rgba(255,230,0,0.15)] group flex flex-col cursor-pointer"
               >
+                {/* Yellow Corner Accent */}
+                <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-accent rounded-tl-[1.8rem] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 pointer-events-none" />
+
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none z-0" />
 
                 {/* TOP HALF: Large Player Image */}
-                <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-black z-0">
+                <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#050505] z-0 border-b border-white/5">
                   <div className="w-full h-full relative transition-transform duration-1000 group-hover:scale-105">
                     
                     <Image
@@ -517,10 +519,9 @@ function SquadSection() {
                     )}
                   </div>
                   
-                  {/* Card Shadow Blends */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/40 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-[#111]/40 to-transparent pointer-events-none" />
                   
-                  <div className="absolute top-5 right-5 bg-black/80 backdrop-blur-md border border-white/20 text-[9px] md:text-[10px] uppercase tracking-widest text-white/90 px-4 py-2 rounded-full pointer-events-none shadow-lg">
+                  <div className="absolute top-5 right-5 bg-black/80 backdrop-blur-md border border-accent/30 text-[9px] md:text-[10px] uppercase tracking-widest text-accent font-bold px-4 py-2 rounded-full pointer-events-none shadow-[0_0_15px_rgba(255,230,0,0.1)]">
                     {member.location}
                   </div>
                 </div>
@@ -538,7 +539,7 @@ function SquadSection() {
                       {member.flags.map((flag, idx) => (
                         <div 
                           key={idx} 
-                          className="w-14 h-9 rounded-md border border-white/20 bg-black/50 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex items-center justify-center text-3xl leading-none transition-all duration-300 group-hover:-translate-y-1 group-hover:border-accent group-hover:shadow-[0_4px_15px_rgba(255,230,0,0.3)] backdrop-blur-sm"
+                          className="w-14 h-9 rounded-md border border-white/20 bg-black shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex items-center justify-center text-3xl leading-none transition-all duration-300 group-hover:-translate-y-1 group-hover:border-accent group-hover:shadow-[0_4px_15px_rgba(255,230,0,0.3)] backdrop-blur-sm"
                         >
                           {flag}
                         </div>
@@ -547,12 +548,12 @@ function SquadSection() {
                   )}
                   
                   <div className="flex flex-wrap justify-center gap-2 mb-6">
-                    <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 bg-white/5 px-4 py-2 rounded-full border border-white/10 shadow-inner">
+                    <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/60 bg-[#1a1a1a] px-4 py-2 rounded-full border border-white/10 shadow-inner">
                       {member.heritage}
                     </span>
                   </div>
                   
-                  <div className="text-white/60 text-xs md:text-sm leading-relaxed mb-8 font-light flex-1 pointer-events-auto px-2">
+                  <div className="text-white/70 text-xs md:text-sm leading-relaxed mb-8 font-medium flex-1 pointer-events-auto px-2">
                     {member.story}
                   </div>
 
@@ -583,117 +584,126 @@ function SquadSection() {
 }
 
 // ==========================================
-// 5. MEDIA & FEATURES SECTION (Broadcast Redesign)
+// 5. MEDIA & FEATURES SECTION (Premium Broadcast Layout)
 // ==========================================
 function EventsSection() {
   return (
-    <section id="events" className="relative w-full py-20 md:py-32 px-4 md:px-6 bg-gradient-to-b from-transparent via-[#080808] to-transparent">
+    <section id="events" className="relative w-full py-20 md:py-32 px-4 md:px-6">
       
-      {/* Subtle Background Accent for Media Section */}
-      <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
+      {/* Background Accent Divider */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto space-y-16 md:space-y-24">
+      <div className="max-w-6xl mx-auto space-y-16 md:space-y-24 relative z-10">
         
         <div className="text-center mb-16 md:mb-24">
-          <h2 className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-4">Media & Features</h2>
-          <p className="text-accent text-xs md:text-sm uppercase tracking-[0.2em] font-bold">Press & Live Coverage</p>
+          <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-lg">Media & Features</h2>
+          <div className="inline-flex items-center gap-3">
+             <div className="w-8 h-[2px] bg-accent" />
+             <p className="text-accent text-xs md:text-sm uppercase tracking-[0.3em] font-black">Press & Live Coverage</p>
+             <div className="w-8 h-[2px] bg-accent" />
+          </div>
         </div>
 
-        {/* Feature 1: KHOU 11 (Left Text, Right Media) */}
-        <div className="group relative w-full flex flex-col lg:flex-row gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#0a0a0a] border border-white/5 shadow-2xl overflow-hidden transition-colors hover:border-white/10">
+        {/* Feature 1: KHOU 11 (Left Text, Right Staggered Media) */}
+        <div className="group relative w-full flex flex-col lg:flex-row gap-12 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111] border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-colors hover:border-accent/50">
+           
+           {/* Viewfinder Corners */}
+           <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-accent rounded-tl-[2.3rem] opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+           <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-accent rounded-br-[2.3rem] opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+           
            {/* Glow Effect */}
-           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[150px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
            
            {/* Text Content */}
            <div className="flex-1 z-10 w-full lg:w-1/2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/30 bg-accent/10 text-accent text-[10px] font-black tracking-[0.2em] uppercase mb-6 shadow-[0_0_10px_rgba(255,230,0,0.1)]">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/40 bg-accent/10 text-accent text-[10px] font-black tracking-[0.25em] uppercase mb-8 shadow-[0_0_15px_rgba(255,230,0,0.15)]">
                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,0.8)]" />
                  Broadcast Feature
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-white mb-6 leading-tight italic drop-shadow-lg">KHOU 11 Network</h2>
               
-              <div className="border-l-4 border-accent pl-6 mb-8 py-2">
-                <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+              <div className="border-l-4 border-accent pl-6 mb-8 py-2 bg-gradient-to-r from-accent/5 to-transparent pr-4 rounded-r-lg">
+                <p className="text-white/80 text-sm md:text-base leading-relaxed mb-4 font-medium">
                   Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.
                 </p>
-                <p className="text-white/50 text-xs md:text-sm leading-relaxed">
-                  Thank you <a href="https://www.instagram.com/troyklesstv" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors underline decoration-white/20 underline-offset-4">@troyklesstv</a> on Instagram for interviewing us and giving TekKrew the opportunity to share our passion for freestyle soccer and the World Cup festivities in Houston.
+                <p className="text-white/60 text-xs md:text-sm leading-relaxed">
+                  Thank you <a href="https://www.instagram.com/troyklesstv" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@troyklesstv</a> on Instagram for interviewing us and giving TekKrew the opportunity to share our passion for freestyle soccer and the World Cup festivities in Houston.
                 </p>
               </div>
-
-              <a
-                href="https://www.instagram.com/reel/DZT_hohjukI/?igsh=MTl6cXBxN2JrM2RueA=="
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-white text-black text-xs md:text-sm rounded-full px-8 py-4 font-bold uppercase tracking-wider transition-all hover:scale-105 hover:bg-accent shadow-[0_5px_20px_rgba(255,255,255,0.15)]"
-              >
-                Watch Interview <ArrowUpRightIcon />
-              </a>
            </div>
            
-           {/* Media Content */}
-           <div className="w-full lg:w-1/2 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
-              <div className="relative p-1 rounded-[1.5rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent w-full max-w-[260px] sm:max-w-xs shadow-2xl">
-                <video controls playsInline preload="metadata" poster="/houston-interview-2-thumbnail.jpg" className="aspect-[9/16] h-full w-full rounded-[1.4rem] bg-black object-contain border border-black/50" src="/Houston Interview 2.mp4" />
+           {/* Media Content (Staggered Vertical Videos) */}
+           <div className="w-full lg:w-1/2 flex flex-row items-center justify-center gap-4 sm:gap-6 relative z-10">
+              <div className="relative w-1/2 max-w-[240px] sm:max-w-[280px] aspect-[9/16] z-10 shadow-[0_10px_30px_rgba(255,230,0,0.15)] border border-accent/50 rounded-[1.5rem] bg-black p-1">
+                <video controls playsInline preload="metadata" poster="/houston-interview-2-thumbnail.jpg" className="aspect-[9/16] h-full w-full rounded-[1.3rem] bg-black object-contain" src="/Houston Interview 2.mp4" />
               </div>
-              <div className="relative p-1 rounded-[1.5rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent w-full max-w-[260px] sm:max-w-xs shadow-2xl sm:mt-12">
-                <video controls playsInline preload="metadata" poster="/houston-interview-thumbnail.jpg" className="aspect-[9/16] h-full w-full rounded-[1.4rem] bg-black object-contain border border-black/50" src="/Houston Interview.mp4" />
+              {/* Offset second video for masonry/collage feel */}
+              <div className="relative w-1/2 max-w-[240px] sm:max-w-[280px] aspect-[9/16] z-0 shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-white/20 rounded-[1.5rem] bg-black p-1 translate-y-6 sm:translate-y-12">
+                <video controls playsInline preload="metadata" poster="/houston-interview-thumbnail.jpg" className="aspect-[9/16] h-full w-full rounded-[1.3rem] bg-black object-contain" src="/Houston Interview.mp4" />
               </div>
            </div>
         </div>
 
         {/* Feature 2: Telemundo (Right Text, Left Media) */}
-        <div className="group relative w-full flex flex-col lg:flex-row-reverse gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#0a0a0a] border border-white/5 shadow-2xl overflow-hidden transition-colors hover:border-white/10">
-           <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+        <div className="group relative w-full flex flex-col lg:flex-row-reverse gap-12 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111] border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-colors hover:border-accent/50">
+           
+           <div className="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-accent rounded-tr-[2.3rem] opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+           <div className="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-accent rounded-bl-[2.3rem] opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[150px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
            
            <div className="flex-1 z-10 w-full lg:w-1/2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 text-white text-[10px] font-black tracking-[0.2em] uppercase mb-6 shadow-[0_0_10px_rgba(255,255,255,0.05)]">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/40 bg-red-500/10 text-white text-[10px] font-black tracking-[0.25em] uppercase mb-8 shadow-[0_0_15px_rgba(239,68,68,0.15)]">
                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
                  Live Coverage
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-white mb-6 leading-tight italic drop-shadow-lg">Telemundo Countdown</h2>
               
-              <div className="border-l-4 border-white/20 pl-6 mb-8 py-2">
-                <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+              <div className="border-l-4 border-white/30 pl-6 mb-8 py-2 bg-gradient-to-r from-white/5 to-transparent pr-4 rounded-r-lg group-hover:border-accent transition-colors">
+                <p className="text-white/80 text-sm md:text-base leading-relaxed mb-4 font-medium">
                   From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.
                 </p>
-                <p className="text-white/50 text-xs md:text-sm leading-relaxed">
-                  A massive thank you to <a href="https://www.instagram.com/sergguerrero?igsh=MTdoN3o4cjd5ZThpag==" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors underline decoration-white/20 underline-offset-4">@sergguerrero</a> and <a href="https://www.instagram.com/ubmartinez?igsh=NDhmYmVibTVyYW9m" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors underline decoration-white/20 underline-offset-4">@ubmartinez</a> for sharing our passion with the Latin community on <a href="https://www.instagram.com/telemundohou?igsh=b2xsd2ZiemU0c2dk" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors underline decoration-white/20 underline-offset-4">@telemundohou</a>. ¡Listos para el Mundial!
+                <p className="text-white/60 text-xs md:text-sm leading-relaxed">
+                  A massive thank you to <a href="https://www.instagram.com/sergguerrero?igsh=MTdoN3o4cjd5ZThpag==" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@sergguerrero</a> and <a href="https://www.instagram.com/ubmartinez?igsh=NDhmYmVibTVyYW9m" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@ubmartinez</a> for sharing our passion with the Latin community on <a href="https://www.instagram.com/telemundohou?igsh=b2xsd2ZiemU0c2dk" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@telemundohou</a>. ¡Listos para el Mundial!
                 </p>
               </div>
            </div>
            
            <div className="w-full lg:w-1/2 flex items-center justify-center relative z-10">
-              <div className="relative p-1 rounded-[1.5rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent w-full shadow-2xl">
-                <video controls playsInline preload="metadata" poster="/telemundo-thumbnail.jpg" className="aspect-video h-full w-full rounded-[1.4rem] bg-black object-contain border border-black/50" src="/Telemundo Interview.mp4" />
+              <div className="relative p-1 rounded-[1.5rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent w-full shadow-[0_15px_30px_rgba(0,0,0,0.8)] border border-white/10 group-hover:border-accent/50 transition-colors duration-500">
+                <video controls playsInline preload="metadata" poster="/telemundo-thumbnail.jpg" className="aspect-video h-full w-full rounded-[1.4rem] bg-black object-contain" src="/Telemundo Interview.mp4" />
               </div>
            </div>
         </div>
 
         {/* Feature 3: Stella Artois (Left Text, Right Media) */}
-        <div className="group relative w-full flex flex-col lg:flex-row gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#0a0a0a] border border-white/5 shadow-2xl overflow-hidden transition-colors hover:border-white/10">
-           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+        <div className="group relative w-full flex flex-col lg:flex-row gap-12 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111] border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-colors hover:border-accent/50">
+           
+           <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-accent rounded-tl-[2.3rem] opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+           <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-accent rounded-br-[2.3rem] opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[150px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
            
            <div className="flex-1 z-10 w-full lg:w-1/2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 text-white text-[10px] font-black tracking-[0.2em] uppercase mb-6 shadow-[0_0_10px_rgba(255,255,255,0.05)]">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 text-white text-[10px] font-black tracking-[0.25em] uppercase mb-8 shadow-[0_0_10px_rgba(255,255,255,0.05)]">
                  <i className="fa-solid fa-star text-[10px] text-accent"></i>
                  VIP Event
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-white mb-6 leading-tight italic drop-shadow-lg">FIFA x Stella Artois</h2>
               
-              <div className="border-l-4 border-white/20 pl-6 mb-8 py-2">
-                <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
+              <div className="border-l-4 border-white/30 pl-6 mb-8 py-2 bg-gradient-to-r from-white/5 to-transparent pr-4 rounded-r-lg group-hover:border-accent transition-colors">
+                <p className="text-white/80 text-sm md:text-base leading-relaxed mb-4 font-medium">
                   This event was truly unforgettable. A huge thank you to everyone who showed such kindness and support—it gives me so much extra motivation to keep elevating my game. I love seeing freestyle appreciated by everyone, and it's amazing to know that the craft is admired regardless of the style.
                 </p>
-                <p className="text-white/50 text-xs md:text-sm leading-relaxed">
-                  Shoutout to <a href="https://www.instagram.com/elgrandynamo" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors underline decoration-white/20 underline-offset-4">@elgrandynamo</a> for tagging along. Y también muchísimas gracias a <a href="https://www.instagram.com/allthingsmarlon" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-semibold transition-colors underline decoration-white/20 underline-offset-4">@allthingsmarlon</a> por estar atento de mí. I'm telling y'all, this year is about to go crazy.
+                <p className="text-white/60 text-xs md:text-sm leading-relaxed">
+                  Shoutout to <a href="https://www.instagram.com/elgrandynamo" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@elgrandynamo</a> for tagging along. Y también muchísimas gracias a <a href="https://www.instagram.com/allthingsmarlon" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 underline-offset-4">@allthingsmarlon</a> por estar atento de mí. I'm telling y'all, this year is about to go crazy.
                 </p>
               </div>
            </div>
            
            <div className="w-full lg:w-1/2 flex items-center justify-center relative z-10">
-              <div className="relative p-1 rounded-[1.5rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent w-full max-w-[300px] sm:max-w-sm shadow-2xl">
-                <video controls playsInline preload="metadata" poster="/fifa-stella-thumbnail.jpg" className="aspect-[9/16] h-full w-full rounded-[1.4rem] bg-black object-contain border border-black/50" src="/FIFA x Stella Artois Event.mp4" />
+              <div className="relative p-1 rounded-[1.5rem] bg-gradient-to-br from-white/20 via-white/5 to-transparent w-full max-w-[300px] sm:max-w-sm shadow-[0_15px_30px_rgba(0,0,0,0.8)] border border-white/10 group-hover:border-accent/50 transition-colors duration-500">
+                <video controls playsInline preload="metadata" poster="/fifa-stella-thumbnail.jpg" className="aspect-[9/16] h-full w-full rounded-[1.4rem] bg-black object-contain" src="/FIFA x Stella Artois Event.mp4" />
               </div>
            </div>
         </div>
@@ -726,7 +736,7 @@ function GallerySection() {
   }, [selectedImage]);
 
   return (
-    <section id="gallery" className="relative w-full py-20 md:py-32 px-4 md:px-6 border-t border-white/10 bg-[#050505]">
+    <section id="gallery" className="relative w-full py-20 md:py-32 px-4 md:px-6 border-t border-white/10 bg-[#0a0b0c]">
       
       <AnimatePresence>
         {selectedImage && (
@@ -736,11 +746,11 @@ function GallerySection() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 z-[99999] bg-black/95 flex flex-col items-center justify-center p-4 sm:p-8 cursor-zoom-out"
+            className="fixed inset-0 z-[99999] bg-black/95 flex flex-col items-center justify-center p-4 sm:p-8 cursor-zoom-out backdrop-blur-md"
           >
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-              className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 hover:bg-accent hover:text-black text-white rounded-full flex items-center justify-center transition-colors z-50 cursor-pointer"
+              className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 hover:bg-accent hover:text-black text-white rounded-full flex items-center justify-center transition-all z-50 cursor-pointer shadow-lg hover:shadow-[0_0_15px_rgba(255,230,0,0.5)]"
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -754,7 +764,7 @@ function GallerySection() {
                 alt="Enlarged Freestyle Image"
                 fill
                 sizes="100vw"
-                className="object-contain"
+                className="object-contain drop-shadow-2xl"
                 priority
               />
             </div>
@@ -764,8 +774,12 @@ function GallerySection() {
 
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col items-center mb-16 md:mb-20 text-center">
-          <h2 className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-4">Freestylers</h2>
-          <p className="text-accent text-xs md:text-sm uppercase tracking-[0.2em] font-bold">HOU — 4.24.26</p>
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-md">Freestylers</h2>
+          <div className="inline-flex items-center gap-3">
+             <div className="w-6 h-[2px] bg-accent" />
+             <p className="text-accent text-xs md:text-sm uppercase tracking-[0.3em] font-black">HOU — 4.24.26</p>
+             <div className="w-6 h-[2px] bg-accent" />
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
@@ -773,7 +787,7 @@ function GallerySection() {
             <button
               key={index}
               onClick={() => setSelectedImage(src)}
-              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111] border border-white/5 group cursor-pointer block text-left shadow-lg"
+              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111] border border-white/10 group cursor-pointer block text-left shadow-lg hover:border-accent/50 hover:shadow-[0_10px_30px_rgba(255,230,0,0.15)] transition-all duration-300"
               aria-label={`View photo ${index + 1}`}
             >
               <Image
@@ -784,7 +798,7 @@ function GallerySection() {
                 className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
               />
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                <div className="w-10 h-10 rounded-full border border-white/50 bg-black/30 backdrop-blur-sm flex items-center justify-center text-white transform scale-50 group-hover:scale-100 transition-transform duration-500">
+                <div className="w-10 h-10 rounded-full border border-accent bg-black/50 backdrop-blur-md flex items-center justify-center text-accent transform scale-50 group-hover:scale-100 transition-transform duration-500 shadow-[0_0_15px_rgba(255,230,0,0.5)]">
                   <ArrowUpRightIcon />
                 </div>
               </div>
@@ -797,7 +811,7 @@ function GallerySection() {
               href="https://www.instagram.com/tekkrew_/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-[#111] text-white/80 text-xs md:text-sm rounded-full px-8 py-4 font-bold uppercase tracking-wider border border-white/10 transition-all hover:bg-white hover:text-black hover:border-white shadow-lg"
+              className="inline-flex items-center gap-3 bg-[#111] text-white/80 text-xs md:text-sm rounded-full px-8 py-4 font-bold uppercase tracking-wider border border-white/20 transition-all hover:bg-accent hover:text-black hover:border-accent hover:shadow-[0_0_20px_rgba(255,230,0,0.4)] shadow-xl"
             >
               See More on Instagram <ArrowUpRightIcon />
             </a>
