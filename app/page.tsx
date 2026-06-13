@@ -37,6 +37,13 @@ const ArrowUpRightIcon = () => (
     <polyline points="7 7 17 7 17 17"></polyline>
   </svg>
 );
+const LetterboxdIcon = () => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="12" cy="12" r="3" />
+    <circle cx="18" cy="12" r="3" />
+  </svg>
+);
 
 // ==========================================
 // 2. TYPES & DATA STRUCTURES
@@ -122,6 +129,7 @@ const squadData: SquadMember[] = [
     links: [
       { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd", icon: <InstagramIcon /> },
       { name: "TikTok", url: "https://www.tiktok.com/@freestyle_jrd", icon: <TikTokIcon /> },
+      { name: "Letterboxd", url: "https://letterboxd.com/freestyle_jrd/", icon: <LetterboxdIcon /> },
       { name: "Email", url: "mailto:joecr768@gmail.com", icon: <EmailIcon /> },
       { name: "Linktree", url: "https://linktr.ee/freestyle_jrd", icon: <LinkIcon /> },
     ]
@@ -178,7 +186,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "khou",
     tag: "Broadcast Feature",
-    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)]",
+    tagIconClass: "bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,0.8)]",
     title: "KHOU 11 Network",
     desc1: "Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.",
     desc2: (
@@ -195,7 +203,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "telemundo",
     tag: "Live Coverage",
-    tagIconClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
+    tagIconClass: "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]",
     title: "Telemundo Countdown",
     desc1: "From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.",
     desc2: (
@@ -211,7 +219,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "stella",
     tag: "VIP Event",
-    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)]",
+    tagIconClass: "bg-accent shadow-[0_0_10px_rgba(255,230,0,0.8)]",
     title: "FIFA x Stella Artois",
     desc1: "This event was truly unforgettable. A huge thank you to everyone who showed such kindness and support—it gives me so much extra motivation to keep elevating my game. I love seeing freestyle appreciated by everyone, and it's amazing to know that the craft is admired regardless of the style.",
     desc2: (
@@ -280,9 +288,9 @@ export default function Page() {
 function BackgroundElements() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
-      {/* Clean Yellow Spotlights */}
-      <div className="absolute top-[-10%] left-[20%] w-[900px] h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[100px]" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[700px] h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[120px]" />
+      {/* Intense but clean Yellow Spotlights (Hardware Accelerated) */}
+      <div className="absolute top-[-10%] left-[20%] w-[900px] h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[100px] transform-gpu will-change-transform" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[700px] h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[120px] transform-gpu will-change-transform" />
       
       {/* Premium Tactical Pitch SVG Pattern */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
@@ -305,7 +313,7 @@ function BackgroundElements() {
         <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#ffffff" strokeWidth="1.5" opacity="0.2" />
       </svg>
 
-      <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent" />
+      <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent transform-gpu" />
     </div>
   );
 }
@@ -434,12 +442,11 @@ function Hero() {
   return (
     <section className="relative min-h-[100svh] flex flex-col w-full overflow-hidden pt-24 pb-8">
       
-      {/* Central Content Container - Flex-1 ensures perfect centering & keeps scroll indicator pinned to bottom naturally */}
       <div className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full z-10">
         
         <motion.div 
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/40 bg-black/60 mb-6 md:mb-10 backdrop-blur-md shadow-[0_0_20px_rgba(255,230,0,0.2)]"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/40 bg-black/60 mb-6 md:mb-10 backdrop-blur-md shadow-[0_0_15px_rgba(255,230,0,0.2)]"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,1)]" />
           <span className="text-[10px] md:text-xs text-accent uppercase tracking-[0.25em] font-bold">Target: World Cup '26</span>
@@ -474,7 +481,7 @@ function Hero() {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
           className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
         >
-          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-accent text-black text-xs md:text-sm rounded-full px-8 py-4 font-black uppercase tracking-widest transition-all hover:scale-105 hover:bg-white shadow-[0_0_25px_rgba(255,230,0,0.3)] w-full sm:w-auto">
+          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-accent text-black text-xs md:text-sm rounded-full px-8 py-4 font-black uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.2)] w-full sm:w-auto">
             Media Showcase
           </button>
           <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-black/60 backdrop-blur-sm text-white text-xs md:text-sm rounded-full px-8 py-4 border border-accent/40 font-bold uppercase tracking-widest transition-all hover:scale-105 hover:bg-white/10 hover:border-accent hover:shadow-[0_0_15px_rgba(255,230,0,0.2)] w-full sm:w-auto">
@@ -483,11 +490,10 @@ function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
       <div className="mt-auto z-10 flex flex-col items-center gap-3 opacity-80 hover:opacity-100 transition-opacity">
         <span className="text-[9px] md:text-[10px] text-accent uppercase tracking-[0.3em] font-bold">Scroll Down</span>
         <div className="w-px h-10 md:h-14 bg-white/20 relative overflow-hidden">
-          <div className="w-full h-full bg-accent animate-scroll-dot rounded-full absolute top-0 shadow-[0_0_15px_rgba(255,230,0,1)]" />
+          <div className="w-full h-full bg-accent animate-scroll-dot rounded-full absolute top-0 shadow-[0_0_10px_rgba(255,230,0,1)]" />
         </div>
       </div>
     </section>
@@ -495,37 +501,38 @@ function Hero() {
 }
 
 // ==========================================
-// 7. SQUAD SECTION & CARDS (Optimized Mobile Logic)
+// 7. SQUAD SECTION & COMPONENT CARDS
 // ==========================================
+
+// Reusable Player Card Component
 function SquadCard({ member, isActive, onInteract, onLeave, isTouchDevice }: { member: SquadMember; isActive: boolean; onInteract: () => void; onLeave: () => void; isTouchDevice: boolean }) {
   return (
     <div
-      onPointerEnter={!isTouchDevice ? onInteract : undefined}
-      onPointerLeave={!isTouchDevice ? onLeave : undefined}
+      onMouseEnter={!isTouchDevice ? onInteract : undefined}
+      onMouseLeave={!isTouchDevice ? onLeave : undefined}
       onClick={isTouchDevice ? onInteract : undefined}
       className={`relative bg-[#111214] rounded-[2rem] overflow-hidden border transition-all duration-500 group flex flex-col cursor-pointer ${
         isActive ? 'border-accent/80 shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:-translate-y-2 hover:border-accent/40 hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
       }`}
     >
-      {/* Top Yellow Accent Line */}
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
 
       {/* TOP HALF: Player Image Container */}
-      <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-black z-0 border-b border-white/5">
-        <div className="w-full h-full relative transition-transform duration-1000 group-hover:scale-105">
+      <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#111214] z-0 border-b border-white/5">
+        <div className="w-full h-full relative transition-transform duration-1000 group-hover:scale-105 bg-black">
           
-          {/* Static Image */}
+          {/* Static Placeholder Image (Always visible to prevent black box layout shifts) */}
           <Image
             src={member.image}
             alt={member.name}
             fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className={`object-cover transition-opacity duration-500 ease-in-out ${member.imageClass || "object-top"} ${
-              isActive && member.gifImage ? "opacity-0" : "opacity-100"
-            }`}
+            loading="lazy"
+            quality={85}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className={`object-cover transition-opacity duration-500 ease-in-out ${member.imageClass || "object-top"}`}
           />
 
-          {/* Interactive Animated GIF (Conditionally Rendered to save CPU/Memory) */}
+          {/* Optimized Interactive GIF (Fades IN over the static image seamlessly) */}
           <AnimatePresence>
             {isActive && member.gifImage && (
               <motion.img
@@ -543,7 +550,6 @@ function SquadCard({ member, isActive, onInteract, onLeave, isTouchDevice }: { m
         
         <div className="absolute inset-0 bg-gradient-to-t from-[#111214] via-[#111214]/40 to-transparent pointer-events-none" />
         
-        {/* Location Badge */}
         <div className="absolute top-5 right-5 bg-black/60 backdrop-blur-md border border-accent/30 text-[9px] md:text-[10px] uppercase tracking-widest text-white/90 font-bold px-4 py-2 rounded-full pointer-events-none shadow-[0_0_10px_rgba(255,230,0,0.1)]">
           {member.location}
         </div>
@@ -553,11 +559,9 @@ function SquadCard({ member, isActive, onInteract, onLeave, isTouchDevice }: { m
       <div className="relative z-10 flex flex-col flex-1 p-8 pt-0 -mt-12 text-center items-center pointer-events-none">
         
         <h3 className="text-3xl md:text-4xl font-display italic font-black text-white drop-shadow-md mb-2">{member.name}</h3>
-        {/* Yellow Accent Divider */}
         <div className="w-12 h-[3px] bg-accent mb-3 rounded-full shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
         <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-[0.2em] mb-6">{member.role}</p>
 
-        {/* FLAG BADGES */}
         {member.flags && member.flags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-3 mb-6">
             {member.flags.map((flag, idx) => (
@@ -581,7 +585,7 @@ function SquadCard({ member, isActive, onInteract, onLeave, isTouchDevice }: { m
           {member.story}
         </div>
 
-        {/* Social Links */}
+        {/* Social Links Row (Stops propagation so taps don't trigger the GIF on mobile) */}
         <div className="mt-auto flex flex-wrap items-center justify-center gap-4 pt-6 w-full border-t border-white/10 pointer-events-auto">
           {member.links.map((link, i) => (
             <a
@@ -589,8 +593,8 @@ function SquadCard({ member, isActive, onInteract, onLeave, isTouchDevice }: { m
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()} // Crucial: Prevents tapping link from toggling GIF
-              className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(255,230,0,0.5)]"
+              onClick={(e) => e.stopPropagation()} 
+              className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(255,230,0,0.4)]"
               title={link.name}
             >
               {link.icon}
@@ -630,7 +634,7 @@ function SquadSection() {
         
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 md:mb-20 gap-4 text-center md:text-left">
           <div>
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-3 drop-shadow-md">The Tekkrew</h2>
+            <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-3 drop-shadow-[0_0_25px_rgba(255,230,0,0.2)]">The Tekkrew</h2>
             <div className="inline-flex items-center gap-3">
               <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
               <p className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">Elite Roster</p>
@@ -639,7 +643,11 @@ function SquadSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+        {/* Clear active GIF if you scroll/drag off the grid entirely */}
+        <div 
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
+          onMouseLeave={() => { if (!isTouchDevice) setActiveIndex(null); }} 
+        >
           {squadData.map((member, index) => (
             <SquadCard 
               key={index} 
@@ -669,7 +677,7 @@ function MediaCard({ feature }: { feature: MediaFeature }) {
        
        {/* Text Content */}
        <div className="flex-1 z-10 w-full lg:w-1/2">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-white/90 text-[10px] font-bold tracking-[0.2em] uppercase mb-8 shadow-[0_0_15px_rgba(255,230,0,0.1)]">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-black/60 text-white/90 text-[10px] font-bold tracking-[0.2em] uppercase mb-8 shadow-sm">
              <span className={`w-2 h-2 rounded-full ${feature.tagIconClass || "bg-accent"}`} />
              {feature.tag}
           </div>
@@ -704,13 +712,12 @@ function MediaSection() {
   return (
     <section id="events" className="relative w-full py-16 md:py-32 px-4 md:px-6">
       
-      {/* Yellow Background Accent Divider */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent pointer-events-none" />
 
       <div className="max-w-6xl mx-auto space-y-16 md:space-y-24 relative z-10">
         
         <div className="text-center mb-12 md:mb-24">
-          <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-md">Media Showcase</h2>
+          <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-[0_0_25px_rgba(255,230,0,0.2)]">Media Showcase</h2>
           <div className="inline-flex items-center gap-3">
              <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
              <p className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">Press & Features</p>
@@ -764,7 +771,7 @@ function GallerySection() {
           >
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-              className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-accent hover:bg-white text-black rounded-full flex items-center justify-center transition-all z-50 cursor-pointer shadow-[0_0_20px_rgba(255,230,0,0.5)]"
+              className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-accent hover:bg-white text-black rounded-full flex items-center justify-center transition-all z-50 cursor-pointer shadow-[0_0_15px_rgba(255,230,0,0.4)]"
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -801,13 +808,15 @@ function GallerySection() {
             <button
               key={index}
               onClick={() => setSelectedImage(src)}
-              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/10 group cursor-pointer block text-left shadow-lg hover:border-accent/60 hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)] transition-all duration-300"
+              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/10 group cursor-pointer block text-left shadow-lg hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)] transition-all duration-300"
               aria-label={`View photo ${index + 1}`}
             >
               <Image
                 src={src}
                 alt={`Freestyle event moment ${index + 1}`}
                 fill
+                loading="lazy"
+                quality={85}
                 sizes="(max-width: 768px) 50vw, 20vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
               />
