@@ -44,6 +44,15 @@ const LetterboxdIcon = () => (
     <circle cx="18" cy="12" r="3" />
   </svg>
 );
+const DocumentIcon = () => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <polyline points="14 2 14 8 20 8"></polyline>
+    <line x1="16" y1="13" x2="8" y2="13"></line>
+    <line x1="16" y1="17" x2="8" y2="17"></line>
+    <polyline points="10 9 9 9 8 9"></polyline>
+  </svg>
+);
 
 // ==========================================
 // 2. TYPES & DATA STRUCTURES
@@ -177,6 +186,7 @@ const squadData: SquadMember[] = [
       { name: "Instagram", url: "https://www.instagram.com/zostyler", icon: <InstagramIcon /> },
       { name: "TikTok", url: "https://www.tiktok.com/@zostyler?_r=1&_t=ZP-972sk7kVEkw", icon: <TikTokIcon /> },
       { name: "Email", url: "mailto:Zostyler.n02@gmail.com", icon: <EmailIcon /> },
+      { name: "Media Kit", url: "/Zohair Ali.pdf", icon: <DocumentIcon /> }
     ]
   }
 ];
@@ -399,21 +409,14 @@ function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 pointer-events-none">
-      {/* hidden md:inline-flex removes this entire pill container on mobile devices */}
       <nav className={`pointer-events-auto hidden md:inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-all duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-accent/50" : ""}`}>
         
-        {/* Logo */}
-        <div 
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-accent to-[#ccb800] cursor-pointer flex-shrink-0 hover:shadow-[0_0_15px_rgba(255,230,0,0.6)] transition-all duration-300"
-        >
+        <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-accent to-[#ccb800] cursor-pointer flex-shrink-0 hover:shadow-[0_0_15px_rgba(255,230,0,0.6)] transition-all duration-300">
           <div className="w-full h-full bg-black rounded-full overflow-hidden flex items-center justify-center relative">
             <Image src="/Tekkrew.jpg" alt="Tekkrew Logo" fill sizes="40px" priority className="object-cover" />
           </div>
         </div>
-        
-        {/* Links */}
-        <div className="w-px h-5 bg-white/10 mx-2 md:mx-3" />
+        <div className="hidden sm:block w-px h-5 bg-white/10 mx-2 md:mx-3" />
         <div className="flex items-center gap-0.5 sm:gap-2 px-1 md:px-2">
           {["Home", "Crew", "Media"].map((link, i) => (
             <button
@@ -429,8 +432,6 @@ function Navbar() {
             </button>
           ))}
         </div>
-        
-        {/* Contact Button */}
         <div className="w-px h-4 md:h-5 bg-white/10 mx-1.5 md:mx-3" />
         <div className="flex items-center gap-1 md:gap-2">
           <a
@@ -591,7 +592,6 @@ interface SquadCardProps {
 const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, priorityLoad = false }: SquadCardProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Video State Management
   useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
@@ -609,11 +609,10 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
       }
     } else {
       vid.pause();
-      vid.currentTime = 0; // Clean reset on close
+      vid.currentTime = 0; 
     }
   }, [isActive]);
 
-  // Event handlers cleanly separated by device type
   const handleMouseEnter = () => { if (!isTouchDevice) onInteract(member.name, "mouse"); };
   const handleMouseLeave = () => { if (!isTouchDevice) onLeave("mouse"); };
   const handleClick = () => { if (isTouchDevice) onInteract(member.name, "touch"); };
@@ -630,11 +629,10 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
     >
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
 
-      {/* TOP HALF: Fixed Aspect Container */}
+      {/* TOP HALF: Fixed Aspect Container to avoid layout shift */}
       <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#111214] z-0 border-b border-white/5">
         <div className="w-full h-full relative transition-transform duration-1000 md:group-hover:scale-105 bg-black">
           
-          {/* Base Static Image */}
           <Image
             src={member.image}
             alt={member.name}
@@ -646,12 +644,11 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
             className={`object-cover ${member.imageClass || "object-top"}`}
           />
 
-          {/* Optimized MP4 Video */}
           {member.videoFile && (
             <video
               ref={videoRef}
               src={member.videoFile}
-              preload="metadata"
+              preload="metadata" 
               loop
               muted
               playsInline
@@ -731,13 +728,12 @@ function SquadSection() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
-    const checkTouch = () => setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
+    const checkTouch = () => setIsTouchDevice(window.matchMedia("(hover: none)").matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
     checkTouch();
     window.addEventListener('resize', checkTouch);
     return () => window.removeEventListener('resize', checkTouch);
   }, []);
 
-  // Set up IntersectionObserver specifically for Mobile Scroll Auto-Play
   useEffect(() => {
     if (!isTouchDevice) return; 
 
@@ -746,10 +742,9 @@ function SquadSection() {
         entries.forEach(entry => {
           const name = entry.target.getAttribute('data-name');
           if (entry.isIntersecting && name) {
-             // 35% threshold is much more forgiving to prevent quick-off flickering during scrolling
+             // 0.35 threshold ensures video plays reliably during scrolling
              setActiveMemberName(name);
           } else {
-             // Cleanly reset if it scrolls completely out of view
              setActiveMemberName(prev => (prev === name ? null : prev));
           }
         });
@@ -763,7 +758,6 @@ function SquadSection() {
     return () => observer.disconnect();
   }, [isTouchDevice]);
 
-  // Handle interactions (Hover desktop, Tap fallback mobile)
   const handleInteract = useCallback((name: string, interactionType: string) => {
     if (interactionType === "mouse") {
       setActiveMemberName(name);
@@ -783,14 +777,8 @@ function SquadSection() {
     <section id="crew" className="relative w-full py-16 md:py-32 px-4 md:px-6 z-10">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 md:mb-20 gap-4 text-center md:text-left">
-          <div>
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-3 drop-shadow-[0_0_25px_rgba(255,230,0,0.2)]">The Tekkrew</h2>
-            <div className="inline-flex items-center gap-3">
-              <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
-              <p className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">Tekkrew</p>
-              <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
-            </div>
-          </div>
+          {/* Header Cleanup: Inner div removed, only <h2> remains */}
+          <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-3 drop-shadow-[0_0_25px_rgba(255,230,0,0.2)]">The Tekkrew</h2>
         </div>
 
         <div 
@@ -805,7 +793,7 @@ function SquadSection() {
               onInteract={handleInteract} 
               onLeave={handleLeave}
               isTouchDevice={isTouchDevice}
-              priorityLoad={index < 2} // First two load instantly for zero LCP lag on mobile
+              priorityLoad={index < 2}
             />
           ))}
         </div>
