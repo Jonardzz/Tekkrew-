@@ -170,7 +170,7 @@ const squadData: SquadMember[] = [
     videoFile: "/Zo.mp4",
     story: (
       <>
-        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
+        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
       </>
     ),
     links: [
@@ -260,6 +260,16 @@ export default function Page() {
       window.history.scrollRestoration = "manual";
     }
     window.scrollTo(0, 0);
+
+    // Smart Preloader for Roster Static Images
+    // This runs silently in the background while the loader covers the screen
+    const preloadRosterImages = () => {
+      squadData.forEach((member) => {
+        const img = new window.Image();
+        img.src = member.image;
+      });
+    };
+    preloadRosterImages();
   }, []);
 
   // Prevent scroll during loader overlay to guarantee smooth entry
@@ -280,7 +290,8 @@ export default function Page() {
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      {/* Main Content wrapper is fully visible and rendered behind the loader. */}
+      {/* Main Content wrapper is fully visible and rendered behind the loader.
+          Opacity remains 100 so images and layouts are securely pre-painted by the browser. */}
       <div className="relative z-10 opacity-100">
         <Navbar />
         <Hero />
@@ -299,8 +310,8 @@ function BackgroundElements() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
       {/* Mobile-optimized spot lights to reduce GPU draw lag on iPhones */}
-      <div className="absolute top-[-10%] left-[20%] w-[300px] md:w-[900px] h-[300px] md:h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[50px] md:blur-[100px] transform-gpu will-change-transform" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[250px] md:w-[700px] h-[300px] md:h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[60px] md:blur-[120px] transform-gpu will-change-transform" />
+      <div className="absolute top-[-10%] left-[20%] w-[500px] md:w-[900px] h-[400px] md:h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[60px] md:blur-[100px] transform-gpu will-change-transform" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[400px] md:w-[700px] h-[500px] md:h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[80px] md:blur-[120px] transform-gpu will-change-transform" />
       
       {/* Premium Tactical Pitch SVG Pattern */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
@@ -342,7 +353,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 150);
+      else setTimeout(onComplete, 150); // Delay before trigger exit
     };
     requestAnimationFrame(step);
   }, [onComplete]);
@@ -350,7 +361,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   return (
     <motion.div
       exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
-      transition={{ duration: 0.7, ease: "easeInOut" }} // Exact Requested Timing: 0.7s Exit fade
+      transition={{ duration: 0.7, ease: "easeInOut" }} // 0.7s exit fade
       className="fixed inset-0 z-[9999] bg-[#08090a] flex flex-col justify-between"
     >
       <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-accent uppercase tracking-[0.3em] font-bold">
@@ -508,17 +519,16 @@ function Hero() {
 interface SquadCardProps {
   member: SquadMember;
   isActive: boolean;
-  onInteract: () => void;
-  onLeave: () => void;
-  isTouchDevice: boolean;
+  onInteract: (name: string, pointerType: string) => void;
+  onLeave: (pointerType: string) => void;
   priorityLoad?: boolean;
 }
 
 // React.memo prevents lagging re-renders on mobile when interacting
-const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, priorityLoad = false }: SquadCardProps) => {
+const SquadCard = memo(({ member, isActive, onInteract, onLeave, priorityLoad = false }: SquadCardProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Play/Pause Video based strictly on isActive prop.
+  // Video State Management (Pause and reset when inactive)
   useEffect(() => {
     if (isActive && videoRef.current) {
       const playPromise = videoRef.current.play();
@@ -531,18 +541,20 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
     }
   }, [isActive]);
 
-  // Robust Native Pointer Events
-  const handlePointerEnter = (e: React.PointerEvent) => { if (e.pointerType === "mouse") onInteract(); };
-  const handlePointerLeave = (e: React.PointerEvent) => { if (e.pointerType === "mouse") onLeave(); };
-  const handleClick = (e: React.MouseEvent) => { if (isTouchDevice) onInteract(); };
+  // Robust Native Pointer Events (Solves Mobile Double-Tap & Desktop Hover)
+  const handlePointerEnter = (e: React.PointerEvent) => onInteract(member.name, e.pointerType);
+  const handlePointerLeave = (e: React.PointerEvent) => onLeave(e.pointerType);
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") onInteract(member.name, e.pointerType);
+  };
 
   return (
     <div
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
-      onClick={handleClick}
+      onPointerDown={handlePointerDown}
       className={`relative bg-[#111214] rounded-[2rem] overflow-hidden border transition-all duration-300 group flex flex-col cursor-pointer ${
-        isActive ? 'border-accent shadow-xl md:shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:-translate-y-2 hover:border-accent/40 md:hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
+        isActive ? 'border-accent shadow-xl md:shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:hover:-translate-y-2 md:hover:border-accent/40 md:hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
       }`}
     >
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
@@ -551,13 +563,13 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
       <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#111214] z-0 border-b border-white/5">
         <div className="w-full h-full relative transition-transform duration-1000 md:group-hover:scale-105 bg-black">
           
-          {/* Base Static Image - ALWAYS MOUNTED. Priority true fixes LCP delay. */}
+          {/* Base Static Image - ALWAYS MOUNTED. `priority` fixes LCP delay. */}
           <Image
             src={member.image}
             alt={member.name}
             fill
             priority={priorityLoad}
-            loading={priorityLoad ? "eager" : "lazy"} 
+            loading={priorityLoad ? "eager" : "lazy"}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             quality={85}
             className={`object-cover ${member.imageClass || "object-top"}`}
@@ -591,11 +603,18 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
         <div className="w-12 h-[3px] bg-accent mb-3 rounded-full shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
         <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-[0.2em] mb-6">{member.role}</p>
 
-        {/* FLAG BADGES */}
+        {/* FLAG BADGES - Now dynamically highlight on mobile tap (isActive) AND desktop hover */}
         {member.flags && member.flags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-3 mb-6">
             {member.flags.map((flag, idx) => (
-              <div key={idx} className="w-14 h-9 rounded-md border border-white/20 bg-[#0a0a0a] shadow-lg md:shadow-[0_5px_15px_rgba(0,0,0,0.6)] flex items-center justify-center text-3xl leading-none transition-all duration-300 md:group-hover:-translate-y-1 md:group-hover:border-accent md:group-hover:shadow-[0_5px_15px_rgba(255,230,0,0.3)]">
+              <div 
+                key={idx} 
+                className={`w-14 h-9 rounded-md border bg-[#0a0a0a] flex items-center justify-center text-3xl leading-none transition-all duration-300 ${
+                  isActive 
+                    ? 'border-accent shadow-[0_5px_15px_rgba(255,230,0,0.3)] -translate-y-1' 
+                    : 'border-white/20 shadow-lg md:shadow-[0_5px_15px_rgba(0,0,0,0.6)] md:group-hover:-translate-y-1 md:group-hover:border-accent md:group-hover:shadow-[0_5px_15px_rgba(255,230,0,0.3)]'
+                }`}
+              >
                 {flag}
               </div>
             ))}
@@ -620,8 +639,8 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()} 
               onPointerDown={(e) => e.stopPropagation()} 
+              onClick={(e) => e.stopPropagation()} 
               className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm md:hover:shadow-[0_0_15px_rgba(255,230,0,0.4)]"
               title={link.name}
             >
@@ -638,28 +657,20 @@ SquadCard.displayName = "SquadCard";
 
 function SquadSection() {
   const [activeMemberName, setActiveMemberName] = useState<string | null>(null);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-  useEffect(() => {
-    // Touch detection allows us to safely bifurcate Desktop Hover and Mobile Click
-    const checkTouch = () => setIsTouchDevice(window.matchMedia("(hover: none)").matches || 'ontouchstart' in window);
-    checkTouch();
-  }, []);
-
-  const handleInteraction = useCallback((name: string) => {
-    if (isTouchDevice) {
-      setActiveIndex((current) => (current === name ? null : name));
+  const handleInteract = useCallback((name: string, pointerType: string) => {
+    if (pointerType === "mouse") {
+      setActiveMemberName(name); // Desktop hover
     } else {
-      setActiveIndex(name);
+      setActiveMemberName((prev) => (prev === name ? null : name)); // Mobile tap toggle
     }
-  }, [isTouchDevice]);
-
-  const handleLeave = useCallback(() => {
-    setActiveIndex(null);
   }, []);
 
-  // Internal state alias for readability
-  const setActiveIndex = setActiveMemberName;
+  const handleLeave = useCallback((pointerType: string) => {
+    if (pointerType === "mouse") {
+      setActiveMemberName(null);
+    }
+  }, []);
 
   return (
     <section id="crew" className="relative w-full py-16 md:py-32 px-4 md:px-6 z-10">
@@ -677,17 +688,16 @@ function SquadSection() {
 
         <div 
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" 
-          onPointerLeave={(e) => { if (e.pointerType === "mouse") handleLeave(); }}
+          onPointerLeave={(e) => { if (e.pointerType === "mouse") setActiveMemberName(null); }}
         >
           {squadData.map((member, index) => (
             <SquadCard 
               key={member.name} 
               member={member} 
               isActive={activeMemberName === member.name} 
-              onInteract={() => handleInteraction(member.name)} 
+              onInteract={handleInteract} 
               onLeave={handleLeave}
-              isTouchDevice={isTouchDevice}
-              priorityLoad={index < 2} // Preloads the first 2 images instantly
+              priorityLoad={index < 2} // First two load instantly for zero LCP lag on mobile
             />
           ))}
         </div>
