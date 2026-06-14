@@ -61,7 +61,7 @@ interface SquadMember {
   flags: string[];
   location: string;
   image: string;
-  gifImage?: string;
+  videoFile?: string;
   imageClass?: string;
   story: React.ReactNode;
   links: SocialLink[];
@@ -95,7 +95,7 @@ const squadData: SquadMember[] = [
     flags: ["🇲🇦"],
     location: "Houston, Texas",
     image: "/Chaymae Qaddouri.jpeg",
-    gifImage: "/Chaymae Qaddouri.gif",
+    videoFile: "/Chaymae Qaddouri.mp4",
     story: "Fusing Moroccan football heritage with absolute technical precision. Chaymae's flow is unmatched, redefining what ball control looks like on the concrete.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/c.qaddouri", icon: <InstagramIcon /> },
@@ -110,7 +110,7 @@ const squadData: SquadMember[] = [
     flags: ["🇲🇽", "🇺🇸"],
     location: "Houston, Texas",
     image: "/Chuy.jpeg",
-    gifImage: "/Chuy.gif",
+    videoFile: "/Chuy.mp4",
     story: "Mexican-American street legend in the making. Chuy brings aggressive, high-energy tricks that hype the crowd and leave defenders lost.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/streetchuy", icon: <InstagramIcon /> },
@@ -124,7 +124,7 @@ const squadData: SquadMember[] = [
     imageClass: "scale-[1.15] sm:scale-[1.25] md:scale-[1.35] origin-[50%_20%] object-[50%_20%]",
     location: "Houston, Texas",
     image: "/Joseph.jpg",
-    gifImage: "/Joseph.gif",
+    videoFile: "/Joseph.mp4",
     story: "Bringing pure Colombian flair mixed with American hustle. Joseph hits combos that shouldn't be possible, turning the street into his personal stage.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd", icon: <InstagramIcon /> },
@@ -153,7 +153,7 @@ const squadData: SquadMember[] = [
     flags: ["🇰🇪"],
     location: "Houston, Texas",
     image: "/Zein.jpg",
-    gifImage: "/Zein.gif",
+    videoFile: "/Zein.mp4",
     story: "A master of flow and creative transitions. Zein brings an international freestyle flavor to the streets, pushing the boundaries of what's possible with a football.",
     links: [
       { name: "Instagram", url: "https://www.instagram.com/zeinkhitamy?igsh=MmRlY3UzYWdtejFz", icon: <InstagramIcon /> },
@@ -167,10 +167,10 @@ const squadData: SquadMember[] = [
     flags: [],
     location: "Houston, Texas",
     image: "/Zo.jpg",
-    gifImage: "/Zo.gif",
+    videoFile: "/Zo.mp4",
     story: (
       <>
-        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
+        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
       </>
     ),
     links: [
@@ -186,7 +186,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "khou",
     tag: "Broadcast Feature",
-    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)]",
+    tagIconClass: "bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,0.8)]",
     title: "KHOU 11 Network",
     desc1: "Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.",
     desc2: (
@@ -203,7 +203,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "telemundo",
     tag: "Live Coverage",
-    tagIconClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
+    tagIconClass: "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]",
     title: "Telemundo Countdown",
     desc1: "From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.",
     desc2: (
@@ -249,6 +249,7 @@ const initialGalleryImages = [
   "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14705.jpg",
 ];
 
+
 // ==========================================
 // 3. MAIN PAGE LAYOUT
 // ==========================================
@@ -263,7 +264,7 @@ export default function Page() {
   }, []);
 
   return (
-    <main className="relative min-h-[100svh] bg-[#0a0b0c] text-text overflow-x-hidden selection:bg-accent selection:text-black font-body">
+    <main className="relative min-h-[100svh] bg-[#08090a] text-text overflow-x-hidden selection:bg-accent selection:text-black font-body">
       <BackgroundElements />
 
       <AnimatePresence mode="wait">
@@ -286,27 +287,33 @@ export default function Page() {
 // ==========================================
 function BackgroundElements() {
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none bg-[#0a0b0c] overflow-hidden">
-      {/* Optimized Performance Spotlights */}
-      <div className="absolute top-[-10%] left-[20%] w-[900px] h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.06)_0%,rgba(255,230,0,0)_60%)] blur-[90px]" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[700px] h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.03)_0%,rgba(255,230,0,0)_70%)] blur-[100px]" />
+    <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
+      {/* Intense but clean Yellow Spotlights (Hardware Accelerated to prevent lag) */}
+      <div className="absolute top-[-10%] left-[20%] w-[900px] h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[100px] transform-gpu will-change-transform" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[700px] h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[120px] transform-gpu will-change-transform" />
       
-      {/* Clean Premium Tactical Pitch Pattern */}
+      {/* Premium Tactical Pitch SVG Pattern */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="netMesh" width="80" height="80" patternUnits="userSpaceOnUse">
-            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#FFE600" strokeWidth="0.5" opacity="0.4" />
+            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#FFE600" strokeWidth="0.5" opacity="0.3" />
           </pattern>
         </defs>
+        
         <rect width="100%" height="100%" fill="url(#netMesh)" />
-        <circle cx="50%" cy="50%" r="350" fill="none" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.6" />
+        
+        {/* Field Markings */}
+        <circle cx="50%" cy="50%" r="350" fill="none" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.5" />
         <circle cx="50%" cy="50%" r="6" fill="#FFE600" opacity="0.9" />
-        <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff" strokeWidth="1" opacity="0.2" />
-        <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.4" />
-        <path d="M-100 200 Q 400 300 500 700 T 1300 600" fill="none" stroke="#FFE600" strokeWidth="2.5" opacity="0.6" strokeDasharray="4 12" />
-        <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#ffffff" strokeWidth="1.5" opacity="0.3" />
+        <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff" strokeWidth="1" opacity="0.15" />
+        <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.3" />
+
+        {/* Dynamic Freestyle Curves */}
+        <path d="M-100 200 Q 400 300 500 700 T 1300 600" fill="none" stroke="#FFE600" strokeWidth="3" opacity="0.5" strokeDasharray="4 12" />
+        <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#ffffff" strokeWidth="1.5" opacity="0.2" />
       </svg>
-      <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#0a0b0c] to-transparent" />
+
+      <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent transform-gpu" />
     </div>
   );
 }
@@ -338,19 +345,24 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
     <motion.div
       exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
       transition={{ duration: 0.7, ease: "easeInOut" }}
-      className="fixed inset-0 z-[9999] bg-[#0a0b0c] flex flex-col justify-between"
+      className="fixed inset-0 z-[9999] bg-[#08090a] flex flex-col justify-between"
     >
-      <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-accent uppercase tracking-[0.3em] font-bold">Tekkrew</div>
+      <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-accent uppercase tracking-[0.3em] font-bold">
+        Tekkrew
+      </div>
+
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white absolute drop-shadow-[0_0_20px_rgba(255,230,0,0.3)]">
+          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white absolute drop-shadow-[0_0_20px_rgba(255,230,0,0.4)]">
             {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
       </div>
+
       <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display text-white tabular-nums leading-none opacity-90 drop-shadow-md">
         {count.toString().padStart(3, "0")}
       </div>
+
       <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/5 origin-left">
         <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent origin-left shadow-[0_0_20px_rgba(255,230,0,0.8)]" />
       </div>
@@ -437,7 +449,7 @@ function Hero() {
 
         <motion.h1
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] font-display italic font-black leading-[0.85] tracking-tight text-white mb-6 drop-shadow-[0_0_35px_rgba(255,230,0,0.2)]"
+          className="text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] font-display italic font-black leading-[0.85] tracking-tight text-white mb-6 drop-shadow-[0_0_35px_rgba(255,230,0,0.15)]"
         >
           Tekkrew
         </motion.h1>
@@ -455,7 +467,7 @@ function Hero() {
 
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.7 }}
-          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-[#111214]/80 py-4 pr-4 rounded-r-xl shadow-xl"
+          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-[#111214]/80 py-4 pr-4 rounded-r-xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
         >
           Born on the concrete, headed for the global stage. We built Tekkrew to elevate the beautiful game with raw street style. As the world turns its eyes to North America for World Cup '26, we are bringing gravity-defying freestyle to the masses—and we are just getting started.
         </motion.p>
@@ -464,7 +476,7 @@ function Hero() {
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}
           className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
         >
-          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-accent text-black text-xs md:text-sm rounded-full px-8 py-4 font-black uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.3)] w-full sm:w-auto">
+          <button onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-accent text-black text-xs md:text-sm rounded-full px-8 py-4 font-black uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_20px_rgba(255,230,0,0.2)] w-full sm:w-auto">
             Media Showcase
           </button>
           <button onClick={() => document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" })} className="relative bg-black/60 backdrop-blur-sm text-white text-xs md:text-sm rounded-full px-8 py-4 border border-accent/40 font-bold uppercase tracking-widest transition-all hover:scale-105 hover:bg-white/10 hover:border-accent hover:shadow-[0_0_15px_rgba(255,230,0,0.2)] w-full sm:w-auto">
@@ -484,8 +496,9 @@ function Hero() {
 }
 
 // ==========================================
-// 7. SQUAD SECTION & OPTIMIZED MEMOIZED CARDS
+// 7. SQUAD SECTION & OPTIMIZED VIDEO CARDS
 // ==========================================
+
 interface SquadCardProps {
   member: SquadMember;
   isActive: boolean;
@@ -512,9 +525,9 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
     >
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
 
-      {/* TOP HALF: Player Image Container */}
-      <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#111214] z-0 border-b border-white/5">
-        <div className="w-full h-full relative transition-transform duration-700 group-hover:scale-105 bg-black">
+      {/* TOP HALF: Player Image Container (Fixed aspect to avoid layout shift) */}
+      <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-black z-0 border-b border-white/5">
+        <div className="w-full h-full relative transition-transform duration-1000 group-hover:scale-105 bg-black">
           
           {/* Base Static Image (ALWAYS MOUNTED to prevent layout shift & black boxes) */}
           <Image
@@ -527,16 +540,20 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
             className={`object-cover ${member.imageClass || "object-top"}`}
           />
 
-          {/* Conditional Lazy GIF (Fades over the static image seamlessly) */}
+          {/* Optimized Interactive Video (Fades IN over the static image seamlessly) */}
           <AnimatePresence>
-            {isActive && member.gifImage && (
-              <motion.img
+            {isActive && member.videoFile && (
+              <motion.video
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                src={member.gifImage}
-                alt={`${member.name} Animated`}
+                src={member.videoFile}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="none" // Optimizes initial page load. Browser fetches exactly on interaction.
                 className={`absolute inset-0 w-full h-full object-cover z-10 ${member.imageClass || "object-top"}`}
               />
             )}
@@ -555,6 +572,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
         <div className="w-12 h-[3px] bg-accent mb-3 rounded-full shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
         <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-[0.2em] mb-6">{member.role}</p>
 
+        {/* FLAG BADGES */}
         {member.flags && member.flags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-3 mb-6">
             {member.flags.map((flag, idx) => (
@@ -575,7 +593,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
           {member.story}
         </div>
 
-        {/* Social Links Row (Stops propagation so clicks don't toggle the GIF on mobile) */}
+        {/* Social Links Row (Stops propagation so clicks don't toggle the video on mobile) */}
         <div className="mt-auto flex flex-wrap items-center justify-center gap-4 pt-6 w-full border-t border-white/10 pointer-events-auto">
           {member.links.map((link, i) => (
             <a
@@ -584,6 +602,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()} 
+              onPointerDown={(e) => e.stopPropagation()} 
               className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(255,230,0,0.4)]"
               title={link.name}
             >
@@ -631,7 +650,7 @@ function SquadSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" onPointerLeave={!isTouchDevice ? handleLeave : undefined}>
           {squadData.map((member, index) => (
             <SquadCard 
               key={index} 
@@ -640,7 +659,7 @@ function SquadSection() {
               onInteract={() => handleInteraction(index)} 
               onLeave={handleLeave}
               isTouchDevice={isTouchDevice}
-              priorityLoad={index < 2} // Force first 2 images to load instantly
+              priorityLoad={index < 2} // Force first 2 images to load instantly to prevent LCP lag
             />
           ))}
         </div>
