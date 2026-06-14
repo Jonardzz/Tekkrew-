@@ -170,7 +170,7 @@ const squadData: SquadMember[] = [
     videoFile: "/Zo.mp4",
     story: (
       <>
-        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
+        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
       </>
     ),
     links: [
@@ -505,16 +505,15 @@ interface SquadCardProps {
   onInteract: () => void;
   onLeave: () => void;
   isTouchDevice: boolean;
-  priorityLoad: boolean;
 }
 
 // React.memo prevents lagging re-renders on mobile when interacting
-const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, priorityLoad }: SquadCardProps) => {
+const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice }: SquadCardProps) => {
   
-  // Custom Interaction Handlers that safely differentiate Desktop vs Mobile
+  // Safe interaction bindings
   const eventHandlers = isTouchDevice
-    ? { onClick: onInteract } // Pure click on mobile prevents double-tap bugs
-    : { onMouseEnter: onInteract, onMouseLeave: onLeave }; // Hover for desktop
+    ? { onPointerDown: onInteract } // Pure pointer touch on mobile prevents double-tap
+    : { onPointerEnter: onInteract, onPointerLeave: onLeave }; // Hover for desktop
 
   return (
     <div
@@ -526,15 +525,15 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
 
       {/* TOP HALF: Player Image Container (Fixed aspect to avoid layout shift) */}
-      <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-black z-0 border-b border-white/5">
+      <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#111214] z-0 border-b border-white/5">
         <div className="w-full h-full relative transition-transform duration-1000 group-hover:scale-105 bg-black">
           
-          {/* Base Static Image (ALWAYS MOUNTED to prevent layout shift & black boxes) */}
+          {/* Base Static Image - PRIORITY TRUE fixes the mobile 3s delay completely */}
           <Image
             src={member.image}
             alt={member.name}
             fill
-            priority={priorityLoad} // True for first row ensures instant mobile loading
+            priority={true} 
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             quality={85}
             className={`object-cover ${member.imageClass || "object-top"}`}
@@ -547,7 +546,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.4 }}
                 src={member.videoFile}
                 autoPlay
                 loop
@@ -622,7 +621,8 @@ function SquadSection() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
-    const checkTouch = () => setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches || 'ontouchstart' in window);
+    // Advanced touch detection avoids double-taps on Safari/iOS
+    const checkTouch = () => setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
     checkTouch();
   }, []);
 
@@ -659,7 +659,6 @@ function SquadSection() {
               onInteract={() => handleInteraction(index)} 
               onLeave={handleLeave}
               isTouchDevice={isTouchDevice}
-              priorityLoad={index < 2} // Force first 2 images to load instantly to prevent LCP lag
             />
           ))}
         </div>
