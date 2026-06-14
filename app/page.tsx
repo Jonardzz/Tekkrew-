@@ -170,7 +170,7 @@ const squadData: SquadMember[] = [
     videoFile: "/Zo.mp4",
     story: (
       <>
-        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
+        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
       </>
     ),
     links: [
@@ -181,12 +181,12 @@ const squadData: SquadMember[] = [
   }
 ];
 
-// --- Media Features Data ---
+// --- Media Features Data (Cinematic & Minimal Design) ---
 const mediaData: MediaFeature[] = [
   {
     id: "khou",
     tag: "Broadcast Feature",
-    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)]",
+    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)] animate-pulse",
     title: "KHOU 11 Network",
     desc1: "Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.",
     desc2: (
@@ -203,7 +203,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "telemundo",
     tag: "Live Coverage",
-    tagIconClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
+    tagIconClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)] animate-pulse",
     title: "Telemundo Countdown",
     desc1: "From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.",
     desc2: (
@@ -262,7 +262,6 @@ export default function Page() {
     window.scrollTo(0, 0);
 
     // Smart Preloader for Roster Static Images
-    // This runs silently in the background while the loader covers the screen
     const preloadRosterImages = () => {
       squadData.forEach((member) => {
         const img = new window.Image();
@@ -338,13 +337,11 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const words = ["Skill", "Street", "Passion"];
   const [wordIndex, setWordIndex] = useState(0);
 
-  // Exact Requested Timing: Word Switch 733ms
   useEffect(() => {
     const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 733);
     return () => clearInterval(interval);
   }, [words.length]);
 
-  // Exact Requested Timing: 2200ms Duration + 150ms trailing delay
   useEffect(() => {
     let start: number | null = null;
     const duration = 2200; 
@@ -353,7 +350,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 150); // Delay before trigger exit
+      else setTimeout(onComplete, 150); 
     };
     requestAnimationFrame(step);
   }, [onComplete]);
@@ -361,7 +358,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   return (
     <motion.div
       exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
-      transition={{ duration: 0.7, ease: "easeInOut" }} // 0.7s exit fade
+      transition={{ duration: 0.7, ease: "easeInOut" }}
       className="fixed inset-0 z-[9999] bg-[#08090a] flex flex-col justify-between"
     >
       <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-accent uppercase tracking-[0.3em] font-bold">
@@ -519,40 +516,55 @@ function Hero() {
 interface SquadCardProps {
   member: SquadMember;
   isActive: boolean;
-  onInteract: (name: string, pointerType: string) => void;
-  onLeave: (pointerType: string) => void;
+  onInteract: () => void;
+  onLeave: () => void;
+  isTouchDevice: boolean;
   priorityLoad?: boolean;
 }
 
 // React.memo prevents lagging re-renders on mobile when interacting
-const SquadCard = memo(({ member, isActive, onInteract, onLeave, priorityLoad = false }: SquadCardProps) => {
+const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, priorityLoad = false }: SquadCardProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Video State Management (Pause and reset when inactive)
   useEffect(() => {
-    if (isActive && videoRef.current) {
-      const playPromise = videoRef.current.play();
+    const vid = videoRef.current;
+    if (!vid) return;
+
+    // Apply strict native attributes to satisfy iOS Safari restrictions
+    vid.defaultMuted = true;
+    vid.muted = true;
+    vid.playsInline = true;
+
+    if (isActive) {
+      const playPromise = vid.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => { /* Auto-play blocked or aborted silently */ });
+        playPromise.catch((err) => {
+          console.warn("Autoplay blocked by browser policy:", err);
+        });
       }
-    } else if (!isActive && videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0; // Clean reset on close
+    } else {
+      vid.pause();
+      vid.currentTime = 0; // Clean reset on close
     }
   }, [isActive]);
 
   // Robust Native Pointer Events (Solves Mobile Double-Tap & Desktop Hover)
-  const handlePointerEnter = (e: React.PointerEvent) => onInteract(member.name, e.pointerType);
-  const handlePointerLeave = (e: React.PointerEvent) => onLeave(e.pointerType);
-  const handlePointerDown = (e: React.PointerEvent) => {
-    if (e.pointerType !== "mouse") onInteract(member.name, e.pointerType);
+  const handleMouseEnter = () => {
+    if (!isTouchDevice) onInteract();
+  };
+  const handleMouseLeave = () => {
+    if (!isTouchDevice) onLeave();
+  };
+  const handleClick = () => {
+    if (isTouchDevice) onInteract();
   };
 
   return (
     <div
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
-      onPointerDown={handlePointerDown}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
       className={`relative bg-[#111214] rounded-[2rem] overflow-hidden border transition-all duration-300 group flex flex-col cursor-pointer ${
         isActive ? 'border-accent shadow-xl md:shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:hover:-translate-y-2 md:hover:border-accent/40 md:hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
       }`}
@@ -603,7 +615,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, priorityLoad = 
         <div className="w-12 h-[3px] bg-accent mb-3 rounded-full shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
         <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-[0.2em] mb-6">{member.role}</p>
 
-        {/* FLAG BADGES - Now dynamically highlight on mobile tap (isActive) AND desktop hover */}
+        {/* FLAG BADGES - Dynamically highlight when active on mobile, or hovered on desktop */}
         {member.flags && member.flags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-3 mb-6">
             {member.flags.map((flag, idx) => (
@@ -639,7 +651,6 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, priorityLoad = 
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              onPointerDown={(e) => e.stopPropagation()} 
               onClick={(e) => e.stopPropagation()} 
               className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm md:hover:shadow-[0_0_15px_rgba(255,230,0,0.4)]"
               title={link.name}
@@ -657,20 +668,27 @@ SquadCard.displayName = "SquadCard";
 
 function SquadSection() {
   const [activeMemberName, setActiveMemberName] = useState<string | null>(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-  const handleInteract = useCallback((name: string, pointerType: string) => {
-    if (pointerType === "mouse") {
-      setActiveMemberName(name); // Desktop hover
-    } else {
-      setActiveMemberName((prev) => (prev === name ? null : name)); // Mobile tap toggle
-    }
+  useEffect(() => {
+    // Advanced touch detection avoids double-taps on Safari/iOS
+    const checkTouch = () => setIsTouchDevice(window.matchMedia("(hover: none)").matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
+    checkTouch();
   }, []);
 
-  const handleLeave = useCallback((pointerType: string) => {
-    if (pointerType === "mouse") {
+  const handleInteract = useCallback((name: string) => {
+    if (isTouchDevice) {
+      setActiveMemberName((prev) => (prev === name ? null : name)); // Mobile tap toggle
+    } else {
+      setActiveMemberName(name); // Desktop hover
+    }
+  }, [isTouchDevice]);
+
+  const handleLeave = useCallback(() => {
+    if (!isTouchDevice) {
       setActiveMemberName(null);
     }
-  }, []);
+  }, [isTouchDevice]);
 
   return (
     <section id="crew" className="relative w-full py-16 md:py-32 px-4 md:px-6 z-10">
@@ -686,17 +704,15 @@ function SquadSection() {
           </div>
         </div>
 
-        <div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" 
-          onPointerLeave={(e) => { if (e.pointerType === "mouse") setActiveMemberName(null); }}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" onMouseLeave={handleLeave}>
           {squadData.map((member, index) => (
             <SquadCard 
               key={member.name} 
               member={member} 
               isActive={activeMemberName === member.name} 
-              onInteract={handleInteract} 
+              onInteract={() => handleInteract(member.name)} 
               onLeave={handleLeave}
+              isTouchDevice={isTouchDevice}
               priorityLoad={index < 2} // First two load instantly for zero LCP lag on mobile
             />
           ))}
@@ -707,67 +723,107 @@ function SquadSection() {
 }
 
 // ==========================================
-// 8. MEDIA SECTION & COMPONENTS
+// 8. MEDIA SECTION (Cinematic Editorial Redesign)
 // ==========================================
-function MediaCard({ feature }: { feature: MediaFeature }) {
+function MediaEditorialBlock({ feature, index }: { feature: MediaFeature; index: number }) {
+  // Alternate layout direction for visual rhythm
+  const isReversed = index % 2 !== 0;
+
   return (
-    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-xl md:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-accent/40 md:hover:shadow-[0_15px_50px_rgba(255,230,0,0.1)]`}>
-       
-       {/* Decorative Viewfinder Corners */}
-       <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-accent/60 rounded-tl-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_2px_2px_10px_rgba(255,230,0,0.2)]" />
-       <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent/60 rounded-br-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.2)]" />
-       
-       {/* Text Content */}
-       <div className="flex-1 z-10 w-full lg:w-1/2">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-white/90 text-[10px] font-bold tracking-[0.2em] uppercase mb-8 shadow-[0_0_15px_rgba(255,230,0,0.1)]">
-             <span className={`w-2 h-2 rounded-full ${feature.tagIconClass || "bg-accent"}`} />
+    <motion.div 
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className={`relative w-full flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 lg:gap-24 items-center py-12 md:py-20`}
+    >
+      
+      {/* 10% Text Focus: Minimal, floating typographic layout */}
+      <div className={`flex-1 z-10 w-full lg:w-[40%] flex flex-col ${isReversed ? 'lg:items-end lg:text-right' : 'lg:items-start lg:text-left'}`}>
+        
+        {/* Precision Yellow Tag */}
+        <div className="inline-flex items-center gap-3 mb-8">
+           <span className={`w-1.5 h-1.5 rounded-full ${feature.tagIconClass || "bg-accent"}`} />
+           <span className="text-white/60 text-[11px] font-bold tracking-[0.3em] uppercase">
              {feature.tag}
-          </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-white mb-6 leading-tight italic drop-shadow-sm">{feature.title}</h2>
-          
-          <div className="border-l-4 border-accent/80 pl-5 mb-4 py-1">
-            <p className="text-white/80 text-sm md:text-base leading-relaxed mb-4 font-light">
-              {feature.desc1}
-            </p>
-            <p className="text-white/50 text-xs md:text-sm leading-relaxed font-light">
-              {feature.desc2}
-            </p>
-          </div>
-       </div>
-       
-       {/* Media Content (Handles 1 or 2 videos with Masonry Stagger) */}
-       <div className="w-full lg:w-1/2 flex flex-row items-center justify-center gap-4 sm:gap-6 relative z-10">
-          {feature.videos.map((vid, i) => (
-            <div 
-              key={i} 
-              className={`relative ${feature.videos.length > 1 ? 'w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 shadow-lg md:shadow-[0_15px_30px_rgba(0,0,0,0.9)] border border-white/10 rounded-[1.5rem] bg-black p-1 transition-colors duration-500 group-hover:border-accent/60 ${vid.offset ? 'translate-y-6 sm:translate-y-12' : ''}`}
-            >
-              <video controls playsInline preload="none" poster={vid.poster} className={`${vid.aspect} h-full w-full rounded-[1.3rem] bg-black object-contain`} src={vid.src} />
-            </div>
-          ))}
-       </div>
-    </div>
+           </span>
+        </div>
+        
+        {/* Large, unconstrained typography */}
+        <h2 className="text-5xl md:text-6xl lg:text-7xl font-display font-black text-white mb-8 leading-[0.9] italic drop-shadow-lg">
+          {feature.title}
+        </h2>
+        
+        <div className={`flex flex-col gap-6 max-w-lg ${isReversed ? 'lg:items-end' : 'lg:items-start'}`}>
+          <p className="text-white/80 text-base md:text-lg leading-relaxed font-light">
+            {feature.desc1}
+          </p>
+          {/* Subtle accent line instead of a heavy border */}
+          <div className="w-12 h-px bg-white/20" />
+          <p className="text-white/50 text-xs md:text-sm leading-relaxed font-light">
+            {feature.desc2}
+          </p>
+        </div>
+      </div>
+      
+      {/* 90% Media Focus: Videos blending directly into the dark background */}
+      <div className={`w-full lg:w-[60%] flex flex-row items-center justify-center gap-4 sm:gap-8 relative z-10`}>
+        {feature.videos.map((vid, i) => (
+          <motion.div 
+            key={i} 
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.4 }}
+            className={`relative ${feature.videos.length > 1 ? 'w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] ${vid.offset ? 'translate-y-8 sm:translate-y-16' : ''}`}
+          >
+            {/* The video has no visible borders or padding, maximizing immersion */}
+            <video 
+              controls 
+              playsInline 
+              preload="none" 
+              poster={vid.poster} 
+              className={`absolute inset-0 w-full h-full object-cover bg-[#0a0b0c]`} 
+              src={vid.src} 
+            />
+            {/* Subtle internal shadow to blend the edges into the background */}
+            <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]" />
+          </motion.div>
+        ))}
+      </div>
+      
+    </motion.div>
   );
 }
 
 function MediaSection() {
   return (
-    <section id="events" className="relative w-full py-16 md:py-32 px-4 md:px-6">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent pointer-events-none" />
+    <section id="events" className="relative w-full py-24 md:py-40 px-4 md:px-6 z-10 overflow-hidden">
+      
+      {/* Cinematic Connecting Line (The precise yellow accent) */}
+      <div className="absolute top-0 left-[15%] lg:left-[50%] w-px h-full bg-gradient-to-b from-transparent via-accent/10 to-transparent pointer-events-none z-0 hidden md:block" />
 
-      <div className="max-w-6xl mx-auto space-y-16 md:space-y-24 relative z-10">
-        <div className="text-center mb-12 md:mb-24">
-          <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-[0_0_25px_rgba(255,230,0,0.2)]">Media Showcase</h2>
-          <div className="inline-flex items-center gap-3">
-             <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
-             <p className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">Press & Features</p>
-             <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
+      <div className="max-w-7xl mx-auto relative z-10">
+        
+        {/* Minimal Section Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center md:text-left mb-20 md:mb-32"
+        >
+          <h2 className="text-6xl sm:text-7xl md:text-8xl font-display italic font-black text-white mb-4 drop-shadow-md">Media Showcase</h2>
+          <div className="inline-flex items-center gap-4">
+             <div className="w-12 h-px bg-accent/80" />
+             <p className="text-white/60 text-xs md:text-sm uppercase tracking-[0.4em] font-bold">Press & Features</p>
           </div>
+        </motion.div>
+
+        {/* The Editorial Flow */}
+        <div className="flex flex-col space-y-24 md:space-y-40">
+          {mediaData.map((feature, idx) => (
+            <MediaEditorialBlock key={idx} feature={feature} index={idx} />
+          ))}
         </div>
 
-        {mediaData.map((feature, idx) => (
-          <MediaCard key={idx} feature={feature} />
-        ))}
       </div>
     </section>
   );
