@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, memo } from "react";
+import React, { useState, useEffect, useCallback, memo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -35,13 +35,6 @@ const ArrowUpRightIcon = () => (
   <svg className="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <line x1="7" y1="17" x2="17" y2="7"></line>
     <polyline points="7 7 17 7 17 17"></polyline>
-  </svg>
-);
-const LetterboxdIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-    <circle cx="6" cy="12" r="3" />
-    <circle cx="12" cy="12" r="3" />
-    <circle cx="18" cy="12" r="3" />
   </svg>
 );
 
@@ -129,7 +122,6 @@ const squadData: SquadMember[] = [
     links: [
       { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd", icon: <InstagramIcon /> },
       { name: "TikTok", url: "https://www.tiktok.com/@freestyle_jrd", icon: <TikTokIcon /> },
-      { name: "Letterboxd", url: "https://letterboxd.com/freestyle_jrd/", icon: <LetterboxdIcon /> },
       { name: "Email", url: "mailto:joecr768@gmail.com", icon: <EmailIcon /> },
       { name: "Linktree", url: "https://linktr.ee/freestyle_jrd", icon: <LinkIcon /> },
     ]
@@ -181,12 +173,11 @@ const squadData: SquadMember[] = [
   }
 ];
 
-// --- Media Features Data ---
 const mediaData: MediaFeature[] = [
   {
     id: "khou",
     tag: "Broadcast Feature",
-    tagIconClass: "bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,0.8)]",
+    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)]",
     title: "KHOU 11 Network",
     desc1: "Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.",
     desc2: (
@@ -203,7 +194,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "telemundo",
     tag: "Live Coverage",
-    tagIconClass: "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]",
+    tagIconClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
     title: "Telemundo Countdown",
     desc1: "From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.",
     desc2: (
@@ -288,9 +279,9 @@ export default function Page() {
 function BackgroundElements() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
-      {/* Intense but clean Yellow Spotlights (Hardware Accelerated to prevent lag) */}
-      <div className="absolute top-[-10%] left-[20%] w-[900px] h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[100px] transform-gpu will-change-transform" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[700px] h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[120px] transform-gpu will-change-transform" />
+      {/* Mobile-optimized spot lights */}
+      <div className="absolute top-[-10%] left-[20%] w-[500px] md:w-[900px] h-[400px] md:h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[60px] md:blur-[100px]" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[400px] md:w-[700px] h-[500px] md:h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[80px] md:blur-[120px]" />
       
       {/* Premium Tactical Pitch SVG Pattern */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
@@ -299,21 +290,15 @@ function BackgroundElements() {
             <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#FFE600" strokeWidth="0.5" opacity="0.3" />
           </pattern>
         </defs>
-        
         <rect width="100%" height="100%" fill="url(#netMesh)" />
-        
-        {/* Field Markings */}
         <circle cx="50%" cy="50%" r="350" fill="none" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.5" />
         <circle cx="50%" cy="50%" r="6" fill="#FFE600" opacity="0.9" />
         <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff" strokeWidth="1" opacity="0.15" />
         <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.3" />
-
-        {/* Dynamic Freestyle Curves */}
         <path d="M-100 200 Q 400 300 500 700 T 1300 600" fill="none" stroke="#FFE600" strokeWidth="3" opacity="0.5" strokeDasharray="4 12" />
         <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#ffffff" strokeWidth="1.5" opacity="0.2" />
       </svg>
-
-      <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent transform-gpu" />
+      <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent" />
     </div>
   );
 }
@@ -324,19 +309,19 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 733);
+    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 200);
     return () => clearInterval(interval);
   }, [words.length]);
 
   useEffect(() => {
     let start: number | null = null;
-    const duration = 2200;
+    const duration = 600; // Drastically shortened load screen for mobile performance
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 150);
+      else setTimeout(onComplete, 100);
     };
     requestAnimationFrame(step);
   }, [onComplete]);
@@ -344,7 +329,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   return (
     <motion.div
       exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
-      transition={{ duration: 0.7, ease: "easeInOut" }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
       className="fixed inset-0 z-[9999] bg-[#08090a] flex flex-col justify-between"
     >
       <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-accent uppercase tracking-[0.3em] font-bold">
@@ -353,7 +338,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white absolute drop-shadow-[0_0_20px_rgba(255,230,0,0.4)]">
+          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white absolute drop-shadow-[0_0_20px_rgba(255,230,0,0.4)]">
             {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
@@ -364,7 +349,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       </div>
 
       <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/5 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent origin-left shadow-[0_0_20px_rgba(255,230,0,0.8)]" />
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.6, ease: "linear" }} className="w-full h-full bg-accent origin-left shadow-[0_0_20px_rgba(255,230,0,0.8)]" />
       </div>
     </motion.div>
   );
@@ -384,7 +369,7 @@ function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 pointer-events-none">
-      <nav className={`pointer-events-auto inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-all duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-accent/50" : ""}`}>
+      <nav className={`pointer-events-auto inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-all duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-accent/50" : ""}`}>
         
         <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-accent to-[#ccb800] cursor-pointer flex-shrink-0 hover:shadow-[0_0_15px_rgba(255,230,0,0.6)] transition-all duration-300">
           <div className="w-full h-full bg-black rounded-full overflow-hidden flex items-center justify-center relative">
@@ -467,7 +452,7 @@ function Hero() {
 
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.7 }}
-          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-[#111214]/80 py-4 pr-4 rounded-r-xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-[#111214]/80 py-4 pr-4 rounded-r-xl shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
         >
           Born on the concrete, headed for the global stage. We built Tekkrew to elevate the beautiful game with raw street style. As the world turns its eyes to North America for World Cup '26, we are bringing gravity-defying freestyle to the masses—and we are just getting started.
         </motion.p>
@@ -504,59 +489,71 @@ interface SquadCardProps {
   isActive: boolean;
   onInteract: () => void;
   onLeave: () => void;
-  isTouchDevice: boolean;
 }
 
-// React.memo prevents lagging re-renders on mobile when interacting
-const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice }: SquadCardProps) => {
-  
-  // Safe interaction bindings
-  const eventHandlers = isTouchDevice
-    ? { onPointerDown: onInteract } // Pure pointer touch on mobile prevents double-tap
-    : { onPointerEnter: onInteract, onPointerLeave: onLeave }; // Hover for desktop
+const SquadCard = memo(({ member, isActive, onInteract, onLeave }: SquadCardProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Play/Pause Video based strictly on isActive prop.
+  // Using native HTML video controls eliminates React re-mounting lag.
+  useEffect(() => {
+    if (isActive && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    } else if (!isActive && videoRef.current) {
+      videoRef.current.pause();
+    }
+  }, [isActive]);
+
+  // Robust Native Pointer Events
+  const handlePointerEnter = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") onInteract();
+  };
+  const handlePointerLeave = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") onLeave();
+  };
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") onInteract(); // Mobile tap
+  };
 
   return (
     <div
-      {...eventHandlers}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+      onPointerDown={handlePointerDown}
       className={`relative bg-[#111214] rounded-[2rem] overflow-hidden border transition-all duration-300 group flex flex-col cursor-pointer ${
-        isActive ? 'border-accent shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-xl hover:-translate-y-2 hover:border-accent/40 hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
+        isActive ? 'border-accent shadow-xl md:shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:-translate-y-2 hover:border-accent/40 md:hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
       }`}
     >
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
 
-      {/* TOP HALF: Player Image Container (Fixed aspect to avoid layout shift) */}
+      {/* TOP HALF: Player Image Container */}
       <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#111214] z-0 border-b border-white/5">
         <div className="w-full h-full relative transition-transform duration-1000 group-hover:scale-105 bg-black">
           
-          {/* Base Static Image - PRIORITY TRUE fixes the mobile 3s delay completely */}
+          {/* Base Static Image - ALWAYS MOUNTED. `loading="lazy"` makes page instant. */}
           <Image
             src={member.image}
             alt={member.name}
             fill
-            priority={true} 
+            loading="lazy"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            quality={85}
             className={`object-cover ${member.imageClass || "object-top"}`}
           />
 
-          {/* Optimized Interactive Video (Fades IN over the static image seamlessly) */}
-          <AnimatePresence>
-            {isActive && member.videoFile && (
-              <motion.video
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                src={member.videoFile}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="none" // Optimizes initial page load. Browser fetches exactly on interaction.
-                className={`absolute inset-0 w-full h-full object-cover z-10 ${member.imageClass || "object-top"}`}
-              />
-            )}
-          </AnimatePresence>
+          {/* Optimized MP4 Video - Fades IN smoothly over the static image only when active */}
+          {member.videoFile && (
+            <video
+              ref={videoRef}
+              src={member.videoFile}
+              preload="none"
+              loop
+              muted
+              playsInline
+              className={`absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300 ${member.imageClass || "object-top"} ${
+                isActive ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            />
+          )}
         </div>
         
         <div className="absolute inset-0 bg-gradient-to-t from-[#111214] via-[#111214]/40 to-transparent pointer-events-none" />
@@ -600,8 +597,8 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice }
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()} 
               onPointerDown={(e) => e.stopPropagation()} 
+              onClick={(e) => e.stopPropagation()} 
               className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(255,230,0,0.4)]"
               title={link.name}
             >
@@ -618,21 +615,10 @@ SquadCard.displayName = "SquadCard";
 
 function SquadSection() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-
-  useEffect(() => {
-    // Advanced touch detection avoids double-taps on Safari/iOS
-    const checkTouch = () => setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
-    checkTouch();
-  }, []);
 
   const handleInteraction = useCallback((index: number) => {
-    if (isTouchDevice) {
-      setActiveIndex((current) => (current === index ? null : index));
-    } else {
-      setActiveIndex(index);
-    }
-  }, [isTouchDevice]);
+    setActiveIndex((current) => (current === index ? null : index));
+  }, []);
 
   const handleLeave = useCallback(() => setActiveIndex(null), []);
 
@@ -650,7 +636,10 @@ function SquadSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" onPointerLeave={!isTouchDevice ? handleLeave : undefined}>
+        <div 
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" 
+          onPointerLeave={(e) => { if (e.pointerType === "mouse") handleLeave(); }}
+        >
           {squadData.map((member, index) => (
             <SquadCard 
               key={index} 
@@ -658,7 +647,6 @@ function SquadSection() {
               isActive={activeIndex === index} 
               onInteract={() => handleInteraction(index)} 
               onLeave={handleLeave}
-              isTouchDevice={isTouchDevice}
             />
           ))}
         </div>
@@ -672,11 +660,11 @@ function SquadSection() {
 // ==========================================
 function MediaCard({ feature }: { feature: MediaFeature }) {
   return (
-    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-accent/40 hover:shadow-[0_15px_50px_rgba(255,230,0,0.1)]`}>
+    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-xl md:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-accent/40 md:hover:shadow-[0_15px_50px_rgba(255,230,0,0.1)]`}>
        
        {/* Decorative Viewfinder Corners */}
-       <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-accent/60 rounded-tl-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_2px_2px_10px_rgba(255,230,0,0.2)]" />
-       <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent/60 rounded-br-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.2)]" />
+       <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-accent/60 rounded-tl-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_2px_2px_10px_rgba(255,230,0,0.2)]" />
+       <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent/60 rounded-br-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.2)]" />
        
        {/* Text Content */}
        <div className="flex-1 z-10 w-full lg:w-1/2">
@@ -701,9 +689,9 @@ function MediaCard({ feature }: { feature: MediaFeature }) {
           {feature.videos.map((vid, i) => (
             <div 
               key={i} 
-              className={`relative ${feature.videos.length > 1 ? 'w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 shadow-[0_15px_30px_rgba(0,0,0,0.9)] border border-white/10 rounded-[1.5rem] bg-black p-1 transition-colors duration-500 group-hover:border-accent/60 ${vid.offset ? 'translate-y-6 sm:translate-y-12' : ''}`}
+              className={`relative ${feature.videos.length > 1 ? 'w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 shadow-lg md:shadow-[0_15px_30px_rgba(0,0,0,0.9)] border border-white/10 rounded-[1.5rem] bg-black p-1 transition-colors duration-500 group-hover:border-accent/60 ${vid.offset ? 'translate-y-6 sm:translate-y-12' : ''}`}
             >
-              <video controls playsInline preload="metadata" poster={vid.poster} className={`${vid.aspect} h-full w-full rounded-[1.3rem] bg-black object-contain`} src={vid.src} />
+              <video controls playsInline preload="none" poster={vid.poster} className={`${vid.aspect} h-full w-full rounded-[1.3rem] bg-black object-contain`} src={vid.src} />
             </div>
           ))}
        </div>
@@ -799,7 +787,7 @@ function GallerySection() {
             <button
               key={index}
               onClick={() => setSelectedImage(src)}
-              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/10 group cursor-pointer block text-left shadow-lg hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)] transition-all duration-300"
+              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/10 group cursor-pointer block text-left shadow-lg hover:border-accent/40 md:hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)] transition-all duration-300"
               aria-label={`View photo ${index + 1}`}
             >
               <Image
