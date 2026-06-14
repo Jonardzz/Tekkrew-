@@ -170,7 +170,7 @@ const squadData: SquadMember[] = [
     videoFile: "/Zo.mp4",
     story: (
       <>
-        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
+        Zohair Ali is a street soccer player and content creator who brings energy, skill, and passion to every video. His content shows more than soccer. It inspires young athletes to believe in themselves, work hard, and build their own path. With 75K+ followers, millions of views, and big brand partners like <a href="https://www.nike.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Nike</a> and <a href="https://www.adidas.com" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white hover:text-accent font-bold transition-colors underline decoration-accent/50 underline-offset-2">Adidas</a>, Zohair is growing a strong community around soccer, culture, and creativity.
       </>
     ),
     links: [
@@ -249,9 +249,8 @@ const initialGalleryImages = [
   "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14705.jpg",
 ];
 
-
 // ==========================================
-// 3. MAIN PAGE LAYOUT & PRELOADER
+// 3. MAIN PAGE LAYOUT
 // ==========================================
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
@@ -261,16 +260,6 @@ export default function Page() {
       window.history.scrollRestoration = "manual";
     }
     window.scrollTo(0, 0);
-
-    // Smart Preloader for Roster Static Images
-    // This runs silently in the background while the loader covers the screen
-    const preloadRosterImages = () => {
-      squadData.forEach((member) => {
-        const img = new window.Image();
-        img.src = member.image;
-      });
-    };
-    preloadRosterImages();
   }, []);
 
   // Prevent scroll during loader overlay to guarantee smooth entry
@@ -291,8 +280,7 @@ export default function Page() {
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      {/* Main Content wrapper is fully visible and rendered behind the loader.
-          Opacity remains 100 so images and layouts are securely pre-painted by the browser. */}
+      {/* Main Content wrapper is fully visible and rendered behind the loader. */}
       <div className="relative z-10 opacity-100">
         <Navbar />
         <Hero />
@@ -310,9 +298,9 @@ export default function Page() {
 function BackgroundElements() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
-      {/* Mobile-optimized spot lights to reduce GPU draw lag */}
-      <div className="absolute top-[-10%] left-[20%] w-[500px] md:w-[900px] h-[400px] md:h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[60px] md:blur-[100px] transform-gpu will-change-transform" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[400px] md:w-[700px] h-[500px] md:h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[80px] md:blur-[120px] transform-gpu will-change-transform" />
+      {/* Mobile-optimized spot lights to reduce GPU draw lag on iPhones */}
+      <div className="absolute top-[-10%] left-[20%] w-[300px] md:w-[900px] h-[300px] md:h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[50px] md:blur-[100px] transform-gpu will-change-transform" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[250px] md:w-[700px] h-[300px] md:h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[60px] md:blur-[120px] transform-gpu will-change-transform" />
       
       {/* Premium Tactical Pitch SVG Pattern */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
@@ -339,13 +327,13 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const words = ["Skill", "Street", "Passion"];
   const [wordIndex, setWordIndex] = useState(0);
 
-  // Keep requested 733ms timing
+  // Exact Requested Timing: Word Switch 733ms
   useEffect(() => {
     const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 733);
     return () => clearInterval(interval);
   }, [words.length]);
 
-  // Keep requested 2200ms timing with 150ms tail delay
+  // Exact Requested Timing: 2200ms Duration + 150ms trailing delay
   useEffect(() => {
     let start: number | null = null;
     const duration = 2200; 
@@ -362,7 +350,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   return (
     <motion.div
       exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
-      transition={{ duration: 0.7, ease: "easeInOut" }} // Keep requested 0.7s exit
+      transition={{ duration: 0.7, ease: "easeInOut" }} // Exact Requested Timing: 0.7s Exit fade
       className="fixed inset-0 z-[9999] bg-[#08090a] flex flex-col justify-between"
     >
       <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-accent uppercase tracking-[0.3em] font-bold">
@@ -520,39 +508,41 @@ function Hero() {
 interface SquadCardProps {
   member: SquadMember;
   isActive: boolean;
-  onInteract: (name: string, pointerType: string) => void;
-  onLeave: (pointerType: string) => void;
+  onInteract: () => void;
+  onLeave: () => void;
+  isTouchDevice: boolean;
   priorityLoad?: boolean;
 }
 
 // React.memo prevents lagging re-renders on mobile when interacting
-const SquadCard = memo(({ member, isActive, onInteract, onLeave, priorityLoad = false }: SquadCardProps) => {
+const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, priorityLoad = false }: SquadCardProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Video State Management (Pause and reset when inactive)
+  // Play/Pause Video based strictly on isActive prop.
   useEffect(() => {
     if (isActive && videoRef.current) {
-      videoRef.current.play().catch(() => {});
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => { /* Auto-play blocked or aborted silently */ });
+      }
     } else if (!isActive && videoRef.current) {
       videoRef.current.pause();
-      videoRef.current.currentTime = 0; // Clean reset
+      videoRef.current.currentTime = 0; // Clean reset on close
     }
   }, [isActive]);
 
-  // Robust Native Pointer Events (Solves Mobile Double-Tap & Desktop Hover)
-  const handlePointerEnter = (e: React.PointerEvent) => onInteract(member.name, e.pointerType);
-  const handlePointerLeave = (e: React.PointerEvent) => onLeave(e.pointerType);
-  const handlePointerDown = (e: React.PointerEvent) => {
-    if (e.pointerType !== "mouse") onInteract(member.name, e.pointerType);
-  };
+  // Robust Native Pointer Events
+  const handlePointerEnter = (e: React.PointerEvent) => { if (e.pointerType === "mouse") onInteract(); };
+  const handlePointerLeave = (e: React.PointerEvent) => { if (e.pointerType === "mouse") onLeave(); };
+  const handleClick = (e: React.MouseEvent) => { if (isTouchDevice) onInteract(); };
 
   return (
     <div
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
-      onPointerDown={handlePointerDown}
+      onClick={handleClick}
       className={`relative bg-[#111214] rounded-[2rem] overflow-hidden border transition-all duration-300 group flex flex-col cursor-pointer ${
-        isActive ? 'border-accent shadow-xl md:shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:hover:-translate-y-2 md:hover:border-accent/40 md:hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
+        isActive ? 'border-accent shadow-xl md:shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:-translate-y-2 hover:border-accent/40 md:hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
       }`}
     >
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
@@ -561,13 +551,13 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, priorityLoad = 
       <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#111214] z-0 border-b border-white/5">
         <div className="w-full h-full relative transition-transform duration-1000 md:group-hover:scale-105 bg-black">
           
-          {/* Base Static Image - ALWAYS MOUNTED. `priority` fixes LCP delay. */}
+          {/* Base Static Image - ALWAYS MOUNTED. Priority true fixes LCP delay. */}
           <Image
             src={member.image}
             alt={member.name}
             fill
             priority={priorityLoad}
-            loading={priorityLoad ? undefined : "lazy"}
+            loading={priorityLoad ? "eager" : "lazy"} 
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             quality={85}
             className={`object-cover ${member.imageClass || "object-top"}`}
@@ -578,7 +568,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, priorityLoad = 
             <video
               ref={videoRef}
               src={member.videoFile}
-              preload="none" // Zero network footprint until interacted with
+              preload="metadata" // Smart preload fetches headers so play is instant, saves payload bandwidth
               loop
               muted
               playsInline
@@ -630,8 +620,8 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, priorityLoad = 
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              onPointerDown={(e) => e.stopPropagation()} 
               onClick={(e) => e.stopPropagation()} 
+              onPointerDown={(e) => e.stopPropagation()} 
               className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm md:hover:shadow-[0_0_15px_rgba(255,230,0,0.4)]"
               title={link.name}
             >
@@ -648,20 +638,28 @@ SquadCard.displayName = "SquadCard";
 
 function SquadSection() {
   const [activeMemberName, setActiveMemberName] = useState<string | null>(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-  const handleInteract = useCallback((name: string, pointerType: string) => {
-    if (pointerType === "mouse") {
-      setActiveMemberName(name); // Desktop hover
+  useEffect(() => {
+    // Touch detection allows us to safely bifurcate Desktop Hover and Mobile Click
+    const checkTouch = () => setIsTouchDevice(window.matchMedia("(hover: none)").matches || 'ontouchstart' in window);
+    checkTouch();
+  }, []);
+
+  const handleInteraction = useCallback((name: string) => {
+    if (isTouchDevice) {
+      setActiveIndex((current) => (current === name ? null : name));
     } else {
-      setActiveMemberName((prev) => (prev === name ? null : name)); // Mobile tap toggle
+      setActiveIndex(name);
     }
+  }, [isTouchDevice]);
+
+  const handleLeave = useCallback(() => {
+    setActiveIndex(null);
   }, []);
 
-  const handleLeave = useCallback((pointerType: string) => {
-    if (pointerType === "mouse") {
-      setActiveMemberName(null);
-    }
-  }, []);
+  // Internal state alias for readability
+  const setActiveIndex = setActiveMemberName;
 
   return (
     <section id="crew" className="relative w-full py-16 md:py-32 px-4 md:px-6 z-10">
@@ -679,16 +677,17 @@ function SquadSection() {
 
         <div 
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" 
-          onPointerLeave={(e) => { if (e.pointerType === "mouse") setActiveMemberName(null); }}
+          onPointerLeave={(e) => { if (e.pointerType === "mouse") handleLeave(); }}
         >
           {squadData.map((member, index) => (
             <SquadCard 
               key={member.name} 
               member={member} 
               isActive={activeMemberName === member.name} 
-              onInteract={handleInteract} 
+              onInteract={() => handleInteraction(member.name)} 
               onLeave={handleLeave}
-              priorityLoad={index < 2} // First two load instantly for zero LCP lag on mobile
+              isTouchDevice={isTouchDevice}
+              priorityLoad={index < 2} // Preloads the first 2 images instantly
             />
           ))}
         </div>
@@ -702,11 +701,11 @@ function SquadSection() {
 // ==========================================
 function MediaCard({ feature }: { feature: MediaFeature }) {
   return (
-    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-xl md:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 md:hover:border-accent/40 md:hover:shadow-[0_15px_50px_rgba(255,230,0,0.1)]`}>
+    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-xl md:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-accent/40 md:hover:shadow-[0_15px_50px_rgba(255,230,0,0.1)]`}>
        
        {/* Decorative Viewfinder Corners */}
-       <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-accent/60 rounded-tl-[2.3rem] opacity-30 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_2px_2px_10px_rgba(255,230,0,0.2)]" />
-       <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent/60 rounded-br-[2.3rem] opacity-30 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.2)]" />
+       <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-accent/60 rounded-tl-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_2px_2px_10px_rgba(255,230,0,0.2)]" />
+       <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent/60 rounded-br-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.2)]" />
        
        {/* Text Content */}
        <div className="flex-1 z-10 w-full lg:w-1/2">
@@ -731,7 +730,7 @@ function MediaCard({ feature }: { feature: MediaFeature }) {
           {feature.videos.map((vid, i) => (
             <div 
               key={i} 
-              className={`relative ${feature.videos.length > 1 ? 'w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 shadow-lg md:shadow-[0_15px_30px_rgba(0,0,0,0.9)] border border-white/10 rounded-[1.5rem] bg-black p-1 transition-colors duration-500 md:group-hover:border-accent/60 ${vid.offset ? 'translate-y-6 sm:translate-y-12' : ''}`}
+              className={`relative ${feature.videos.length > 1 ? 'w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 shadow-lg md:shadow-[0_15px_30px_rgba(0,0,0,0.9)] border border-white/10 rounded-[1.5rem] bg-black p-1 transition-colors duration-500 group-hover:border-accent/60 ${vid.offset ? 'translate-y-6 sm:translate-y-12' : ''}`}
             >
               <video controls playsInline preload="none" poster={vid.poster} className={`${vid.aspect} h-full w-full rounded-[1.3rem] bg-black object-contain`} src={vid.src} />
             </div>
