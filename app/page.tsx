@@ -186,7 +186,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "khou",
     tag: "Broadcast Feature",
-    tagIconClass: "bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,0.8)]",
+    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)]",
     title: "KHOU 11 Network",
     desc1: "Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.",
     desc2: (
@@ -203,7 +203,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "telemundo",
     tag: "Live Coverage",
-    tagIconClass: "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]",
+    tagIconClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
     title: "Telemundo Countdown",
     desc1: "From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.",
     desc2: (
@@ -251,7 +251,7 @@ const initialGalleryImages = [
 
 
 // ==========================================
-// 3. MAIN PAGE LAYOUT
+// 3. MAIN PAGE LAYOUT & PRELOADER
 // ==========================================
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
@@ -261,18 +261,26 @@ export default function Page() {
       window.history.scrollRestoration = "manual";
     }
     window.scrollTo(0, 0);
+
+    // Smart Preloader for Roster Static Images
+    // This runs silently in the background while the loader covers the screen
+    const preloadRosterImages = () => {
+      squadData.forEach((member) => {
+        const img = new window.Image();
+        img.src = member.image;
+      });
+    };
+    preloadRosterImages();
   }, []);
 
-  // Prevent user from scrolling down while the loading screen overlay is still active
+  // Prevent scroll during loader overlay to guarantee smooth entry
   useEffect(() => {
     if (isLoading) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
     }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
+    return () => { document.body.style.overflow = "unset"; };
   }, [isLoading]);
 
   return (
@@ -283,11 +291,9 @@ export default function Page() {
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      {/* The main content renders immediately (opacity-100) behind the loader.
-        This ensures all images, roster layouts, and static content fetch and load 
-        before the 3-second loader disappears, eliminating delayed pops. 
-      */}
-      <div className="relative z-10 opacity-100 transition-opacity duration-700 ease-out">
+      {/* Main Content wrapper is fully visible and rendered behind the loader.
+          Opacity remains 100 so images and layouts are securely pre-painted by the browser. */}
+      <div className="relative z-10 opacity-100">
         <Navbar />
         <Hero />
         <SquadSection />
@@ -304,9 +310,9 @@ export default function Page() {
 function BackgroundElements() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
-      {/* Intense but clean Yellow Spotlights (Hardware Accelerated to prevent lag) */}
-      <div className="absolute top-[-10%] left-[20%] w-[900px] h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[100px] transform-gpu will-change-transform" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[700px] h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[120px] transform-gpu will-change-transform" />
+      {/* Mobile-optimized spot lights to reduce GPU draw lag */}
+      <div className="absolute top-[-10%] left-[20%] w-[500px] md:w-[900px] h-[400px] md:h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[60px] md:blur-[100px] transform-gpu will-change-transform" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[400px] md:w-[700px] h-[500px] md:h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[80px] md:blur-[120px] transform-gpu will-change-transform" />
       
       {/* Premium Tactical Pitch SVG Pattern */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
@@ -315,20 +321,14 @@ function BackgroundElements() {
             <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#FFE600" strokeWidth="0.5" opacity="0.3" />
           </pattern>
         </defs>
-        
         <rect width="100%" height="100%" fill="url(#netMesh)" />
-        
-        {/* Field Markings */}
         <circle cx="50%" cy="50%" r="350" fill="none" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.5" />
         <circle cx="50%" cy="50%" r="6" fill="#FFE600" opacity="0.9" />
         <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff" strokeWidth="1" opacity="0.15" />
         <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.3" />
-
-        {/* Dynamic Freestyle Curves */}
         <path d="M-100 200 Q 400 300 500 700 T 1300 600" fill="none" stroke="#FFE600" strokeWidth="3" opacity="0.5" strokeDasharray="4 12" />
         <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#ffffff" strokeWidth="1.5" opacity="0.2" />
       </svg>
-
       <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent transform-gpu" />
     </div>
   );
@@ -339,13 +339,13 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const words = ["Skill", "Street", "Passion"];
   const [wordIndex, setWordIndex] = useState(0);
 
-  // Interval for Word Switching (733ms as requested)
+  // Keep requested 733ms timing
   useEffect(() => {
     const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 733);
     return () => clearInterval(interval);
   }, [words.length]);
 
-  // Main Loader Duration (2200ms duration + 150ms delay as requested)
+  // Keep requested 2200ms timing with 150ms tail delay
   useEffect(() => {
     let start: number | null = null;
     const duration = 2200; 
@@ -354,7 +354,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 150); // Delay before trigger exit
+      else setTimeout(onComplete, 150);
     };
     requestAnimationFrame(step);
   }, [onComplete]);
@@ -362,7 +362,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   return (
     <motion.div
       exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
-      transition={{ duration: 0.7, ease: "easeInOut" }} // 0.7s exit fade
+      transition={{ duration: 0.7, ease: "easeInOut" }} // Keep requested 0.7s exit
       className="fixed inset-0 z-[9999] bg-[#08090a] flex flex-col justify-between"
     >
       <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-accent uppercase tracking-[0.3em] font-bold">
@@ -402,7 +402,7 @@ function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 pointer-events-none">
-      <nav className={`pointer-events-auto inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-all duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-accent/50" : ""}`}>
+      <nav className={`pointer-events-auto inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-all duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-accent/50" : ""}`}>
         
         <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-accent to-[#ccb800] cursor-pointer flex-shrink-0 hover:shadow-[0_0_15px_rgba(255,230,0,0.6)] transition-all duration-300">
           <div className="w-full h-full bg-black rounded-full overflow-hidden flex items-center justify-center relative">
@@ -455,8 +455,6 @@ function Hero() {
 
   return (
     <section className="relative min-h-[100svh] flex flex-col w-full overflow-hidden pt-24 pb-8">
-      
-      {/* Central Content Container */}
       <div className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full z-10">
         
         <motion.div 
@@ -487,7 +485,7 @@ function Hero() {
 
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.7 }}
-          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-[#111214]/80 py-4 pr-4 rounded-r-xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-[#111214]/80 py-4 pr-4 rounded-r-xl shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
         >
           Born on the concrete, headed for the global stage. We built Tekkrew to elevate the beautiful game with raw street style. As the world turns its eyes to North America for World Cup '26, we are bringing gravity-defying freestyle to the masses—and we are just getting started.
         </motion.p>
@@ -522,31 +520,30 @@ function Hero() {
 interface SquadCardProps {
   member: SquadMember;
   isActive: boolean;
-  onInteract: () => void;
-  onLeave: () => void;
+  onInteract: (name: string, pointerType: string) => void;
+  onLeave: (pointerType: string) => void;
+  priorityLoad?: boolean;
 }
 
-const SquadCard = memo(({ member, isActive, onInteract, onLeave }: SquadCardProps) => {
+// React.memo prevents lagging re-renders on mobile when interacting
+const SquadCard = memo(({ member, isActive, onInteract, onLeave, priorityLoad = false }: SquadCardProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Play/Pause Video based strictly on isActive prop.
+  // Video State Management (Pause and reset when inactive)
   useEffect(() => {
     if (isActive && videoRef.current) {
       videoRef.current.play().catch(() => {});
     } else if (!isActive && videoRef.current) {
       videoRef.current.pause();
+      videoRef.current.currentTime = 0; // Clean reset
     }
   }, [isActive]);
 
-  // Robust Native Pointer Events
-  const handlePointerEnter = (e: React.PointerEvent) => {
-    if (e.pointerType === "mouse") onInteract();
-  };
-  const handlePointerLeave = (e: React.PointerEvent) => {
-    if (e.pointerType === "mouse") onLeave();
-  };
+  // Robust Native Pointer Events (Solves Mobile Double-Tap & Desktop Hover)
+  const handlePointerEnter = (e: React.PointerEvent) => onInteract(member.name, e.pointerType);
+  const handlePointerLeave = (e: React.PointerEvent) => onLeave(e.pointerType);
   const handlePointerDown = (e: React.PointerEvent) => {
-    if (e.pointerType !== "mouse") onInteract(); // Mobile tap
+    if (e.pointerType !== "mouse") onInteract(member.name, e.pointerType);
   };
 
   return (
@@ -555,21 +552,22 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave }: SquadCardProp
       onPointerLeave={handlePointerLeave}
       onPointerDown={handlePointerDown}
       className={`relative bg-[#111214] rounded-[2rem] overflow-hidden border transition-all duration-300 group flex flex-col cursor-pointer ${
-        isActive ? 'border-accent shadow-xl md:shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:-translate-y-2 hover:border-accent/40 md:hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
+        isActive ? 'border-accent shadow-xl md:shadow-[0_15px_40px_rgba(255,230,0,0.15)] -translate-y-2' : 'border-white/10 shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:hover:-translate-y-2 md:hover:border-accent/40 md:hover:shadow-[0_15px_40px_rgba(255,230,0,0.1)]'
       }`}
     >
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
 
       {/* TOP HALF: Fixed Aspect Container to avoid layout shift */}
       <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#111214] z-0 border-b border-white/5">
-        <div className="w-full h-full relative transition-transform duration-1000 group-hover:scale-105 bg-black">
+        <div className="w-full h-full relative transition-transform duration-1000 md:group-hover:scale-105 bg-black">
           
-          {/* Base Static Image - ALWAYS MOUNTED. `priority` fixes mobile 3s delay completely */}
+          {/* Base Static Image - ALWAYS MOUNTED. `priority` fixes LCP delay. */}
           <Image
             src={member.image}
             alt={member.name}
             fill
-            priority={true} 
+            priority={priorityLoad}
+            loading={priorityLoad ? undefined : "lazy"}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             quality={85}
             className={`object-cover ${member.imageClass || "object-top"}`}
@@ -580,11 +578,11 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave }: SquadCardProp
             <video
               ref={videoRef}
               src={member.videoFile}
-              preload="none" // Optimizes initial page load
+              preload="none" // Zero network footprint until interacted with
               loop
               muted
               playsInline
-              className={`absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300 ${member.imageClass || "object-top"} ${
+              className={`absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300 transform-gpu ${member.imageClass || "object-top"} ${
                 isActive ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             />
@@ -607,7 +605,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave }: SquadCardProp
         {member.flags && member.flags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-3 mb-6">
             {member.flags.map((flag, idx) => (
-              <div key={idx} className="w-14 h-9 rounded-md border border-white/20 bg-[#0a0a0a] shadow-[0_5px_15px_rgba(0,0,0,0.6)] flex items-center justify-center text-3xl leading-none transition-all duration-300 group-hover:-translate-y-1 group-hover:border-accent group-hover:shadow-[0_5px_15px_rgba(255,230,0,0.3)]">
+              <div key={idx} className="w-14 h-9 rounded-md border border-white/20 bg-[#0a0a0a] shadow-lg md:shadow-[0_5px_15px_rgba(0,0,0,0.6)] flex items-center justify-center text-3xl leading-none transition-all duration-300 md:group-hover:-translate-y-1 md:group-hover:border-accent md:group-hover:shadow-[0_5px_15px_rgba(255,230,0,0.3)]">
                 {flag}
               </div>
             ))}
@@ -634,7 +632,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave }: SquadCardProp
               rel="noopener noreferrer"
               onPointerDown={(e) => e.stopPropagation()} 
               onClick={(e) => e.stopPropagation()} 
-              className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(255,230,0,0.4)]"
+              className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-accent hover:border-accent transition-all duration-300 shadow-sm md:hover:shadow-[0_0_15px_rgba(255,230,0,0.4)]"
               title={link.name}
             >
               {link.icon}
@@ -649,13 +647,21 @@ SquadCard.displayName = "SquadCard";
 
 
 function SquadSection() {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeMemberName, setActiveMemberName] = useState<string | null>(null);
 
-  const handleInteraction = useCallback((index: number) => {
-    setActiveIndex((current) => (current === index ? null : index));
+  const handleInteract = useCallback((name: string, pointerType: string) => {
+    if (pointerType === "mouse") {
+      setActiveMemberName(name); // Desktop hover
+    } else {
+      setActiveMemberName((prev) => (prev === name ? null : name)); // Mobile tap toggle
+    }
   }, []);
 
-  const handleLeave = useCallback(() => setActiveIndex(null), []);
+  const handleLeave = useCallback((pointerType: string) => {
+    if (pointerType === "mouse") {
+      setActiveMemberName(null);
+    }
+  }, []);
 
   return (
     <section id="crew" className="relative w-full py-16 md:py-32 px-4 md:px-6 z-10">
@@ -673,15 +679,16 @@ function SquadSection() {
 
         <div 
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" 
-          onPointerLeave={(e) => { if (e.pointerType === "mouse") handleLeave(); }}
+          onPointerLeave={(e) => { if (e.pointerType === "mouse") setActiveMemberName(null); }}
         >
           {squadData.map((member, index) => (
             <SquadCard 
-              key={index} 
+              key={member.name} 
               member={member} 
-              isActive={activeIndex === index} 
-              onInteract={() => handleInteraction(index)} 
+              isActive={activeMemberName === member.name} 
+              onInteract={handleInteract} 
               onLeave={handleLeave}
+              priorityLoad={index < 2} // First two load instantly for zero LCP lag on mobile
             />
           ))}
         </div>
@@ -695,11 +702,11 @@ function SquadSection() {
 // ==========================================
 function MediaCard({ feature }: { feature: MediaFeature }) {
   return (
-    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-xl md:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-accent/40 md:hover:shadow-[0_15px_50px_rgba(255,230,0,0.1)]`}>
+    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center p-8 md:p-12 rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-xl md:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 md:hover:border-accent/40 md:hover:shadow-[0_15px_50px_rgba(255,230,0,0.1)]`}>
        
        {/* Decorative Viewfinder Corners */}
-       <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-accent/60 rounded-tl-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_2px_2px_10px_rgba(255,230,0,0.2)]" />
-       <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent/60 rounded-br-[2.3rem] opacity-30 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.2)]" />
+       <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-accent/60 rounded-tl-[2.3rem] opacity-30 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_2px_2px_10px_rgba(255,230,0,0.2)]" />
+       <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent/60 rounded-br-[2.3rem] opacity-30 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.2)]" />
        
        {/* Text Content */}
        <div className="flex-1 z-10 w-full lg:w-1/2">
@@ -724,7 +731,7 @@ function MediaCard({ feature }: { feature: MediaFeature }) {
           {feature.videos.map((vid, i) => (
             <div 
               key={i} 
-              className={`relative ${feature.videos.length > 1 ? 'w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 shadow-lg md:shadow-[0_15px_30px_rgba(0,0,0,0.9)] border border-white/10 rounded-[1.5rem] bg-black p-1 transition-colors duration-500 group-hover:border-accent/60 ${vid.offset ? 'translate-y-6 sm:translate-y-12' : ''}`}
+              className={`relative ${feature.videos.length > 1 ? 'w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 shadow-lg md:shadow-[0_15px_30px_rgba(0,0,0,0.9)] border border-white/10 rounded-[1.5rem] bg-black p-1 transition-colors duration-500 md:group-hover:border-accent/60 ${vid.offset ? 'translate-y-6 sm:translate-y-12' : ''}`}
             >
               <video controls playsInline preload="none" poster={vid.poster} className={`${vid.aspect} h-full w-full rounded-[1.3rem] bg-black object-contain`} src={vid.src} />
             </div>
@@ -822,7 +829,7 @@ function GallerySection() {
             <button
               key={index}
               onClick={() => setSelectedImage(src)}
-              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/10 group cursor-pointer block text-left shadow-lg hover:border-accent/40 md:hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)] transition-all duration-300"
+              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/10 group cursor-pointer block text-left shadow-lg md:hover:border-accent/40 md:hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)] transition-all duration-300"
               aria-label={`View photo ${index + 1}`}
             >
               <Image
@@ -832,10 +839,10 @@ function GallerySection() {
                 loading="lazy"
                 quality={85}
                 sizes="(max-width: 768px) 50vw, 20vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                className="object-cover transition-transform duration-700 md:group-hover:scale-110 opacity-80 md:group-hover:opacity-100"
               />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                <div className="w-10 h-10 rounded-full border border-accent bg-black/50 backdrop-blur-md flex items-center justify-center text-accent transform scale-50 group-hover:scale-100 transition-transform duration-500 shadow-[0_0_15px_rgba(255,230,0,0.5)]">
+              <div className="absolute inset-0 bg-black/50 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full border border-accent bg-black/50 backdrop-blur-md flex items-center justify-center text-accent transform scale-50 md:group-hover:scale-100 transition-transform duration-500 shadow-[0_0_15px_rgba(255,230,0,0.5)]">
                   <ArrowUpRightIcon />
                 </div>
               </div>
