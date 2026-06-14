@@ -37,6 +37,13 @@ const ArrowUpRightIcon = () => (
     <polyline points="7 7 17 7 17 17"></polyline>
   </svg>
 );
+const LetterboxdIcon = () => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="12" cy="12" r="3" />
+    <circle cx="18" cy="12" r="3" />
+  </svg>
+);
 
 // ==========================================
 // 2. TYPES & DATA STRUCTURES
@@ -122,6 +129,7 @@ const squadData: SquadMember[] = [
     links: [
       { name: "Instagram", url: "https://www.instagram.com/freestyle_jrd", icon: <InstagramIcon /> },
       { name: "TikTok", url: "https://www.tiktok.com/@freestyle_jrd", icon: <TikTokIcon /> },
+      { name: "Letterboxd", url: "https://letterboxd.com/freestyle_jrd/", icon: <LetterboxdIcon /> },
       { name: "Email", url: "mailto:joecr768@gmail.com", icon: <EmailIcon /> },
       { name: "Linktree", url: "https://linktr.ee/freestyle_jrd", icon: <LinkIcon /> },
     ]
@@ -173,11 +181,12 @@ const squadData: SquadMember[] = [
   }
 ];
 
+// --- Media Features Data ---
 const mediaData: MediaFeature[] = [
   {
     id: "khou",
     tag: "Broadcast Feature",
-    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)]",
+    tagIconClass: "bg-accent animate-pulse shadow-[0_0_8px_rgba(255,230,0,0.8)]",
     title: "KHOU 11 Network",
     desc1: "Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.",
     desc2: (
@@ -194,7 +203,7 @@ const mediaData: MediaFeature[] = [
   {
     id: "telemundo",
     tag: "Live Coverage",
-    tagIconClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
+    tagIconClass: "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]",
     title: "Telemundo Countdown",
     desc1: "From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.",
     desc2: (
@@ -254,6 +263,18 @@ export default function Page() {
     window.scrollTo(0, 0);
   }, []);
 
+  // Prevent user from scrolling down while the loading screen overlay is still active
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isLoading]);
+
   return (
     <main className="relative min-h-[100svh] bg-[#08090a] text-text overflow-x-hidden selection:bg-accent selection:text-black font-body">
       <BackgroundElements />
@@ -262,7 +283,11 @@ export default function Page() {
         {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      <div className={`relative z-10 transition-opacity duration-700 ease-out ${isLoading ? "opacity-0" : "opacity-100"}`}>
+      {/* The main content renders immediately (opacity-100) behind the loader.
+        This ensures all images, roster layouts, and static content fetch and load 
+        before the 3-second loader disappears, eliminating delayed pops. 
+      */}
+      <div className="relative z-10 opacity-100 transition-opacity duration-700 ease-out">
         <Navbar />
         <Hero />
         <SquadSection />
@@ -279,9 +304,9 @@ export default function Page() {
 function BackgroundElements() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
-      {/* Mobile-optimized spot lights */}
-      <div className="absolute top-[-10%] left-[20%] w-[500px] md:w-[900px] h-[400px] md:h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[60px] md:blur-[100px]" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[400px] md:w-[700px] h-[500px] md:h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[80px] md:blur-[120px]" />
+      {/* Intense but clean Yellow Spotlights (Hardware Accelerated to prevent lag) */}
+      <div className="absolute top-[-10%] left-[20%] w-[900px] h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[100px] transform-gpu will-change-transform" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[700px] h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[120px] transform-gpu will-change-transform" />
       
       {/* Premium Tactical Pitch SVG Pattern */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
@@ -290,15 +315,21 @@ function BackgroundElements() {
             <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#FFE600" strokeWidth="0.5" opacity="0.3" />
           </pattern>
         </defs>
+        
         <rect width="100%" height="100%" fill="url(#netMesh)" />
+        
+        {/* Field Markings */}
         <circle cx="50%" cy="50%" r="350" fill="none" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.5" />
         <circle cx="50%" cy="50%" r="6" fill="#FFE600" opacity="0.9" />
         <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff" strokeWidth="1" opacity="0.15" />
         <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.3" />
+
+        {/* Dynamic Freestyle Curves */}
         <path d="M-100 200 Q 400 300 500 700 T 1300 600" fill="none" stroke="#FFE600" strokeWidth="3" opacity="0.5" strokeDasharray="4 12" />
         <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#ffffff" strokeWidth="1.5" opacity="0.2" />
       </svg>
-      <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent" />
+
+      <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent transform-gpu" />
     </div>
   );
 }
@@ -308,20 +339,22 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const words = ["Skill", "Street", "Passion"];
   const [wordIndex, setWordIndex] = useState(0);
 
+  // Interval for Word Switching (733ms as requested)
   useEffect(() => {
-    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 200);
+    const interval = setInterval(() => setWordIndex((prev) => (prev + 1) % words.length), 733);
     return () => clearInterval(interval);
   }, [words.length]);
 
+  // Main Loader Duration (2200ms duration + 150ms delay as requested)
   useEffect(() => {
     let start: number | null = null;
-    const duration = 600; // Drastically shortened load screen for mobile performance
+    const duration = 2200; 
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       setCount(Math.floor(progress * 100));
       if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 100);
+      else setTimeout(onComplete, 150); // Delay before trigger exit
     };
     requestAnimationFrame(step);
   }, [onComplete]);
@@ -329,7 +362,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   return (
     <motion.div
       exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
+      transition={{ duration: 0.7, ease: "easeInOut" }} // 0.7s exit fade
       className="fixed inset-0 z-[9999] bg-[#08090a] flex flex-col justify-between"
     >
       <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-accent uppercase tracking-[0.3em] font-bold">
@@ -338,7 +371,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white absolute drop-shadow-[0_0_20px_rgba(255,230,0,0.4)]">
+          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white absolute drop-shadow-[0_0_20px_rgba(255,230,0,0.4)]">
             {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
@@ -349,7 +382,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       </div>
 
       <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/5 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.6, ease: "linear" }} className="w-full h-full bg-accent origin-left shadow-[0_0_20px_rgba(255,230,0,0.8)]" />
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent origin-left shadow-[0_0_20px_rgba(255,230,0,0.8)]" />
       </div>
     </motion.div>
   );
@@ -369,7 +402,7 @@ function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 pointer-events-none">
-      <nav className={`pointer-events-auto inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-all duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-accent/50" : ""}`}>
+      <nav className={`pointer-events-auto inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-all duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-accent/50" : ""}`}>
         
         <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-accent to-[#ccb800] cursor-pointer flex-shrink-0 hover:shadow-[0_0_15px_rgba(255,230,0,0.6)] transition-all duration-300">
           <div className="w-full h-full bg-black rounded-full overflow-hidden flex items-center justify-center relative">
@@ -422,6 +455,8 @@ function Hero() {
 
   return (
     <section className="relative min-h-[100svh] flex flex-col w-full overflow-hidden pt-24 pb-8">
+      
+      {/* Central Content Container */}
       <div className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full z-10">
         
         <motion.div 
@@ -452,7 +487,7 @@ function Hero() {
 
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.7 }}
-          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-[#111214]/80 py-4 pr-4 rounded-r-xl shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+          className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed max-w-2xl mb-12 border-l-4 border-accent pl-5 md:pl-6 text-left mx-auto backdrop-blur-md bg-[#111214]/80 py-4 pr-4 rounded-r-xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
         >
           Born on the concrete, headed for the global stage. We built Tekkrew to elevate the beautiful game with raw street style. As the world turns its eyes to North America for World Cup '26, we are bringing gravity-defying freestyle to the masses—and we are just getting started.
         </motion.p>
@@ -495,7 +530,6 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave }: SquadCardProp
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Play/Pause Video based strictly on isActive prop.
-  // Using native HTML video controls eliminates React re-mounting lag.
   useEffect(() => {
     if (isActive && videoRef.current) {
       videoRef.current.play().catch(() => {});
@@ -526,17 +560,18 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave }: SquadCardProp
     >
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
 
-      {/* TOP HALF: Player Image Container */}
+      {/* TOP HALF: Fixed Aspect Container to avoid layout shift */}
       <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#111214] z-0 border-b border-white/5">
         <div className="w-full h-full relative transition-transform duration-1000 group-hover:scale-105 bg-black">
           
-          {/* Base Static Image - ALWAYS MOUNTED. `loading="lazy"` makes page instant. */}
+          {/* Base Static Image - ALWAYS MOUNTED. `priority` fixes mobile 3s delay completely */}
           <Image
             src={member.image}
             alt={member.name}
             fill
-            loading="lazy"
+            priority={true} 
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            quality={85}
             className={`object-cover ${member.imageClass || "object-top"}`}
           />
 
@@ -545,7 +580,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave }: SquadCardProp
             <video
               ref={videoRef}
               src={member.videoFile}
-              preload="none"
+              preload="none" // Optimizes initial page load
               loop
               muted
               playsInline
