@@ -9,12 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Your custom Tekkrew variables
         bg: "var(--bg)",
         surface: "var(--surface)",
         text: "var(--text)",
         muted: "var(--muted)",
         accent: "var(--accent)",
         stroke: "var(--stroke)",
+        
+        // Shadcn required variables (mapped to your theme so it doesn't break)
+        border: "var(--border, var(--stroke))",
+        ring: "var(--ring, #ffe600)",
+        background: "var(--background, #050505)",
+        foreground: "var(--foreground, #ffffff)",
       },
       fontFamily: {
         body: ["var(--font-body)", "sans-serif"],

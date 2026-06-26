@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Instrument_Serif } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
 // --- Fonts ---
 const inter = Inter({
@@ -30,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className={cn("scroll-smooth", "font-sans", GeistSans.variable)}>
       <body className={`${inter.variable} ${instrumentSerif.variable} font-body antialiased bg-[#050505] text-white`}>
         {children}
       </body>

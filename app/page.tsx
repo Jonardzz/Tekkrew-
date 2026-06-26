@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useCallback, memo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import TextType from "../components/TextType"; 
+import Grainient from "../components/Grainient";
 
 // ==========================================
 // 1. ICONS & SVG ASSETS
@@ -42,15 +44,6 @@ const LetterboxdIcon = () => (
     <circle cx="6" cy="12" r="3" />
     <circle cx="12" cy="12" r="3" />
     <circle cx="18" cy="12" r="3" />
-  </svg>
-);
-const DocumentIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-    <polyline points="14 2 14 8 20 8"></polyline>
-    <line x1="16" y1="13" x2="8" y2="13"></line>
-    <line x1="16" y1="17" x2="8" y2="17"></line>
-    <polyline points="10 9 9 9 8 9"></polyline>
   </svg>
 );
 
@@ -186,7 +179,6 @@ const squadData: SquadMember[] = [
       { name: "Instagram", url: "https://www.instagram.com/zostyler", icon: <InstagramIcon /> },
       { name: "TikTok", url: "https://www.tiktok.com/@zostyler?_r=1&_t=ZP-972sk7kVEkw", icon: <TikTokIcon /> },
       { name: "Email", url: "mailto:Zostyler.n02@gmail.com", icon: <EmailIcon /> },
-      { name: "Media Kit", url: "/Zohair Ali.pdf", icon: <DocumentIcon /> }
     ]
   }
 ];
@@ -264,6 +256,7 @@ const initialGalleryImages = [
 // ==========================================
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
+  const [heroReady, setHeroReady] = useState(false);
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -271,7 +264,6 @@ export default function Page() {
     }
     window.scrollTo(0, 0);
 
-    // Eagerly preloads static images silently while the loader overlay runs.
     const preloadRosterImages = () => {
       squadData.forEach((member) => {
         const img = new window.Image();
@@ -281,7 +273,6 @@ export default function Page() {
     preloadRosterImages();
   }, []);
 
-  // Prevent scroll during loader overlay to guarantee smooth entry
   useEffect(() => {
     if (isLoading) {
       document.body.style.overflow = "hidden";
@@ -291,20 +282,27 @@ export default function Page() {
     return () => { document.body.style.overflow = "unset"; };
   }, [isLoading]);
 
+  const handleLoadingComplete = useCallback(() => {
+    setIsLoading(false);
+    // Add a slight delay before triggering the hero animation
+    // so it starts exactly when the loading screen is fully out of view.
+    window.setTimeout(() => {
+      setHeroReady(true);
+    }, 300);
+  }, []);
+
   return (
     <main className="relative min-h-[100svh] bg-[#08090a] text-text overflow-x-hidden selection:bg-accent selection:text-black font-body">
       <BackgroundElements />
 
       <AnimatePresence mode="wait">
-        {isLoading && <LoadingScreen key="loader" onComplete={() => setIsLoading(false)} />}
+        {isLoading && <LoadingScreen key="loader" onComplete={handleLoadingComplete} />}
       </AnimatePresence>
 
-      {/* Main Content wrapper is fully visible and rendered behind the loader.
-          Opacity remains 100 so images and layouts are securely pre-painted by the browser. */}
       <div className="relative z-10 opacity-100">
         <Navbar />
         <HamburgerMenu />
-        <Hero />
+        <Hero heroReady={heroReady} />
         <SquadSection />
         <MediaSection />
         <GallerySection />
@@ -319,26 +317,36 @@ export default function Page() {
 function BackgroundElements() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
-      {/* Mobile-optimized spot lights to reduce GPU draw lag on iPhones */}
-      <div className="absolute top-[-10%] left-[20%] w-[500px] md:w-[900px] h-[400px] md:h-[700px] bg-[radial-gradient(circle,rgba(255,230,0,0.08)_0%,rgba(255,230,0,0)_60%)] blur-[60px] md:blur-[100px] transform-gpu will-change-transform" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[400px] md:w-[700px] h-[500px] md:h-[900px] bg-[radial-gradient(circle,rgba(255,230,0,0.04)_0%,rgba(255,230,0,0)_70%)] blur-[80px] md:blur-[120px] transform-gpu will-change-transform" />
+      {/* 🌟 The Main Grainient Background 🌟 */}
+      <div className="absolute inset-0">
+        <Grainient
+          color1="#FFE600"
+          color2="#1a1600"
+          color3="#08090a"
+          timeSpeed={0.22}
+          colorBalance={-0.1}
+          warpStrength={2.0}
+          warpFrequency={4.0}
+          warpSpeed={1.2}
+          warpAmplitude={45.0}
+          blendSoftness={0.16}
+          rotationAmount={350.0}
+          noiseScale={2.0}
+          grainAmount={0.08}
+          grainScale={2.0}
+          grainAnimated={false}
+          contrast={1.7}
+          gamma={1.0}
+          saturation={1.25}
+          centerX={0.0}
+          centerY={0.0}
+          zoom={0.9}
+        />
+      </div>
       
-      {/* Premium Tactical Pitch SVG Pattern */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="netMesh" width="80" height="80" patternUnits="userSpaceOnUse">
-            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#FFE600" strokeWidth="0.5" opacity="0.3" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#netMesh)" />
-        <circle cx="50%" cy="50%" r="350" fill="none" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.5" />
-        <circle cx="50%" cy="50%" r="6" fill="#FFE600" opacity="0.9" />
-        <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff" strokeWidth="1" opacity="0.15" />
-        <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#FFE600" strokeWidth="1.5" strokeDasharray="8 16" opacity="0.3" />
-        <path d="M-100 200 Q 400 300 500 700 T 1300 600" fill="none" stroke="#FFE600" strokeWidth="3" opacity="0.5" strokeDasharray="4 12" />
-        <path d="M-50 800 Q 600 700 800 200 T 1500 100" fill="none" stroke="#ffffff" strokeWidth="1.5" opacity="0.2" />
-      </svg>
-      <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-[#08090a] to-transparent transform-gpu" />
+      {/* Subtle overlays to ensure readability of text and cards */}
+      <div className="absolute inset-0 bg-[#08090a]/30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#08090a]/10 via-[#08090a]/40 to-[#08090a]/90" />
     </div>
   );
 }
@@ -411,12 +419,16 @@ function Navbar() {
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 pointer-events-none">
       <nav className={`pointer-events-auto hidden md:inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-all duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-accent/50" : ""}`}>
         
-        <div className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-accent to-[#ccb800] cursor-pointer flex-shrink-0 hover:shadow-[0_0_15px_rgba(255,230,0,0.6)] transition-all duration-300">
+        <div 
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-accent to-[#ccb800] cursor-pointer flex-shrink-0 hover:shadow-[0_0_15px_rgba(255,230,0,0.6)] transition-all duration-300"
+        >
           <div className="w-full h-full bg-black rounded-full overflow-hidden flex items-center justify-center relative">
             <Image src="/Tekkrew.jpg" alt="Tekkrew Logo" fill sizes="40px" priority className="object-cover" />
           </div>
         </div>
-        <div className="hidden sm:block w-px h-5 bg-white/10 mx-2 md:mx-3" />
+        
+        <div className="w-px h-5 bg-white/10 mx-2 md:mx-3" />
         <div className="flex items-center gap-0.5 sm:gap-2 px-1 md:px-2">
           {["Home", "Crew", "Media"].map((link, i) => (
             <button
@@ -432,6 +444,7 @@ function Navbar() {
             </button>
           ))}
         </div>
+        
         <div className="w-px h-4 md:h-5 bg-white/10 mx-1.5 md:mx-3" />
         <div className="flex items-center gap-1 md:gap-2">
           <a
@@ -464,7 +477,6 @@ function HamburgerMenu() {
 
   return (
     <div className="fixed top-4 right-4 md:hidden z-[60]">
-      {/* 3-Dash Menu Button */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="w-10 h-10 rounded-full bg-[#111214]/90 backdrop-blur-md border border-accent/30 flex flex-col items-center justify-center gap-[4px] shadow-[0_0_15px_rgba(255,230,0,0.15)] relative z-50 transition-colors"
@@ -475,7 +487,6 @@ function HamburgerMenu() {
         <span className={`w-4 h-[2px] bg-white transition-all duration-300 origin-center ${isOpen ? '-rotate-45 -translate-y-[6px] bg-accent' : ''}`} />
       </button>
 
-      {/* Dropdown Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -507,7 +518,7 @@ function HamburgerMenu() {
 // ==========================================
 // 6. HERO SECTION
 // ==========================================
-function Hero() {
+function Hero({ heroReady }: { heroReady: boolean }) {
   const roles = ["Freestylers", "Creators", "Ballers", "Champions"];
   const [roleIndex, setRoleIndex] = useState(0);
 
@@ -528,12 +539,23 @@ function Hero() {
           <span className="text-[10px] md:text-xs text-accent uppercase tracking-[0.25em] font-bold">Target: World Cup '26</span>
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] font-display italic font-black leading-[0.85] tracking-tight text-white mb-6 drop-shadow-[0_0_35px_rgba(255,230,0,0.15)]"
-        >
-          Tekkrew
-        </motion.h1>
+        {heroReady ? (
+          <TextType
+            as="h1"
+            text="Tekkrew"
+            typingSpeed={100}
+            showCursor
+            cursorCharacter="_"
+            cursorClassName="text-accent"
+            className="text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] font-display italic font-black leading-[0.85] tracking-tight text-white mb-6 drop-shadow-[0_0_35px_rgba(255,230,0,0.15)] block"
+            startOnVisible={false}
+            loop={false}
+          />
+        ) : (
+          <h1 className="text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] font-display italic font-black leading-[0.85] tracking-tight text-white mb-6 opacity-0 select-none pointer-events-none" aria-hidden="true">
+            Tekkrew
+          </h1>
+        )}
 
         <motion.p
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}
@@ -629,7 +651,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
     >
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent transition-opacity duration-500 z-20 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
 
-      {/* TOP HALF: Fixed Aspect Container to avoid layout shift */}
+      {/* TOP HALF: Fixed Aspect Container */}
       <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden bg-[#111214] z-0 border-b border-white/5">
         <div className="w-full h-full relative transition-transform duration-1000 md:group-hover:scale-105 bg-black">
           
@@ -648,7 +670,7 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
             <video
               ref={videoRef}
               src={member.videoFile}
-              preload="metadata" 
+              preload="metadata"
               loop
               muted
               playsInline
@@ -666,12 +688,11 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
       </div>
       
       {/* BOTTOM HALF: Info */}
-      <div className="relative z-10 flex flex-col flex-1 p-8 pt-0 -mt-12 text-center items-center pointer-events-none">
+      <div className="relative z-10 flex flex-col flex-1 p-8 pt-0 -mt-12 text-center items-center pointer-events-none bg-[#111214]">
         <h3 className="text-3xl md:text-4xl font-display italic font-black text-white drop-shadow-md mb-2">{member.name}</h3>
         <div className="w-12 h-[3px] bg-accent mb-3 rounded-full shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
         <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-[0.2em] mb-6">{member.role}</p>
 
-        {/* FLAG BADGES */}
         {member.flags && member.flags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-3 mb-6">
             {member.flags.map((flag, idx) => (
@@ -699,7 +720,6 @@ const SquadCard = memo(({ member, isActive, onInteract, onLeave, isTouchDevice, 
           {member.story}
         </div>
 
-        {/* Social Links Row */}
         <div className="mt-auto flex flex-wrap items-center justify-center gap-4 pt-6 w-full border-t border-white/10 pointer-events-auto">
           {member.links.map((link, i) => (
             <a
@@ -728,7 +748,7 @@ function SquadSection() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
-    const checkTouch = () => setIsTouchDevice(window.matchMedia("(hover: none)").matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
+    const checkTouch = () => setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
     checkTouch();
     window.addEventListener('resize', checkTouch);
     return () => window.removeEventListener('resize', checkTouch);
@@ -742,7 +762,6 @@ function SquadSection() {
         entries.forEach(entry => {
           const name = entry.target.getAttribute('data-name');
           if (entry.isIntersecting && name) {
-             // 0.35 threshold ensures video plays reliably during scrolling
              setActiveMemberName(name);
           } else {
              setActiveMemberName(prev => (prev === name ? null : prev));
@@ -762,7 +781,6 @@ function SquadSection() {
     if (interactionType === "mouse") {
       setActiveMemberName(name);
     } else {
-      // Manual tap fallback on mobile toggles it instantly
       setActiveMemberName((prev) => (prev === name ? null : name));
     }
   }, []);
@@ -777,8 +795,19 @@ function SquadSection() {
     <section id="crew" className="relative w-full py-16 md:py-32 px-4 md:px-6 z-10">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 md:mb-20 gap-4 text-center md:text-left">
-          {/* Header Cleanup: Inner div removed, only <h2> remains */}
-          <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-3 drop-shadow-[0_0_25px_rgba(255,230,0,0.2)]">The Tekkrew</h2>
+          <div className="w-full text-center md:text-left">
+            <TextType 
+              as="h2"
+              text="Tekkrew"
+              typingSpeed={75}
+              showCursor
+              cursorCharacter="_"
+              cursorClassName="text-accent"
+              className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white drop-shadow-[0_0_25px_rgba(255,230,0,0.2)] block"
+              startOnVisible={true}
+              loop={false}
+            />
+          </div>
         </div>
 
         <div 
@@ -793,7 +822,7 @@ function SquadSection() {
               onInteract={handleInteract} 
               onLeave={handleLeave}
               isTouchDevice={isTouchDevice}
-              priorityLoad={index < 2}
+              priorityLoad={index < 2} 
             />
           ))}
         </div>
@@ -809,11 +838,9 @@ function MediaCard({ feature }: { feature: MediaFeature }) {
   return (
     <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-8 md:gap-12 lg:gap-16 items-center p-6 sm:p-8 md:p-12 rounded-[2rem] md:rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-lg md:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-white/10 md:hover:border-accent/40 md:hover:shadow-[0_15px_50px_rgba(255,230,0,0.1)]`}>
        
-       {/* Decorative Viewfinder Corners */}
        <div className="absolute top-0 left-0 w-8 h-8 md:w-12 md:h-12 border-t-2 border-l-2 border-accent/40 md:border-accent/60 rounded-tl-[1.8rem] md:rounded-tl-[2.3rem] opacity-30 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_2px_2px_10px_rgba(255,230,0,0.2)]" />
        <div className="absolute bottom-0 right-0 w-8 h-8 md:w-12 md:h-12 border-b-2 border-r-2 border-accent/40 md:border-accent/60 rounded-br-[1.8rem] md:rounded-br-[2.3rem] opacity-30 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.2)]" />
        
-       {/* Text Content */}
        <div className="flex-1 z-10 w-full lg:w-1/2">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-accent/30 bg-accent/10 text-white/90 text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase mb-6 md:mb-8 shadow-[0_0_15px_rgba(255,230,0,0.1)]">
              <span className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${feature.tagIconClass || "bg-accent"}`} />
@@ -831,7 +858,6 @@ function MediaCard({ feature }: { feature: MediaFeature }) {
           </div>
        </div>
        
-       {/* Media Content */}
        <div className="w-full lg:w-1/2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 relative z-10 mt-2 md:mt-0">
           {feature.videos.map((vid, i) => (
             <div 
@@ -852,11 +878,30 @@ function MediaSection() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent pointer-events-none" />
 
       <div className="max-w-6xl mx-auto space-y-12 md:space-y-24 relative z-10">
-        <div className="text-center mb-8 md:mb-24">
-          <h2 className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-[0_0_25px_rgba(255,230,0,0.2)]">Media Showcase</h2>
+        <div className="text-center mb-8 md:mb-24 flex flex-col items-center">
+          <TextType 
+            as="h2"
+            text="Media Showcase"
+            typingSpeed={60}
+            showCursor
+            cursorCharacter="_"
+            cursorClassName="text-accent"
+            className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-[0_0_25px_rgba(255,230,0,0.2)] block"
+            startOnVisible={true}
+            loop={false}
+          />
           <div className="inline-flex items-center gap-3">
              <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
-             <p className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">Press & Features</p>
+             <TextType 
+               as="p"
+               text="Press & Features"
+               typingSpeed={50}
+               initialDelay={1200}
+               showCursor={false}
+               className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold"
+               startOnVisible={true}
+               loop={false}
+             />
              <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
           </div>
         </div>
@@ -921,10 +966,39 @@ function GallerySection() {
 
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col items-center mb-16 md:mb-20 text-center">
-          <h2 className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-md">Freestylers</h2>
+          <TextType 
+            as="h2"
+            text="GALLERY"
+            typingSpeed={50}
+            showCursor={false}
+            className="text-2xl md:text-3xl font-display font-bold text-accent mb-2 block tracking-widest"
+            startOnVisible={true}
+            loop={false}
+          />
+          <TextType 
+            as="h3"
+            text="Freestylers"
+            typingSpeed={60}
+            initialDelay={800}
+            showCursor
+            cursorCharacter="_"
+            cursorClassName="text-accent"
+            className="text-4xl sm:text-5xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-md block"
+            startOnVisible={true}
+            loop={false}
+          />
           <div className="inline-flex items-center gap-3">
              <div className="w-6 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
-             <p className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold">HOU — 4.24.26</p>
+             <TextType 
+               as="p"
+               text="HOU — 4.24.26"
+               typingSpeed={50}
+               initialDelay={1800}
+               showCursor={false}
+               className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold"
+               startOnVisible={true}
+               loop={false}
+             />
              <div className="w-6 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
           </div>
         </div>
