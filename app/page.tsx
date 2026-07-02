@@ -3,8 +3,9 @@
 import React, { useState, useEffect, useCallback, memo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import TextType from "../components/TextType"; 
+import TextType from "../components/TextType";
 import Grainient from "../components/Grainient";
+import Masonry, { MasonryItem } from "../components/Masonry";
 
 // ==========================================
 // 1. ICONS & SVG ASSETS
@@ -236,19 +237,21 @@ const mediaData: MediaFeature[] = [
   }
 ];
 
-const initialGalleryImages = [
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14871.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14863.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14853.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14822.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14761.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14501.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14544.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14562.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14623.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14664.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14716.jpg",
-  "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14705.jpg",
+// aspectRatio = height / width, taken from each photo's real pixel dimensions
+// so Masonry tiles crop consistently instead of stretching at different column widths.
+const initialGalleryImages: MasonryItem[] = [
+  { id: "14871", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14871.jpg", aspectRatio: 0.705 },
+  { id: "14863", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14863.jpg", aspectRatio: 1.396 },
+  { id: "14853", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14853.jpg", aspectRatio: 1.327 },
+  { id: "14822", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14822.jpg", aspectRatio: 1.500 },
+  { id: "14761", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14761.jpg", aspectRatio: 1.443 },
+  { id: "14501", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14501.jpg", aspectRatio: 0.674 },
+  { id: "14544", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14544.jpg", aspectRatio: 1.495 },
+  { id: "14562", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14562.jpg", aspectRatio: 0.657 },
+  { id: "14623", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14623.jpg", aspectRatio: 1.332 },
+  { id: "14664", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14664.jpg", aspectRatio: 0.667 },
+  { id: "14716", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14716.jpg", aspectRatio: 1.417 },
+  { id: "14705", img: "/Freestylers - HOU - 4.24.26/20260424_freestylers_RN_14705.jpg", aspectRatio: 1.417 },
 ];
 
 // ==========================================
@@ -918,7 +921,7 @@ function MediaSection() {
 // 9. GALLERY SECTION 
 // ==========================================
 function GallerySection() {
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<MasonryItem[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -1003,31 +1006,14 @@ function GallerySection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
-          {images.map((src, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedImage(src)}
-              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#111214] border border-white/10 group cursor-pointer block text-left shadow-lg md:hover:border-accent/40 md:hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)] transition-all duration-300"
-              aria-label={`View photo ${index + 1}`}
-            >
-              <Image
-                src={src}
-                alt={`Freestyle event moment ${index + 1}`}
-                fill
-                loading="lazy"
-                quality={85}
-                sizes="(max-width: 768px) 50vw, 20vw"
-                className="object-cover transition-transform duration-700 md:group-hover:scale-110 opacity-80 md:group-hover:opacity-100"
-              />
-              <div className="absolute inset-0 bg-black/50 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                <div className="w-10 h-10 rounded-full border border-accent bg-black/50 backdrop-blur-md flex items-center justify-center text-accent transform scale-50 md:group-hover:scale-100 transition-transform duration-500 shadow-[0_0_15px_rgba(255,230,0,0.5)]">
-                  <ArrowUpRightIcon />
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
+        <Masonry
+          items={images}
+          onItemClick={(item) => setSelectedImage(item.img)}
+          animateFrom="bottom"
+          scaleOnHover
+          hoverScale={0.97}
+          blurToFocus
+        />
         
         <div className="mt-16 flex justify-center">
            <a
