@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, memo, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import TextType from "../components/TextType";
 import Grainient from "../components/Grainient";
@@ -727,128 +727,139 @@ function SquadSection() {
 // 8. MEDIA SECTION & COMPONENTS
 // ==========================================
 function VideoFrame({ video }: { video: MediaVideo }) {
-  const portrait = video.height >= video.width;
-  const ratioLabel = portrait ? "9:16" : "16:9";
+  const isPortrait = video.height >= video.width;
   return (
-    <figure className={`relative w-full min-w-0 ${portrait ? "max-w-[250px] sm:max-w-[270px]" : "max-w-2xl"}`}>
-      {/* viewfinder corner brackets */}
-      <span className="pointer-events-none absolute -left-1.5 -top-1.5 z-20 h-5 w-5 border-l-2 border-t-2 border-accent/60 transition-colors duration-500 md:group-hover/card:border-accent" />
-      <span className="pointer-events-none absolute -right-1.5 -top-1.5 z-20 h-5 w-5 border-r-2 border-t-2 border-accent/60 transition-colors duration-500 md:group-hover/card:border-accent" />
-      <span className="pointer-events-none absolute -bottom-1.5 -left-1.5 z-20 h-5 w-5 border-b-2 border-l-2 border-accent/60 transition-colors duration-500 md:group-hover/card:border-accent" />
-      <span className="pointer-events-none absolute -bottom-1.5 -right-1.5 z-20 h-5 w-5 border-b-2 border-r-2 border-accent/60 transition-colors duration-500 md:group-hover/card:border-accent" />
-
-      {/* the frame is sized purely by the hardcoded intrinsic ratio — never stretches or crops */}
-      <div
-        className="relative w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-lg transition-colors duration-500 md:rounded-2xl md:shadow-[0_20px_50px_rgba(0,0,0,0.8)] md:group-hover/card:border-accent/50"
-        style={{ aspectRatio: `${video.width} / ${video.height}` }}
-      >
-        <video
-          controls
-          playsInline
-          preload="none"
-          poster={video.poster}
-          width={video.width}
-          height={video.height}
-          src={video.src}
-          className="h-full w-full object-contain"
-        />
-      </div>
-
-      <figcaption className="mt-2.5 flex flex-wrap items-center justify-between gap-1 px-0.5 text-[8px] font-bold uppercase tracking-[0.2em] text-white/35 sm:text-[9px]">
-        <span className="flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
-          REC
-        </span>
-        <span className="tabular-nums">{video.width} × {video.height} — {ratioLabel}</span>
-      </figcaption>
-    </figure>
+    <motion.figure
+      initial={{ opacity: 0, y: 40, filter: "blur(6px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className={`group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-black shadow-[0_20px_60px_rgba(0,0,0,0.6)] transition-colors duration-500 hover:border-accent/40 ${
+        isPortrait ? "max-w-[250px] sm:max-w-[280px]" : "max-w-2xl"
+      }`}
+      style={{ aspectRatio: `${video.width} / ${video.height}` }}
+    >
+      <video
+        src={video.src}
+        poster={video.poster}
+        controls
+        playsInline
+        preload="metadata"
+        className="absolute inset-0 h-full w-full object-contain"
+      />
+      <span className="pointer-events-none absolute left-3 top-3 h-4 w-4 border-l-2 border-t-2 border-accent/70 transition-all duration-500 group-hover:left-2 group-hover:top-2" />
+      <span className="pointer-events-none absolute right-3 top-3 h-4 w-4 border-r-2 border-t-2 border-accent/70 transition-all duration-500 group-hover:right-2 group-hover:top-2" />
+      <span className="pointer-events-none absolute bottom-3 left-3 h-4 w-4 border-b-2 border-l-2 border-accent/70 transition-all duration-500 group-hover:bottom-2 group-hover:left-2" />
+      <span className="pointer-events-none absolute bottom-3 right-3 h-4 w-4 border-b-2 border-r-2 border-accent/70 transition-all duration-500 group-hover:bottom-2 group-hover:right-2" />
+    </motion.figure>
   );
 }
 
-function MediaFeatureCard({ feature, index }: { feature: MediaFeature; index: number }) {
-  const num = String(index + 1).padStart(2, "0");
-  const mediaRight = feature.mediaSide === "right";
+function MediaTicker() {
+  const items = ["AS SEEN ON", "KHOU 11", "TELEMUNDO", "FIFA × STELLA ARTOIS", "HOUSTON, TX"];
+  const strip = (
+    <div className="flex shrink-0 items-center">
+      {items.map((item) => (
+        <span key={item} className="flex items-center">
+          <span className="px-6 text-[11px] font-bold uppercase tracking-[0.35em] text-white/40 md:text-xs">
+            {item}
+          </span>
+          <span className="h-1 w-1 rounded-full bg-accent/60" />
+        </span>
+      ))}
+    </div>
+  );
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 48 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className="group/card relative"
-    >
-      {/* oversized ghost index bleeding off the card corner */}
-      <span
-        aria-hidden
-        className={`pointer-events-none absolute -top-12 md:-top-20 ${mediaRight ? "left-1 md:-left-7" : "right-1 md:-right-7"} z-0 select-none font-display text-[6.5rem] font-black italic leading-none text-transparent md:text-[11rem]`}
-        style={{ WebkitTextStroke: "1.5px rgba(255,230,0,0.16)" }}
+    <div className="relative mb-16 overflow-hidden border-y border-white/[0.06] py-4 md:mb-24 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
+      <motion.div
+        className="flex w-max"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 28, ease: "linear", repeat: Infinity }}
       >
-        {num}
+        {strip}
+        {strip}
+      </motion.div>
+    </div>
+  );
+}
+
+function MediaFeatureCard({ feature }: { feature: MediaFeature }) {
+  const textOnLeft = feature.mediaSide === "right";
+  return (
+    <div className="relative pl-10 md:pl-0">
+      {/* Timeline node */}
+      <span className="absolute left-[7px] top-3 z-10 md:left-1/2 md:-translate-x-1/2">
+        <motion.span
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", stiffness: 300, damping: 18 }}
+          className="block h-4 w-4 rounded-full border-2 border-accent bg-[#050505] shadow-[0_0_16px_rgba(255,230,0,0.7)]"
+        />
       </span>
 
-      <div className="relative z-10 overflow-hidden rounded-[1.75rem] border border-white/10 bg-gradient-to-b from-white/[0.05] via-[#0c0d0f] to-[#0a0b0c] transition-colors duration-500 md:rounded-[2.25rem] md:hover:border-accent/30">
-        {/* broadcast meta strip */}
-        <div className="flex items-center justify-between border-b border-white/10 px-5 py-3 md:px-8">
-          <div className="flex items-center gap-2.5">
+      <div
+        className={`flex flex-col gap-8 md:flex-row md:items-center md:gap-16 ${
+          textOnLeft ? "" : "md:flex-row-reverse"
+        }`}
+      >
+        {/* Copy block */}
+        <motion.div
+          initial={{ opacity: 0, x: textOnLeft ? -32 : 32 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className={`md:w-1/2 ${textOnLeft ? "md:pr-16 md:text-right" : "md:pl-16"}`}
+        >
+          <div
+            className={`mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 backdrop-blur-sm ${
+              textOnLeft ? "md:flex-row-reverse" : ""
+            }`}
+          >
             <span className={`h-1.5 w-1.5 rounded-full ${feature.dotClass}`} />
-            <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/70 md:text-[10px]">{feature.tag}</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/70">
+              {feature.tag}
+            </span>
           </div>
-          <span className="text-[9px] font-bold uppercase tracking-[0.3em] tabular-nums text-accent/80 md:text-[10px]">{num} / 03</span>
-        </div>
+          <h3 className="mb-5 font-display text-2xl font-black italic leading-tight text-white sm:text-3xl md:text-4xl">
+            {feature.title}
+          </h3>
+          <div className="space-y-4">
+            {feature.paragraphs.map((paragraph, i) => (
+              <p key={i} className="text-sm leading-relaxed text-white/60 md:text-[15px]">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </motion.div>
 
-        <div className={`flex flex-col gap-10 p-6 sm:p-8 md:p-12 lg:items-center lg:gap-16 ${mediaRight ? "lg:flex-row" : "lg:flex-row-reverse"}`}>
-          {/* text column */}
-          <div className="min-w-0 flex-1 lg:w-[46%] lg:flex-none">
-            <h3 className="mb-5 font-display text-4xl font-black italic leading-[0.95] text-white drop-shadow-sm sm:text-5xl md:mb-6 md:text-6xl">
-              {feature.title}
-            </h3>
-            <div className="mb-5 flex items-center gap-2 md:mb-6">
-              <span className="h-[2px] w-10 bg-accent shadow-[0_0_10px_rgba(255,230,0,0.6)]" />
-              <span className="h-[2px] w-2 bg-accent/40" />
-            </div>
-            <div className="space-y-4 border-l-2 border-accent/60 pl-4 md:pl-5">
-              {feature.paragraphs.map((paragraph, i) => (
-                <p
-                  key={i}
-                  className={
-                    i === 0
-                      ? "text-sm font-light leading-relaxed text-white/80 md:text-base"
-                      : "text-xs font-light leading-relaxed text-white/50 md:text-sm"
-                  }
-                >
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-          </div>
-
-          {/* media column over a technical dotted backdrop */}
-          <div className="relative flex min-w-0 flex-1 items-start justify-center">
-            <div className="pointer-events-none absolute -inset-3 rounded-3xl bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:16px_16px] opacity-70 md:-inset-6" />
-            {feature.videos.length > 1 ? (
-              <div className="relative grid w-full max-w-[560px] grid-cols-2 items-start gap-3 sm:gap-5">
-                {feature.videos.map((video, i) => (
-                  <div key={video.src} className={`flex justify-center ${i === 1 ? "mt-8 sm:mt-12" : ""}`}>
-                    <VideoFrame video={video} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <VideoFrame video={feature.videos[0]} />
-            )}
-          </div>
+        {/* Media block */}
+        <div
+          className={`flex flex-wrap items-center gap-5 md:w-1/2 ${
+            textOnLeft ? "md:justify-start md:pl-16" : "md:justify-end md:pr-16"
+          }`}
+        >
+          {feature.videos.map((video) => (
+            <VideoFrame key={video.src} video={video} />
+          ))}
         </div>
       </div>
-    </motion.article>
+    </div>
   );
 }
 
 function MediaSection() {
+  const timelineRef = React.useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 0.75", "end 0.6"],
+  });
+  const lineScale = useSpring(scrollYProgress, { stiffness: 90, damping: 25 });
+
   return (
     <section id="events" className="relative w-full px-4 py-16 md:px-6 md:py-32">
-      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
-
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <div className="mb-16 flex flex-col items-center gap-3 text-center md:mb-28">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-12 flex flex-col items-center gap-3 text-center md:mb-16">
           <TextType
             as="h2"
             text="Media Showcase"
@@ -876,9 +887,17 @@ function MediaSection() {
           </div>
         </div>
 
-        <div className="space-y-24 md:space-y-36">
-          {mediaData.map((feature, idx) => (
-            <MediaFeatureCard key={feature.id} feature={feature} index={idx} />
+        <MediaTicker />
+
+        <div ref={timelineRef} className="relative flex flex-col gap-24 md:gap-36">
+          {/* Timeline spine: left rail on mobile, center spine on desktop */}
+          <div className="absolute bottom-0 left-[14px] top-0 w-px bg-white/[0.07] md:left-1/2 md:-translate-x-1/2" />
+          <motion.div
+            style={{ scaleY: lineScale }}
+            className="absolute bottom-0 left-[14px] top-0 w-px origin-top bg-accent shadow-[0_0_12px_rgba(255,230,0,0.6)] md:left-1/2 md:-translate-x-1/2"
+          />
+          {mediaData.map((feature) => (
+            <MediaFeatureCard key={feature.id} feature={feature} />
           ))}
         </div>
       </div>
