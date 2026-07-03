@@ -6,6 +6,7 @@ import Image from "next/image";
 import TextType from "../components/TextType";
 import Grainient from "../components/Grainient";
 import Masonry, { MasonryItem } from "../components/Masonry";
+import Navbar from "../components/Navbar";
 
 // ==========================================
 // 1. ICONS & SVG ASSETS
@@ -73,20 +74,20 @@ interface SquadMember {
 interface MediaVideo {
   src: string;
   poster: string;
-  aspect: string;
-  maxWidth: string;
-  offset?: boolean;
+  /** hardcoded intrinsic pixel dimensions — the frame strictly respects this ratio */
+  width: number;
+  height: number;
 }
 
 interface MediaFeature {
   id: string;
   tag: string;
-  tagIconClass?: string;
+  dotClass: string;
   title: string;
-  desc1: React.ReactNode;
-  desc2: React.ReactNode;
+  paragraphs: React.ReactNode[];
   videos: MediaVideo[];
-  reverse?: boolean;
+  /** which side the media column sits on at desktop widths */
+  mediaSide: "left" | "right";
 }
 
 // --- Squad Data ---
@@ -185,56 +186,57 @@ const squadData: SquadMember[] = [
 ];
 
 // --- Media Features Data ---
+// Event copy is locked verbatim. Video width/height are hardcoded intrinsic pixels.
 const mediaData: MediaFeature[] = [
   {
     id: "khou",
-    tag: "Broadcast Feature",
-    tagIconClass: "bg-accent shadow-[0_0_8px_rgba(255,230,0,0.8)]",
+    tag: "Live Coverage",
+    dotClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
     title: "KHOU 11 Network",
-    desc1: "Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.",
-    desc2: (
+    paragraphs: [
+      "Houston’s TekKrew was featured by KHOU 11 discussing the excitement around the World Cup festivities and how freestyle soccer brings people together in Houston.",
       <>
         Thank you <a href="https://www.instagram.com/troyklesstv" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@troyklesstv</a> on Instagram for interviewing us and giving TekKrew the opportunity to share our passion for freestyle soccer and the World Cup festivities in Houston.
-      </>
-    ),
-    videos: [
-      { src: "/Houston Interview 2.mp4", poster: "/houston-interview-2-thumbnail.jpg", aspect: "aspect-[9/16]", maxWidth: "max-w-[280px]" },
-      { src: "/Houston Interview.mp4", poster: "/houston-interview-thumbnail.jpg", aspect: "aspect-[9/16]", maxWidth: "max-w-[280px]", offset: true }
+      </>,
     ],
-    reverse: false
+    videos: [
+      { src: "/Houston Interview.mp4", poster: "/houston-interview-thumbnail.jpg", width: 720, height: 1280 },
+      { src: "/Houston Interview 2.mp4", poster: "/houston-interview-2-thumbnail.jpg", width: 720, height: 1280 },
+    ],
+    mediaSide: "right",
   },
   {
     id: "telemundo",
     tag: "Live Coverage",
-    tagIconClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
+    dotClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
     title: "Telemundo Countdown",
-    desc1: "From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.",
-    desc2: (
+    paragraphs: [
+      "From the streets of Alief to Cypress, Katy, and across the city, we are incredibly proud to represent the hustle and heart of the 713. Freestyle and streetstyle are the art forms we love to express, and we couldn't be more hyped to showcase our craft throughout the World Cup in the best city in Texas.",
       <>
         A massive thank you to <a href="https://www.instagram.com/sergguerrero?igsh=MTdoN3o4cjd5ZThpag==" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@sergguerrero</a> and <a href="https://www.instagram.com/ubmartinez?igsh=NDhmYmVibTVyYW9m" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@ubmartinez</a> for sharing our passion with the Latin community on <a href="https://www.instagram.com/telemundohou?igsh=b2xsd2ZiemU0c2dk" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@telemundohou</a>. ¡Listos para el Mundial!
-      </>
-    ),
-    videos: [
-      { src: "/Telemundo Interview.mp4", poster: "/telemundo-thumbnail.jpg", aspect: "aspect-video", maxWidth: "max-w-3xl" }
+      </>,
     ],
-    reverse: true
+    videos: [
+      { src: "/Telemundo Interview.mp4", poster: "/telemundo-thumbnail.jpg", width: 1276, height: 718 },
+    ],
+    mediaSide: "left",
   },
   {
     id: "stella",
     tag: "VIP Event",
-    tagIconClass: "bg-accent shadow-[0_0_10px_rgba(255,230,0,0.8)]",
+    dotClass: "bg-accent shadow-[0_0_10px_rgba(255,230,0,0.8)]",
     title: "FIFA x Stella Artois",
-    desc1: "This event was truly unforgettable. A huge thank you to everyone who showed such kindness and support—it gives me so much extra motivation to keep elevating my game. I love seeing freestyle appreciated by everyone, and it's amazing to know that the craft is admired regardless of the style.",
-    desc2: (
+    paragraphs: [
+      "This event was truly unforgettable. A huge thank you to everyone who showed such kindness and support—it gives me so much extra motivation to keep elevating my game. I love seeing freestyle appreciated by everyone, and it's amazing to know that the craft is admired regardless of the style.",
       <>
         Shoutout to <a href="https://www.instagram.com/elgrandynamo" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@elgrandynamo</a> for tagging along. Y también muchísimas gracias a <a href="https://www.instagram.com/allthingsmarlon" target="_blank" rel="noopener noreferrer" className="text-white hover:text-accent font-bold transition-colors underline decoration-white/20 hover:decoration-accent underline-offset-4">@allthingsmarlon</a> por estar atento de mí. I'm telling y'all, this year is about to go crazy.
-      </>
-    ),
-    videos: [
-      { src: "/FIFA x Stella Artois Event.mp4", poster: "/fifa-stella-thumbnail.jpg", aspect: "aspect-[9/16]", maxWidth: "max-w-[300px]" }
+      </>,
     ],
-    reverse: false
-  }
+    videos: [
+      { src: "/FIFA x Stella Artois Event.mp4", poster: "/fifa-stella-thumbnail.jpg", width: 720, height: 1280 },
+    ],
+    mediaSide: "right",
+  },
 ];
 
 // aspectRatio = height / width, taken from each photo's real pixel dimensions
@@ -304,7 +306,6 @@ export default function Page() {
 
       <div className="relative z-10 opacity-100">
         <Navbar />
-        <HamburgerMenu />
         <Hero heroReady={heroReady} />
         <SquadSection />
         <MediaSection />
@@ -403,118 +404,6 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
         <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent origin-left shadow-[0_0_20px_rgba(255,230,0,0.8)]" />
       </div>
     </motion.div>
-  );
-}
-
-// ==========================================
-// 5. NAVBAR & HAMBURGER MENU
-// ==========================================
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 100);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 pointer-events-none">
-      <nav className={`pointer-events-auto hidden md:inline-flex items-center rounded-full backdrop-blur-md border border-accent/20 bg-[#111214]/90 px-1.5 py-1.5 md:px-2 md:py-2 transition-all duration-300 max-w-full overflow-x-auto no-scrollbar ${scrolled ? "shadow-lg md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-accent/50" : ""}`}>
-        
-        <div 
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="group relative w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-br from-accent to-[#ccb800] cursor-pointer flex-shrink-0 hover:shadow-[0_0_15px_rgba(255,230,0,0.6)] transition-all duration-300"
-        >
-          <div className="w-full h-full bg-black rounded-full overflow-hidden flex items-center justify-center relative">
-            <Image src="/Tekkrew.jpg" alt="Tekkrew Logo" fill sizes="40px" priority className="object-cover" />
-          </div>
-        </div>
-        
-        <div className="w-px h-5 bg-white/10 mx-2 md:mx-3" />
-        <div className="flex items-center gap-0.5 sm:gap-2 px-1 md:px-2">
-          {["Home", "Crew", "Media"].map((link, i) => (
-            <button
-              key={link}
-              onClick={() => {
-                if (link === "Crew") document.getElementById("crew")?.scrollIntoView({ behavior: "smooth" });
-                if (link === "Media") document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
-                if (link === "Home") window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className={`text-[11px] sm:text-xs md:text-sm rounded-full px-3 sm:px-5 py-1.5 sm:py-2 transition-all font-bold whitespace-nowrap ${i === 0 ? "text-black bg-accent shadow-[0_0_15px_rgba(255,230,0,0.4)]" : "text-white/70 hover:text-accent hover:bg-white/5"}`}
-            >
-              {link}
-            </button>
-          ))}
-        </div>
-        
-        <div className="w-px h-4 md:h-5 bg-white/10 mx-1.5 md:mx-3" />
-        <div className="flex items-center gap-1 md:gap-2">
-          <a
-            href="https://www.instagram.com/tekkrew_/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="relative text-[11px] sm:text-xs md:text-sm font-bold text-white bg-white/5 border border-white/10 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex items-center justify-center transition-all hover:bg-accent hover:text-black hover:border-accent hover:shadow-[0_0_15px_rgba(255,230,0,0.5)] whitespace-nowrap"
-          >
-            Contact <ArrowUpRightIcon />
-          </a>
-        </div>
-      </nav>
-    </div>
-  );
-}
-
-function HamburgerMenu() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleNav = (id: string) => {
-    setIsOpen(false);
-    if (id === 'contact') {
-      window.open("https://www.instagram.com/tekkrew_/", "_blank");
-    } else if (id === 'home') {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  return (
-    <div className="fixed top-4 right-4 md:hidden z-[60]">
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-10 h-10 rounded-full bg-[#111214]/90 backdrop-blur-md border border-accent/30 flex flex-col items-center justify-center gap-[4px] shadow-[0_0_15px_rgba(255,230,0,0.15)] relative z-50 transition-colors"
-        aria-label="Toggle Menu"
-      >
-        <span className={`w-4 h-[2px] bg-white transition-all duration-300 origin-center ${isOpen ? 'rotate-45 translate-y-[6px] bg-accent' : ''}`} />
-        <span className={`w-4 h-[2px] bg-white transition-all duration-300 ${isOpen ? 'opacity-0' : 'opacity-100'}`} />
-        <span className={`w-4 h-[2px] bg-white transition-all duration-300 origin-center ${isOpen ? '-rotate-45 -translate-y-[6px] bg-accent' : ''}`} />
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-            <motion.div 
-              initial={{ opacity: 0, y: -15, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -15, scale: 0.95 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute top-14 right-0 w-48 bg-[#08090a]/95 backdrop-blur-xl border border-accent/40 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col py-2 z-50"
-            >
-               <button onClick={() => handleNav('home')} className="text-left px-6 py-4 text-white/80 hover:text-accent font-bold uppercase tracking-widest text-xs transition-colors">Home</button>
-               <div className="w-full h-px bg-white/10" />
-               <button onClick={() => handleNav('crew')} className="text-left px-6 py-4 text-white/80 hover:text-accent font-bold uppercase tracking-widest text-xs transition-colors">Tekkrew</button>
-               <div className="w-full h-px bg-white/10" />
-               <button onClick={() => handleNav('events')} className="text-left px-6 py-4 text-white/80 hover:text-accent font-bold uppercase tracking-widest text-xs transition-colors">Media</button>
-               <div className="w-full h-px bg-white/10" />
-               <button onClick={() => handleNav('gallery')} className="text-left px-6 py-4 text-white/80 hover:text-accent font-bold uppercase tracking-widest text-xs transition-colors">Gallery</button>
-               <div className="w-full h-px bg-white/10" />
-               <button onClick={() => handleNav('contact')} className="text-left px-6 py-4 text-white/80 hover:text-accent font-bold uppercase tracking-widest text-xs transition-colors flex items-center justify-between">Contact <ArrowUpRightIcon /></button>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </div>
   );
 }
 
@@ -837,81 +726,161 @@ function SquadSection() {
 // ==========================================
 // 8. MEDIA SECTION & COMPONENTS
 // ==========================================
-function MediaCard({ feature }: { feature: MediaFeature }) {
+function VideoFrame({ video }: { video: MediaVideo }) {
+  const portrait = video.height >= video.width;
+  const ratioLabel = portrait ? "9:16" : "16:9";
   return (
-    <div className={`group relative w-full flex flex-col ${feature.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-8 md:gap-12 lg:gap-16 items-center p-6 sm:p-8 md:p-12 rounded-[2rem] md:rounded-[2.5rem] bg-[#111214] border border-white/5 shadow-lg md:shadow-[0_15px_40px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-white/10 md:hover:border-accent/40 md:hover:shadow-[0_15px_50px_rgba(255,230,0,0.1)]`}>
-       
-       <div className="absolute top-0 left-0 w-8 h-8 md:w-12 md:h-12 border-t-2 border-l-2 border-accent/40 md:border-accent/60 rounded-tl-[1.8rem] md:rounded-tl-[2.3rem] opacity-30 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_2px_2px_10px_rgba(255,230,0,0.2)]" />
-       <div className="absolute bottom-0 right-0 w-8 h-8 md:w-12 md:h-12 border-b-2 border-r-2 border-accent/40 md:border-accent/60 rounded-br-[1.8rem] md:rounded-br-[2.3rem] opacity-30 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none md:shadow-[inset_-2px_-2px_10px_rgba(255,230,0,0.2)]" />
-       
-       <div className="flex-1 z-10 w-full lg:w-1/2">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-accent/30 bg-accent/10 text-white/90 text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase mb-6 md:mb-8 shadow-[0_0_15px_rgba(255,230,0,0.1)]">
-             <span className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${feature.tagIconClass || "bg-accent"}`} />
-             {feature.tag}
+    <figure className={`relative w-full min-w-0 ${portrait ? "max-w-[250px] sm:max-w-[270px]" : "max-w-2xl"}`}>
+      {/* viewfinder corner brackets */}
+      <span className="pointer-events-none absolute -left-1.5 -top-1.5 z-20 h-5 w-5 border-l-2 border-t-2 border-accent/60 transition-colors duration-500 md:group-hover/card:border-accent" />
+      <span className="pointer-events-none absolute -right-1.5 -top-1.5 z-20 h-5 w-5 border-r-2 border-t-2 border-accent/60 transition-colors duration-500 md:group-hover/card:border-accent" />
+      <span className="pointer-events-none absolute -bottom-1.5 -left-1.5 z-20 h-5 w-5 border-b-2 border-l-2 border-accent/60 transition-colors duration-500 md:group-hover/card:border-accent" />
+      <span className="pointer-events-none absolute -bottom-1.5 -right-1.5 z-20 h-5 w-5 border-b-2 border-r-2 border-accent/60 transition-colors duration-500 md:group-hover/card:border-accent" />
+
+      {/* the frame is sized purely by the hardcoded intrinsic ratio — never stretches or crops */}
+      <div
+        className="relative w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-lg transition-colors duration-500 md:rounded-2xl md:shadow-[0_20px_50px_rgba(0,0,0,0.8)] md:group-hover/card:border-accent/50"
+        style={{ aspectRatio: `${video.width} / ${video.height}` }}
+      >
+        <video
+          controls
+          playsInline
+          preload="none"
+          poster={video.poster}
+          width={video.width}
+          height={video.height}
+          src={video.src}
+          className="h-full w-full object-contain"
+        />
+      </div>
+
+      <figcaption className="mt-2.5 flex flex-wrap items-center justify-between gap-1 px-0.5 text-[8px] font-bold uppercase tracking-[0.2em] text-white/35 sm:text-[9px]">
+        <span className="flex items-center gap-1.5">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
+          REC
+        </span>
+        <span className="tabular-nums">{video.width} × {video.height} — {ratioLabel}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+function MediaFeatureCard({ feature, index }: { feature: MediaFeature; index: number }) {
+  const num = String(index + 1).padStart(2, "0");
+  const mediaRight = feature.mediaSide === "right";
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 48 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="group/card relative"
+    >
+      {/* oversized ghost index bleeding off the card corner */}
+      <span
+        aria-hidden
+        className={`pointer-events-none absolute -top-12 md:-top-20 ${mediaRight ? "left-1 md:-left-7" : "right-1 md:-right-7"} z-0 select-none font-display text-[6.5rem] font-black italic leading-none text-transparent md:text-[11rem]`}
+        style={{ WebkitTextStroke: "1.5px rgba(255,230,0,0.16)" }}
+      >
+        {num}
+      </span>
+
+      <div className="relative z-10 overflow-hidden rounded-[1.75rem] border border-white/10 bg-gradient-to-b from-white/[0.05] via-[#0c0d0f] to-[#0a0b0c] transition-colors duration-500 md:rounded-[2.25rem] md:hover:border-accent/30">
+        {/* broadcast meta strip */}
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-3 md:px-8">
+          <div className="flex items-center gap-2.5">
+            <span className={`h-1.5 w-1.5 rounded-full ${feature.dotClass}`} />
+            <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/70 md:text-[10px]">{feature.tag}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-white mb-4 md:mb-6 leading-tight italic drop-shadow-sm">{feature.title}</h2>
-          
-          <div className="border-l-2 md:border-l-4 border-accent/80 pl-4 md:pl-5 mb-4 py-1">
-            <p className="text-white/80 text-sm md:text-base leading-relaxed mb-4 font-light">
-              {feature.desc1}
-            </p>
-            <p className="text-white/50 text-xs md:text-sm leading-relaxed font-light">
-              {feature.desc2}
-            </p>
-          </div>
-       </div>
-       
-       <div className="w-full lg:w-1/2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 relative z-10 mt-2 md:mt-0">
-          {feature.videos.map((vid, i) => (
-            <div 
-              key={i} 
-              className={`relative ${feature.videos.length > 1 ? 'w-full sm:w-1/2' : 'w-full'} ${vid.maxWidth} ${vid.aspect} z-10 shadow-md md:shadow-[0_15px_30px_rgba(0,0,0,0.9)] border border-white/10 rounded-[1rem] md:rounded-[1.5rem] bg-black p-1 transition-colors duration-500 md:group-hover:border-accent/60 ${vid.offset ? 'md:translate-y-8 lg:translate-y-12' : ''}`}
-            >
-              <video controls playsInline preload="none" poster={vid.poster} className={`${vid.aspect} h-full w-full rounded-[0.8rem] md:rounded-[1.3rem] bg-black object-contain`} src={vid.src} />
+          <span className="text-[9px] font-bold uppercase tracking-[0.3em] tabular-nums text-accent/80 md:text-[10px]">{num} / 03</span>
+        </div>
+
+        <div className={`flex flex-col gap-10 p-6 sm:p-8 md:p-12 lg:items-center lg:gap-16 ${mediaRight ? "lg:flex-row" : "lg:flex-row-reverse"}`}>
+          {/* text column */}
+          <div className="min-w-0 flex-1 lg:w-[46%] lg:flex-none">
+            <h3 className="mb-5 font-display text-4xl font-black italic leading-[0.95] text-white drop-shadow-sm sm:text-5xl md:mb-6 md:text-6xl">
+              {feature.title}
+            </h3>
+            <div className="mb-5 flex items-center gap-2 md:mb-6">
+              <span className="h-[2px] w-10 bg-accent shadow-[0_0_10px_rgba(255,230,0,0.6)]" />
+              <span className="h-[2px] w-2 bg-accent/40" />
             </div>
-          ))}
-       </div>
-    </div>
+            <div className="space-y-4 border-l-2 border-accent/60 pl-4 md:pl-5">
+              {feature.paragraphs.map((paragraph, i) => (
+                <p
+                  key={i}
+                  className={
+                    i === 0
+                      ? "text-sm font-light leading-relaxed text-white/80 md:text-base"
+                      : "text-xs font-light leading-relaxed text-white/50 md:text-sm"
+                  }
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </div>
+
+          {/* media column over a technical dotted backdrop */}
+          <div className="relative flex min-w-0 flex-1 items-start justify-center">
+            <div className="pointer-events-none absolute -inset-3 rounded-3xl bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:16px_16px] opacity-70 md:-inset-6" />
+            {feature.videos.length > 1 ? (
+              <div className="relative grid w-full max-w-[560px] grid-cols-2 items-start gap-3 sm:gap-5">
+                {feature.videos.map((video, i) => (
+                  <div key={video.src} className={`flex justify-center ${i === 1 ? "mt-8 sm:mt-12" : ""}`}>
+                    <VideoFrame video={video} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <VideoFrame video={feature.videos[0]} />
+            )}
+          </div>
+        </div>
+      </div>
+    </motion.article>
   );
 }
 
 function MediaSection() {
   return (
-    <section id="events" className="relative w-full py-16 md:py-32 px-4 md:px-6">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent pointer-events-none" />
+    <section id="events" className="relative w-full px-4 py-16 md:px-6 md:py-32">
+      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
 
-      <div className="max-w-6xl mx-auto space-y-12 md:space-y-24 relative z-10">
-        <div className="text-center mb-8 md:mb-24 flex flex-col items-center">
-          <TextType 
+      <div className="relative z-10 mx-auto max-w-6xl">
+        <div className="mb-16 flex flex-col items-center gap-3 text-center md:mb-28">
+          <TextType
             as="h2"
             text="Media Showcase"
             typingSpeed={60}
             showCursor
             cursorCharacter="_"
             cursorClassName="text-accent"
-            className="text-5xl sm:text-6xl md:text-7xl font-display italic font-black text-white mb-4 drop-shadow-[0_0_25px_rgba(255,230,0,0.2)] block"
+            className="block font-display text-5xl font-black italic text-white drop-shadow-[0_0_25px_rgba(255,230,0,0.2)] sm:text-6xl md:text-7xl"
             startOnVisible={true}
             loop={false}
           />
           <div className="inline-flex items-center gap-3">
-             <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
-             <TextType 
-               as="p"
-               text="Press & Features"
-               typingSpeed={50}
-               initialDelay={1200}
-               showCursor={false}
-               className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold"
-               startOnVisible={true}
-               loop={false}
-             />
-             <div className="w-8 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
+            <span className="h-[2px] w-8 bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
+            <TextType
+              as="p"
+              text="Press & Features"
+              typingSpeed={50}
+              initialDelay={900}
+              showCursor={false}
+              className="text-xs font-bold uppercase tracking-[0.3em] text-white/80 md:text-sm"
+              startOnVisible={true}
+              loop={false}
+            />
+            <span className="h-[2px] w-8 bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
           </div>
         </div>
 
-        {mediaData.map((feature, idx) => (
-          <MediaCard key={idx} feature={feature} />
-        ))}
+        <div className="space-y-24 md:space-y-36">
+          {mediaData.map((feature, idx) => (
+            <MediaFeatureCard key={feature.id} feature={feature} index={idx} />
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -969,7 +938,7 @@ function GallerySection() {
 
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col items-center mb-16 md:mb-20 text-center">
-          <TextType 
+          <TextType
             as="h2"
             text="GALLERY"
             typingSpeed={50}
@@ -978,7 +947,7 @@ function GallerySection() {
             startOnVisible={true}
             loop={false}
           />
-          <TextType 
+          <TextType
             as="h3"
             text="Freestylers"
             typingSpeed={60}
@@ -992,7 +961,7 @@ function GallerySection() {
           />
           <div className="inline-flex items-center gap-3">
              <div className="w-6 h-[2px] bg-accent/80 shadow-[0_0_8px_rgba(255,230,0,0.5)]" />
-             <TextType 
+             <TextType
                as="p"
                text="HOU — 4.24.26"
                typingSpeed={50}
@@ -1015,15 +984,19 @@ function GallerySection() {
           blurToFocus
         />
         
-        <div className="mt-16 flex justify-center">
-           <a
-              href="https://www.instagram.com/tekkrew_/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-white text-black text-xs md:text-sm rounded-full px-8 py-4 font-bold uppercase tracking-wider transition-all hover:bg-accent hover:shadow-[0_0_20px_rgba(255,230,0,0.4)] shadow-xl"
-            >
-              See More on Instagram <ArrowUpRightIcon />
-            </a>
+        <div className="mt-14 flex justify-center md:mt-20">
+          <a
+            href="https://www.instagram.com/tekkrew_/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-accent/40 bg-[#0c0d0f]/80 px-8 py-4 text-xs font-black uppercase tracking-[0.2em] text-white backdrop-blur-md transition-all duration-300 hover:border-accent hover:shadow-[0_0_30px_rgba(255,230,0,0.25)] md:text-sm"
+          >
+            <span className="absolute inset-0 -translate-x-full bg-accent transition-transform duration-300 ease-out group-hover:translate-x-0" />
+            <span className="relative z-10 transition-colors duration-300 group-hover:text-black">See More on Instagram</span>
+            <span className="relative z-10 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-black">
+              <ArrowUpRightIcon />
+            </span>
+          </a>
         </div>
       </div>
     </section>
