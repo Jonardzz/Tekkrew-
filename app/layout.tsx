@@ -20,9 +20,60 @@ const displayFace = localFont({
 });
 
 // --- Metadata & Favicon ---
+const SITE_URL = "https://tekkrew.com";
+const SITE_DESCRIPTION = "Freestyle//Panna KREW based in HTX•DTX";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "TekKREW | Freestylers",
-  description: "Freestyle//Panna KREW based in HTX•DTX",
+  description: SITE_DESCRIPTION,
+  applicationName: "TekKREW",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "TekKREW",
+    title: "TekKREW | Freestylers",
+    description: SITE_DESCRIPTION,
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "TekKREW logo" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TekKREW | Freestylers",
+    description: SITE_DESCRIPTION,
+    images: ["/og-image.jpg"],
+  },
+};
+
+// Structured data so Google can show the TekKREW name + logo in results.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#org`,
+      name: "TekKREW",
+      url: SITE_URL,
+      logo: `${SITE_URL}/tekkrew-logo-square.png`,
+      image: `${SITE_URL}/og-image.jpg`,
+      sameAs: ["https://www.instagram.com/tekkrew_/"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: "TekKREW",
+      url: SITE_URL,
+      publisher: { "@id": `${SITE_URL}/#org` },
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/#webpage`,
+      url: SITE_URL,
+      name: "TekKREW | Freestylers",
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      primaryImageOfPage: { "@type": "ImageObject", url: `${SITE_URL}/og-image.jpg` },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -33,6 +84,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("scroll-smooth", "font-sans", GeistSans.variable)}>
       <body className={`${inter.variable} ${displayFace.variable} font-body antialiased bg-[#050505] text-white`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {children}
       </body>
     </html>
