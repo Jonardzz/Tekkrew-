@@ -7,6 +7,8 @@ import { TK_LOGO_SVG } from "./tekkrewLogoSvg";
 const START_DELAY = 200; // wait before the pen starts, ms
 const PEN_SPEED = 2600; // pen speed in SVG units per second — used for the scribble AND the lettering
 const LETTER_GAP = 40; // tiny pen lift between letters, ms
+const MOBILE_SPEED = 0.65; // on phone-size screens the pen runs at this fraction of PEN_SPEED (the logo is smaller there)
+const MOBILE_START_DELAY = 350; // a slightly longer beat before drawing on phones, ms
 /* Plays once; the finished logo then stays on screen. */
 /* ======================================================== */
 
@@ -30,13 +32,15 @@ function animate(root: HTMLElement): () => void {
     return () => undefined;
   }
 
+  const narrow = window.matchMedia("(max-width: 767px)").matches;
+  const speed = narrow ? PEN_SPEED * MOBILE_SPEED : PEN_SPEED;
   const steps: Step[] = [];
-  let t = START_DELAY;
+  let t = narrow ? MOBILE_START_DELAY : START_DELAY;
   const add = (path: SVGPathElement, letter = false) => {
     const len = path.getTotalLength();
     path.style.strokeDasharray = `${len} ${len}`;
     path.style.strokeDashoffset = `${len}`;
-    const dur = (len / PEN_SPEED) * 1000;
+    const dur = (len / speed) * 1000;
     steps.push({ path, len, start: t, dur, letter });
     t += dur;
   };

@@ -337,6 +337,7 @@ function BackgroundElements() {
           flow={2}
           silk={0.35}
           grainAmount={0.08}
+          dpr={1.5}
         />
       </div>
       
