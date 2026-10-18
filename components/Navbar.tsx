@@ -14,11 +14,8 @@ const NAV_SECTIONS = [
   { id: "home", label: "Home" },
   { id: "tekkrew", label: "TekKREW" },
   { id: "media", label: "Press & Features" },
-  { id: "gallery", label: "Gallery", mobileOnly: true },
+  { id: "gallery", label: "Gallery" },
 ] as const;
-
-// Desktop pill keeps the three main links; the phone menu also lists Gallery.
-const DESKTOP_SECTIONS = NAV_SECTIONS.filter((s) => !("mobileOnly" in s));
 
 type SectionId = (typeof NAV_SECTIONS)[number]["id"];
 
@@ -156,7 +153,7 @@ export default function Navbar() {
 
           {/* Links with sliding active pill */}
           <div className="flex items-center px-1">
-            {DESKTOP_SECTIONS.map((section) => {
+            {NAV_SECTIONS.map((section) => {
               const isActive = active === section.id;
               return (
                 <button
