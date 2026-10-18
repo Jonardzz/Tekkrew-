@@ -5,16 +5,15 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ==========================================
-// NAVIGATION — Tekkrew premium floating nav
+// NAVIGATION — TekKREW premium floating nav
 // Desktop: glass pill with scroll-spy + sliding active indicator.
 // Mobile: compact logo chip + morphing hamburger opening a staggered panel.
 // ==========================================
 
 const NAV_SECTIONS = [
   { id: "home", label: "Home" },
-  { id: "crew", label: "Crew" },
-  { id: "events", label: "Media" },
-  { id: "gallery", label: "Gallery" },
+  { id: "tekkrew", label: "TekKREW" },
+  { id: "media", label: "Press & Features" },
 ] as const;
 
 type SectionId = (typeof NAV_SECTIONS)[number]["id"];
@@ -126,8 +125,8 @@ export default function Navbar() {
           aria-label="Primary"
           className={`pointer-events-auto relative inline-flex items-center rounded-full border bg-[#0a0b0c]/75 px-2 py-2 backdrop-blur-xl transition-[border-color,box-shadow,background-color] duration-500 ${
             scrolled
-              ? "border-accent/40 bg-[#0a0b0c]/90 shadow-[0_16px_50px_rgba(0,0,0,0.75),0_0_30px_rgba(255,230,0,0.08)]"
-              : "border-accent/15 shadow-[0_10px_40px_rgba(0,0,0,0.55)]"
+              ? "border-white/15 bg-[#0a0b0c]/90 shadow-[0_16px_50px_rgba(0,0,0,0.75)]"
+              : "border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.55)]"
           }`}
         >
           {/* hairline glow across the top edge of the pill */}
@@ -136,19 +135,17 @@ export default function Navbar() {
           {/* Logo */}
           <button
             onClick={() => goTo("home")}
-            aria-label="Back to top"
-            className="group relative mr-2 h-9 w-9 flex-shrink-0 rounded-full bg-gradient-to-br from-accent via-[#8a7a00] to-accent/30 p-[2px] transition-shadow duration-300 hover:shadow-[0_0_18px_rgba(255,230,0,0.5)]"
+            aria-label="TekKREW, back to top"
+            className="group relative mr-1 flex h-9 flex-shrink-0 items-center pl-3 pr-2"
           >
-            <span className="relative block h-full w-full overflow-hidden rounded-full bg-black">
-              <Image
-                src="/Tekkrew.jpg"
-                alt="Tekkrew logo"
-                fill
-                sizes="36px"
-                priority
-                className="object-cover transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110"
-              />
-            </span>
+            <Image
+              src="/tekkrew-logo.png"
+              alt="TekKREW"
+              width={800}
+              height={420}
+              priority
+              className="-my-2 h-[52px] w-auto transition-transform duration-300 group-hover:scale-105"
+            />
           </button>
 
           <span className="mx-1 h-5 w-px bg-white/10" />
@@ -168,16 +165,19 @@ export default function Navbar() {
                     <motion.span
                       layoutId="nav-active-pill"
                       transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                      className="absolute inset-0 rounded-full bg-accent shadow-[0_0_18px_rgba(255,230,0,0.35)]"
+                      className="absolute inset-0 rounded-full bg-white/10"
                     />
                   )}
                   <span
                     className={`relative z-10 transition-colors duration-300 ${
-                      isActive ? "text-black" : "text-white/60 group-hover:text-white"
-                    }`}
+                      isActive ? "text-white" : "text-white/60 group-hover:text-white"
+                    } ${section.id === "tekkrew" ? "normal-case" : ""}`}
                   >
                     {section.label}
                   </span>
+                  {isActive && (
+                    <span className="absolute bottom-1 left-1/2 z-10 h-1 w-1 -translate-x-1/2 rounded-full bg-accent" />
+                  )}
                   {!isActive && (
                     <span className="absolute inset-x-4 bottom-1 z-10 h-px origin-left scale-x-0 bg-accent/70 transition-transform duration-300 group-hover:scale-x-100" />
                   )}
@@ -188,53 +188,34 @@ export default function Navbar() {
 
           <span className="mx-1 h-5 w-px bg-white/10" />
 
-          {/* Contact CTA — sweeping yellow fill on hover */}
+          {/* Contact — crew Instagram */}
           <a
             href={INSTAGRAM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative ml-2 inline-flex items-center gap-1.5 overflow-hidden rounded-full border border-accent/40 bg-black/40 px-5 py-2 text-xs font-black uppercase tracking-[0.14em] text-accent transition-all duration-300 hover:border-accent hover:text-black hover:shadow-[0_0_20px_rgba(255,230,0,0.45)] lg:text-[13px]"
+            className="group ml-2 inline-flex items-center gap-1.5 rounded-full border border-white/20 px-5 py-2 text-xs font-black uppercase tracking-[0.14em] text-white/80 transition-colors duration-300 hover:border-accent hover:text-accent lg:text-[13px]"
           >
-            <span className="absolute inset-0 -translate-x-full bg-accent transition-transform duration-300 ease-out group-hover:translate-x-0" />
-            <span className="relative z-10">Contact</span>
-            <ArrowUpRight className="relative z-10 h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            Contact
+            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </a>
         </motion.nav>
       </div>
 
       {/* ================= MOBILE ================= */}
       <div className="relative z-20 flex items-center justify-end px-4 pt-4 md:hidden">
-        {/* Morphing hamburger */}
+        {/* Hamburger → X (styles in globals.css: .tk-burger) */}
         <motion.button
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           onClick={() => setMenuOpen((v) => !v)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
-          className={`pointer-events-auto relative flex h-11 w-11 items-center justify-center rounded-full border backdrop-blur-xl transition-all duration-300 ${
-            menuOpen
-              ? "border-accent bg-accent shadow-[0_0_22px_rgba(255,230,0,0.45)]"
-              : "border-accent/25 bg-[#0a0b0c]/85 shadow-[0_8px_30px_rgba(0,0,0,0.6)]"
-          }`}
+          data-open={menuOpen ? "" : undefined}
+          className="tk-burger pointer-events-auto"
         >
-          <span className="relative block h-3.5 w-5">
-            <span
-              className={`absolute left-0 h-[2px] w-5 rounded-full transition-all duration-300 ${
-                menuOpen ? "top-1/2 -translate-y-1/2 rotate-45 bg-black" : "top-0 bg-white"
-              }`}
-            />
-            <span
-              className={`absolute left-0 top-1/2 h-[2px] -translate-y-1/2 rounded-full transition-all duration-300 ${
-                menuOpen ? "w-5 bg-black opacity-0" : "w-3.5 bg-accent opacity-100"
-              }`}
-            />
-            <span
-              className={`absolute left-0 h-[2px] w-5 rounded-full transition-all duration-300 ${
-                menuOpen ? "bottom-1/2 translate-y-1/2 -rotate-45 bg-black" : "bottom-0 bg-white"
-              }`}
-            />
-          </span>
+          <span className="tk-burger__line tk-burger__line--top" />
+          <span className="tk-burger__line tk-burger__line--bottom" />
         </motion.button>
       </div>
 
@@ -258,13 +239,13 @@ export default function Navbar() {
               animate="show"
               exit="exit"
               aria-label="Mobile"
-              className="pointer-events-auto fixed right-4 top-[4.75rem] z-10 w-[min(calc(100vw-2rem),22rem)] overflow-hidden rounded-[1.6rem] border border-accent/25 bg-[#0a0b0c]/95 shadow-[0_30px_80px_rgba(0,0,0,0.85),0_0_40px_rgba(255,230,0,0.05)] backdrop-blur-2xl md:hidden"
+              className="pointer-events-auto fixed right-4 top-[4.75rem] z-10 w-[min(calc(100vw-2rem),22rem)] overflow-hidden rounded-[1.6rem] border border-white/10 bg-[#0a0b0c]/95 shadow-[0_30px_80px_rgba(0,0,0,0.85)] backdrop-blur-2xl md:hidden"
             >
               <span className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent" />
 
               <div className="flex items-center justify-between px-6 pb-2 pt-5">
                 <span className="text-[9px] font-bold uppercase tracking-[0.35em] text-white/40">Navigation</span>
-                <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.25em] text-accent">
+                <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.25em] text-white/50">
                   <span className="h-1 w-1 animate-pulse rounded-full bg-accent" />
                   HOU
                 </span>
@@ -280,7 +261,7 @@ export default function Navbar() {
                       onClick={() => goTo(section.id)}
                       aria-current={isActive ? "true" : undefined}
                       className={`group flex w-full items-center gap-4 rounded-2xl px-4 py-3.5 text-left transition-colors duration-200 ${
-                        isActive ? "bg-accent/10" : "hover:bg-white/5 active:bg-white/10"
+                        isActive ? "bg-white/5" : "hover:bg-white/5 active:bg-white/10"
                       }`}
                     >
                       <span
@@ -291,14 +272,14 @@ export default function Navbar() {
                         0{i + 1}
                       </span>
                       <span
-                        className={`font-display text-xl font-black italic ${isActive ? "text-accent" : "text-white"}`}
+                        className={`font-display text-2xl font-black text-white ${section.id === "tekkrew" ? "" : "uppercase"}`}
                       >
                         {section.label}
                       </span>
                       <span
                         className={`ml-auto h-1.5 w-1.5 rounded-full transition-all duration-200 ${
                           isActive
-                            ? "bg-accent shadow-[0_0_10px_rgba(255,230,0,0.9)]"
+                            ? "bg-accent"
                             : "bg-white/15 group-hover:bg-white/40"
                         }`}
                       />
@@ -314,7 +295,7 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-3.5 text-xs font-black uppercase tracking-[0.2em] text-black shadow-[0_0_25px_rgba(255,230,0,0.25)] transition-transform active:scale-[0.98]"
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-white/15 px-4 py-3.5 text-xs font-black uppercase tracking-[0.2em] text-white transition-colors active:border-accent active:text-accent"
                 >
                   Contact <ArrowUpRight />
                 </motion.a>

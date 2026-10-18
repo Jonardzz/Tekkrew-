@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -10,20 +11,18 @@ const inter = Inter({
   variable: "--font-body",
 });
 
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  style: ["normal", "italic"],
-  subsets: ["latin"],
+// Condensed athletic display face for headlines (scoreboard / kit lettering feel)
+const displayFace = localFont({
+  src: "./fonts/BigShouldersDisplay-Variable.woff2",
+  weight: "100 900",
   variable: "--font-display",
+  display: "swap",
 });
 
 // --- Metadata & Favicon ---
 export const metadata: Metadata = {
-  title: "Tekkrew | Freestylers",
-  description: "Road to World Cup '26 - Houston, Texas",
-  icons: {
-    icon: "/Tekkrew.jpg", 
-  },
+  title: "TekKREW | Freestylers",
+  description: "Freestyle//Panna KREW based in HTX•DTX",
 };
 
 export default function RootLayout({
@@ -33,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("scroll-smooth", "font-sans", GeistSans.variable)}>
-      <body className={`${inter.variable} ${instrumentSerif.variable} font-body antialiased bg-[#050505] text-white`}>
+      <body className={`${inter.variable} ${displayFace.variable} font-body antialiased bg-[#050505] text-white`}>
         {children}
       </body>
     </html>

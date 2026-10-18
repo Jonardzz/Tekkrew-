@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Your custom Tekkrew variables
+        // Your custom TekKREW variables
         bg: "var(--bg)",
         surface: "var(--surface)",
         text: "var(--text)",
@@ -19,7 +19,7 @@ const config: Config = {
         
         // Shadcn required variables (mapped to your theme so it doesn't break)
         border: "var(--border, var(--stroke))",
-        ring: "var(--ring, #ffe600)",
+        ring: "var(--ring, #FF4328)",
         background: "var(--background, #050505)",
         foreground: "var(--foreground, #ffffff)",
       },
@@ -28,7 +28,7 @@ const config: Config = {
         display: ["var(--font-display)", "serif"],
       },
       backgroundImage: {
-        "accent-gradient": "linear-gradient(90deg, #FFE600 0%, #FFB800 100%)",
+        "accent-gradient": "linear-gradient(90deg, var(--accent) 0%, var(--accent) 100%)",
       },
       keyframes: {
         fadeIn: {

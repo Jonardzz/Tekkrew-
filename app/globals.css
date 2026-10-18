@@ -4,13 +4,13 @@
 @tailwind utilities;
 
 :root {
-  /* Tekkrew Color Palette */
+  /* TekKREW Color Palette */
   --bg: #050505;
   --surface: rgba(255, 255, 255, 0.05);
   --text: #ffffff;
   --muted: #a1a1aa;
   --stroke: rgba(255, 255, 255, 0.1);
-  --accent: #ffe600; /* Tekkrew Yellow */
+  --accent: #FF4328; /* TekKREW orange (logo accent) — used sparingly for small details */
 }
 
 @layer utilities {
@@ -31,7 +31,7 @@
 
   /* Gradients */
   .bg-accent-gradient {
-    background-image: linear-gradient(to right, #ffe600, #ffaa00);
+    background-image: linear-gradient(to right, var(--accent), var(--accent));
   }
 
   /* Fonts */
@@ -133,3 +133,74 @@
     @apply font-sans;
   }
 }
+
+/* ---------- Animated TekKREW logo (hero) ---------- */
+.tk-logo-waiting { visibility: hidden; }
+.tk-logo { display: block; width: 100%; height: auto; overflow: visible; }
+.tk-ink path { fill: none; stroke: #FF4529; stroke-linecap: round; stroke-linejoin: round; }
+.tk-exact { opacity: 0; }
+/* Lettering: the pen traces each outline (stroke), then the letter fills and the outline fades */
+.tk-letter {
+  fill-opacity: 0;
+  stroke: #FEFEFE;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: fill-opacity 260ms ease, stroke-opacity 400ms ease;
+}
+.tk-est { stroke-width: 2.2; }
+.tk-letter.is-filled { fill-opacity: 1; }
+.tk-letter.is-settled { stroke-opacity: 0; }
+/* Finished state (also prefers-reduced-motion): everything visible, no motion */
+.tk-logo.tk-done .tk-exact, .tk-logo.tk-done .tk-letter { opacity: 1; fill-opacity: 1; stroke-opacity: 0; transition: none; }
+.tk-logo.tk-done .tk-ink { display: none; }
+
+/* ---------- Mobile menu button (hamburger → X) ----------
+   Emil Kowalski–style: only transform/opacity animate, ease-in-out for the on-screen morph,
+   0.96 press scale, hover gated to real pointers, no colour flash when opening. */
+.tk-burger {
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.875rem;
+  height: 2.875rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01)), rgba(10, 11, 12, 0.7);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  transition: transform 160ms var(--ease-out), border-color 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.tk-burger:active { transform: scale(0.96); }
+.tk-burger:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.tk-burger[data-open] { border-color: rgba(255, 67, 40, 0.5); }
+.tk-burger__line {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 2px;
+  margin: -1px 0 0 -10px;
+  border-radius: 9999px;
+  background: #fff;
+  transform-origin: center;
+  transition: transform 260ms var(--ease-in-out), background-color 200ms ease;
+}
+/* closed: white line on top, shorter orange line below (left-aligned) */
+.tk-burger__line--top { transform: translateY(-4px); }
+.tk-burger__line--bottom { background: var(--accent); transform: translate(-3px, 4px) scaleX(0.7); }
+/* open: both lines meet in the middle and cross into an X */
+.tk-burger[data-open] .tk-burger__line--top { transform: translateY(0) rotate(45deg); }
+.tk-burger[data-open] .tk-burger__line--bottom { background: #fff; transform: translate(0, 0) rotate(-45deg) scaleX(1); }
+@media (hover: hover) and (pointer: fine) {
+  .tk-burger:hover { border-color: rgba(255, 255, 255, 0.3); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tk-burger,
+  .tk-burger__line { transition: none; }
+}
+

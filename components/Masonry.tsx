@@ -228,7 +228,7 @@ export default function Masonry({
         <div
           key={item.id}
           data-key={item.id}
-          className="absolute overflow-hidden rounded-2xl border border-white/10 bg-[#111214] shadow-lg transition-colors duration-300 md:hover:border-accent/40 md:hover:shadow-[0_10px_30px_rgba(255,230,0,0.2)]"
+          className="absolute overflow-hidden rounded-2xl border border-white/10 bg-[#111214] shadow-lg transition-colors duration-300 md:hover:border-accent/40"
           style={{ willChange: "transform, width, height, opacity" }}
           onMouseEnter={() => handleMouseEnter(item.id)}
           onMouseLeave={() => handleMouseLeave(item.id)}
@@ -250,7 +250,7 @@ export default function Masonry({
               className="object-cover opacity-80 transition-all duration-500 md:group-hover:scale-105 md:group-hover:opacity-100"
             />
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 md:group-hover:opacity-100">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-accent bg-black/50 text-accent shadow-[0_0_15px_rgba(255,230,0,0.5)] backdrop-blur-md">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-accent bg-black/50 text-accent backdrop-blur-md">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="7" y1="17" x2="17" y2="7"></line>
                   <polyline points="7 7 17 7 17 17"></polyline>
