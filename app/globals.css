@@ -188,8 +188,9 @@ button, [role="button"] {
 .tk-logo { display: block; width: 100%; height: auto; overflow: visible; }
 .tk-ink path { fill: none; stroke: #FF4529; stroke-linecap: round; stroke-linejoin: round; }
 .tk-exact { opacity: 0; }
-/* Lettering: solid fill, revealed by the ink-sweep masks set up in TekkrewLogoAnimated */
+/* Lettering: solid fill; the handwriting marker (TekkrewLogoAnimated) writes it, then the exact shape takes over */
 .tk-letter { stroke: none; }
+.tk-marker path { fill: none; stroke: #FEFEFE; stroke-linecap: round; stroke-linejoin: round; }
 /* Finished state (also prefers-reduced-motion): everything visible, no motion */
 .tk-logo.tk-done .tk-exact { opacity: 1; }
 .tk-logo.tk-done .tk-ink { display: none; }

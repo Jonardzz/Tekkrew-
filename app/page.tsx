@@ -640,6 +640,29 @@ const PlayerTile = memo(({ member, isActive, onInteract, onLeave, isTouchDevice,
 });
 PlayerTile.displayName = "PlayerTile";
 
+// Section title that types itself in when it scrolls into view — same speed and cursor as the gallery title.
+// An invisible copy of the full text reserves the final size, so nothing below jumps while it types.
+function TypedHeading({ text, className }: { text: string; className: string }) {
+  return (
+    <h2 className={`relative ${className}`} aria-label={text}>
+      <span aria-hidden="true" className="invisible">{text}</span>
+      <span aria-hidden="true" className="absolute inset-0">
+        <TextType
+          as="span"
+          text={text}
+          typingSpeed={60}
+          initialDelay={200}
+          showCursor
+          cursorCharacter="_"
+          cursorClassName="text-accent"
+          startOnVisible={true}
+          loop={false}
+        />
+      </span>
+    </h2>
+  );
+}
+
 function SquadSection() {
   const [activeMemberName, setActiveMemberName] = useState<string | null>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -680,7 +703,7 @@ function SquadSection() {
     <section id="tekkrew" className="scroll-mt-20 md:scroll-mt-24 relative z-10 w-full px-4 py-16 md:px-8 md:py-28">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 md:mb-12">
-          <h2 className="font-display text-6xl font-black leading-[0.85] text-white md:text-8xl">TekKREW</h2>
+          <TypedHeading text="TekKREW" className="font-display text-6xl font-black leading-[0.85] text-white md:text-8xl" />
         </div>
 
         <motion.div
@@ -902,7 +925,7 @@ function MediaSection() {
     <section id="media" className="scroll-mt-20 md:scroll-mt-24 relative w-full px-4 py-16 md:px-8 md:py-28">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 flex items-end justify-between gap-6 md:mb-12">
-          <h2 className="font-display text-6xl font-black uppercase leading-[0.85] text-white md:text-8xl">Press &amp; Features</h2>
+          <TypedHeading text="Press & Features" className="font-display text-6xl font-black uppercase leading-[0.85] text-white md:text-8xl" />
         </div>
 
         <MediaTicker />

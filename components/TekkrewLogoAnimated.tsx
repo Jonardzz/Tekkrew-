@@ -2,12 +2,15 @@
 
 import { memo, useEffect, useRef } from "react";
 import { TK_LOGO_SVG } from "./tekkrewLogoSvg";
+import { TK_WRITE_STROKES } from "./tekkrewWriteStrokes";
 
 /* ================= TIMING — adjust here ================= */
 const START_DELAY = 120; // short beat after the loader has faded, before the pen starts, ms
 const PEN_SPEED = 2600; // scribble pen speed in SVG units per second
-const SWEEP_SPEED = 1000; // "TekKREW" / "EST. 2026" ink sweep, SVG units per second across each letter (lower = slower)
-const SWEEP_OVERLAP = 0.85; // next letter starts when the current one is 85% swept, so the hand never stops
+const WRITE_SPEED = 2300; // handwriting cruise speed for "TekKREW" / "EST. 2026", SVG units per second (lower = slower)
+const CURVE_SLOWDOWN = 0.5; // on the tightest turns the pen slows to this share of the cruise speed (1 = no slowdown)
+const SMALL_TEXT_SPEED = 0.45; // "EST. 2026" is tiny, so it's written at this share of the speed
+const SETTLE_MS = 260; // when a letter is finished, the marker stroke settles into the exact letter shape
 const MOBILE_SPEED = 1; // phones draw at the same speed as desktop
 const MOBILE_START_DELAY = 120; // same beat as desktop
 /* Plays once; the finished logo then stays on screen. */
@@ -62,45 +65,75 @@ function prepare(root: HTMLElement): Prepared {
   });
   const scribbleEnd = t;
 
-  // 2) Lettering: ink sweep. Each letter is wiped in left -> right by a mask with a soft leading edge.
-  const defs = el("defs", {});
-  svg.insertBefore(defs, svg.firstChild);
-  const grad = el("linearGradient", { id: "tk-sweep-grad", x1: 0, x2: 1, y1: 0, y2: 0 }, defs);
-  el("stop", { offset: 0, "stop-color": "#fff" }, grad);
-  el("stop", { offset: 0.82, "stop-color": "#fff" }, grad);
-  el("stop", { offset: 1, "stop-color": "#fff", "stop-opacity": 0 }, grad);
-  // Phones use a hard-edged clip (cheap) instead of the soft gradient mask (slow in mobile Safari).
-  letters.forEach((path, i) => {
-    const b = path.getBBox();
-    const pad = 6;
-    const soft = narrow ? 0 : Math.max(24, b.height * 0.25);
-    const x = b.x - pad - soft;
-    const full = b.width + 2 * pad + 2 * soft;
-    let rect: SVGRectElement;
-    if (narrow) {
-      const clip = el("clipPath", { id: `tk-sweep-${i}` }, defs);
-      rect = el("rect", { x, y: b.y - pad, width: 0, height: b.height + 2 * pad }, clip);
-      path.setAttribute("clip-path", `url(#tk-sweep-${i})`);
-    } else {
-      const mask = el("mask", { id: `tk-sweep-${i}`, maskUnits: "userSpaceOnUse", x, y: b.y - pad, width: full, height: b.height + 2 * pad }, defs);
-      rect = el("rect", { x, y: b.y - pad, width: 0, height: b.height + 2 * pad, fill: "url(#tk-sweep-grad)" }, mask);
-      path.setAttribute("mask", `url(#tk-sweep-${i})`);
-    }
-    path.style.visibility = "hidden"; // not rendered at all until its sweep begins
-    const dur = (b.width / (SWEEP_SPEED * pace)) * 1000 + 140;
+  // 2) Lettering: handwriting. A round marker as thick as the logo's letters writes each letter in natural
+  //    pen order. Speed follows the shape (fast on straights, slower into curves and corners), each stroke
+  //    eases in and out without ever stopping, and pen lifts depend on how far the hand travels.
+  //    When a letter is done, the exact letter shape takes over, so the result is pixel-perfect.
+  //    Everything is measured here (during the loader), so each frame only moves one dash.
+  const ease = (u: number) => 0.55 * u + 0.45 * (u * u * u * (10 - 15 * u + 6 * u * u)); // never reaches zero speed
+  const lim = (x: number) => Math.min(1, Math.max(0, x));
+  const marker = el("g", { class: "tk-marker" });
+  svg.appendChild(marker);
+  let prevEnd: [number, number] | null = null;
+  letters.forEach((letter, i) => {
+    const def = TK_WRITE_STROKES[i];
+    if (!def) return;
+    const small = def.w < 10;
+    letter.style.opacity = "0";
+    letter.style.visibility = "hidden";
+    const strokes = def.s.map((d) => el("path", { d, "stroke-width": def.w }, marker));
+    strokes.forEach((p) => {
+      const L = Math.ceil(p.getTotalLength()) + 2;
+      p.style.strokeDasharray = `${L} ${L}`;
+      p.style.strokeDashoffset = `${L}`;
+      // sample the stroke; each piece gets a speed from how sharply the line turns there
+      const n = Math.max(2, Math.ceil(L / (small ? 2 : 6)));
+      const pts: [number, number][] = [];
+      for (let j = 0; j <= n; j++) {
+        const q = p.getPointAtLength((L * j) / n);
+        pts.push([q.x, q.y]);
+      }
+      const lens = new Float32Array(n + 1);
+      const times = new Float32Array(n + 1);
+      const cruise = WRITE_SPEED * pace * (small ? SMALL_TEXT_SPEED : 1);
+      for (let j = 1; j <= n; j++) {
+        const a = pts[Math.max(0, j - 3)], m = pts[j - 1], c = pts[Math.min(n, j + 2)];
+        const v1x = m[0] - a[0], v1y = m[1] - a[1], v2x = c[0] - m[0], v2y = c[1] - m[1];
+        const den = Math.hypot(v1x, v1y) * Math.hypot(v2x, v2y) || 1;
+        const straight = (Math.max(-1, Math.min(1, (v1x * v2x + v1y * v2y) / den)) + 1) / 2;
+        const v = cruise * (CURVE_SLOWDOWN + (1 - CURVE_SLOWDOWN) * Math.pow(straight, 1.6));
+        const ds = L / n;
+        lens[j] = lens[j - 1] + ds;
+        times[j] = times[j - 1] + (ds / v) * 1000;
+      }
+      const T = times[n];
+      // pen lift: a quick hop inside a letter, a longer move when the hand travels to the next letter
+      if (prevEnd) t += Math.min(260, 70 + Math.hypot(pts[0][0] - prevEnd[0], pts[0][1] - prevEnd[1]) / 6) / pace;
+      prevEnd = pts[n];
+      const lenAt = (tt: number) => {
+        let lo = 0, hi = n;
+        while (lo < hi) {
+          const mid = (lo + hi) >> 1;
+          if (times[mid] < tt) lo = mid + 1;
+          else hi = mid;
+        }
+        const j = Math.max(1, lo);
+        const f = lim((tt - times[j - 1]) / (times[j] - times[j - 1] || 1));
+        return lens[j - 1] + (lens[j] - lens[j - 1]) * f;
+      };
+      steps.push({ start: t, dur: T, tick: (k) => (p.style.strokeDashoffset = `${L - lenAt(ease(k) * T)}`) });
+      t += T;
+    });
     steps.push({
       start: t,
-      dur,
+      dur: SETTLE_MS,
       tick: (k) => {
-        if (path.style.visibility) path.style.visibility = "";
-        rect.setAttribute("width", String(full * k));
-        if (k >= 1) {
-          path.removeAttribute("mask");
-          path.removeAttribute("clip-path");
-        }
+        if (letter.style.visibility) letter.style.visibility = "";
+        letter.style.opacity = String(k);
+        strokes.forEach((p) => (p.style.opacity = String(1 - k)));
+        if (k >= 1) strokes.forEach((p) => (p.style.display = "none"));
       },
     });
-    t += dur * SWEEP_OVERLAP;
   });
   const end = Math.max(t, ...steps.map((s) => s.start + s.dur));
   const clamp = (x: number) => Math.min(1, Math.max(0, x));
@@ -158,7 +191,7 @@ const LogoMarkup = memo(function LogoMarkup() {
   return <div dangerouslySetInnerHTML={LOGO_HTML} />;
 });
 
-/** Animated TekKREW logo: the scribble is drawn by a pen, then "TekKREW" and "EST. 2026" are swept in with ink. Plays once. */
+/** Animated TekKREW logo: the scribble is drawn by a pen, then "TekKREW" and "EST. 2026" are handwritten with a marker. Plays once. */
 export default function TekkrewLogoAnimated({ play = true, className = "" }: { play?: boolean; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const prepared = useRef<Prepared | null>(null);
