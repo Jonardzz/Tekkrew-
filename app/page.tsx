@@ -340,6 +340,7 @@ const PageBody = memo(function PageBody() {
 // ==========================================
 // 4. BACKGROUND & LOADER
 // ==========================================
+// Desktop: capped at 60 fps (it's a slow drift; 120 Hz redraws are wasted work).
 // Phones: render the grain background at 1x resolution and 30 fps. It moves slowly, so this
 // looks the same but frees the phone's GPU for the logo animation (the main source of choppiness).
 const IS_PHONE = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
@@ -359,7 +360,7 @@ function BackgroundElements() {
           silk={0.35}
           grainAmount={0.08}
           dpr={IS_PHONE ? 1 : 1.5}
-          maxFps={IS_PHONE ? 30 : 0}
+          maxFps={IS_PHONE ? 30 : 60}
         />
       </div>
       
@@ -412,7 +413,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
-          <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="text-4xl md:text-6xl lg:text-7xl font-display uppercase text-white absolute">
+          <motion.div key={wordIndex} initial={{ opacity: 0, transform: "translateY(10px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} exit={{ opacity: 0, transform: "translateY(-10px)" }} transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }} className="text-4xl md:text-6xl lg:text-7xl font-display uppercase text-white absolute">
             {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
@@ -442,12 +443,12 @@ function CrewFaces() {
         aria-label="Meet TekKREW"
         className="group flex items-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
       >
-        <span className="flex -space-x-3 transition-all duration-500 ease-out group-hover:-space-x-1">
+        <span className="flex -space-x-3">
           {squadData.map((member, i) => (
             <span
               key={member.name}
-              className="relative h-11 w-11 overflow-hidden rounded-full border-2 border-black ring-1 ring-white/20 md:h-12 md:w-12"
-              style={{ zIndex: squadData.length - i }}
+              className="relative h-11 w-11 overflow-hidden rounded-full border-2 border-black ring-1 ring-white/20 transition-transform duration-200 ease-out group-hover:[transform:translateX(calc(var(--i)*0.5rem))] md:h-12 md:w-12"
+              style={{ zIndex: squadData.length - i, ["--i" as string]: i }}
             >
               <Image
                 src={member.image}
@@ -486,13 +487,13 @@ function Hero({ heroReady }: { heroReady: boolean }) {
         <div className="flex flex-col gap-3 sm:flex-row">
           <button
             onClick={() => document.getElementById("tekkrew")?.scrollIntoView({ behavior: "smooth" })}
-            className="rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black transition-colors hover:bg-accent hover:text-white"
+            className="tk-press rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-accent hover:text-white"
           >
             Meet TekKREW
           </button>
           <button
             onClick={() => document.getElementById("media")?.scrollIntoView({ behavior: "smooth" })}
-            className="rounded-full border border-white/30 bg-black/50 px-7 py-3.5 text-sm font-bold text-white transition-colors hover:border-accent hover:text-accent md:bg-black/30 md:backdrop-blur-sm"
+            className="tk-press rounded-full border border-white/30 bg-black/50 px-7 py-3.5 text-sm font-bold text-white hover:border-accent hover:text-accent md:bg-black/30 md:backdrop-blur-sm"
           >
             Press & Features
           </button>
@@ -536,12 +537,12 @@ const PlayerTile = memo(({ member, isActive, onInteract, onLeave, isTouchDevice,
   return (
     <article
       data-name={member.name}
-      className="squad-card group relative aspect-[4/5] cursor-pointer overflow-hidden rounded-2xl bg-[#111214]"
+      className="squad-card group relative aspect-[4/5] cursor-pointer overflow-hidden rounded-2xl bg-[#111214] transition-transform duration-150 ease-out active:scale-[0.985]"
       onMouseEnter={() => { if (!isTouchDevice) onInteract(member.name, "mouse"); }}
       onMouseLeave={() => { if (!isTouchDevice) onLeave("mouse"); }}
       onClick={() => { if (isTouchDevice) onInteract(member.name, "touch"); }}
     >
-      <div className="absolute inset-0 transition-transform duration-700 ease-out md:group-hover:scale-[1.04]">
+      <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.04]">
         <Image
           src={member.image}
           alt={member.name}
@@ -570,7 +571,7 @@ const PlayerTile = memo(({ member, isActive, onInteract, onLeave, isTouchDevice,
 
       <div className="absolute left-3 top-3 flex gap-1.5">
         {member.flags.map((flag) => (
-          <span key={flag} className="rounded-md bg-black/55 px-1.5 py-0.5 text-lg leading-none backdrop-blur-sm" aria-hidden="true">
+          <span key={flag} className="rounded-md bg-black/60 px-1.5 py-0.5 text-lg leading-none" aria-hidden="true">
             {flag}
           </span>
         ))}
@@ -592,7 +593,7 @@ const PlayerTile = memo(({ member, isActive, onInteract, onLeave, isTouchDevice,
               onPointerDown={(e) => e.stopPropagation()}
               aria-label={`${member.name} on ${link.name}`}
               title={link.name}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-black/50 text-white/75 backdrop-blur-sm transition-colors duration-300 hover:border-accent hover:text-accent [&_svg]:h-4 [&_svg]:w-4"
+              className="tk-press flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-black/60 text-white/75 hover:border-accent hover:text-accent [&_svg]:h-4 [&_svg]:w-4"
             >
               {link.icon}
             </a>
@@ -602,8 +603,10 @@ const PlayerTile = memo(({ member, isActive, onInteract, onLeave, isTouchDevice,
 
       <span
         aria-hidden="true"
-        className={`absolute inset-x-0 bottom-0 h-[3px] origin-left bg-accent transition-transform duration-500 ${isActive ? "scale-x-100" : "scale-x-0"}`}
+        className={`absolute inset-x-0 bottom-0 h-[3px] origin-left bg-accent transition-transform duration-300 ease-out ${isActive ? "scale-x-100" : "scale-x-0"}`}
       />
+      {/* 1px inner border, same as the press tiles */}
+      <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-2xl border border-white/10" />
     </article>
   );
 });
@@ -703,14 +706,10 @@ function MediaTicker() {
   );
   return (
     <div className="relative mb-8 overflow-hidden border-y border-white/[0.06] py-4 md:mb-10 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
-      <motion.div
-        className="flex w-max"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 28, ease: "linear", repeat: Infinity }}
-      >
+      <div className="tk-marquee flex w-max">
         {strip}
         {strip}
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -743,20 +742,20 @@ function PressModal({ feature, onClose }: { feature: MediaFeature; onClose: () =
       role="dialog"
       aria-modal="true"
       aria-label={feature.title}
-      className="fixed inset-0 z-[100000] flex items-center justify-center overflow-y-auto bg-black/90 p-4 backdrop-blur-md sm:p-8"
+      className="fixed inset-0 z-[100000] flex items-center justify-center overflow-y-auto bg-black/[0.92] p-4 sm:p-8"
     >
       <motion.div
-        initial={{ opacity: 0, y: 16, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 8, scale: 0.98 }}
-        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0, transform: "translateY(12px) scale(0.97)" }}
+        animate={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
+        exit={{ opacity: 0, transform: "translateY(6px) scale(0.98)" }}
+        transition={{ duration: 0.24, ease: [0.23, 1, 0.32, 1] }}
         onClick={(e) => e.stopPropagation()}
         className="relative my-auto w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0d0e10] p-5 md:p-8"
       >
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-black transition-colors hover:bg-accent hover:text-white"
+          className="tk-press absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-black hover:bg-accent hover:text-white"
         >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
@@ -921,11 +920,11 @@ function GallerySection() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 z-[99999] bg-black/95 flex flex-col items-center justify-center p-4 sm:p-8 cursor-zoom-out backdrop-blur-md"
+            className="fixed inset-0 z-[99999] bg-black/95 flex flex-col items-center justify-center p-4 sm:p-8 cursor-zoom-out"
           >
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-              className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-white hover:bg-accent text-black rounded-full flex items-center justify-center transition-all z-50 cursor-pointer"
+              className="tk-press absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-white hover:bg-accent text-black rounded-full flex items-center justify-center z-50 cursor-pointer"
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -1017,11 +1016,14 @@ function GallerySection() {
             href="https://www.instagram.com/tekkrew_/"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-[#FF4328]/50 bg-[#0c0d0f]/80 px-8 py-4 text-xs font-black uppercase tracking-[0.2em] text-white backdrop-blur-md transition-all duration-300 hover:border-[#FF4328] hover:shadow-[0_0_30px_rgba(255,67,40,0.25)] md:text-sm"
+            className="group relative inline-flex items-center gap-3 rounded-full border border-[#FF4328]/50 bg-[#0c0d0f]/90 px-8 py-4 text-xs font-black uppercase tracking-[0.2em] text-white transition-[border-color,transform] duration-200 ease-out hover:border-[#FF4328] active:scale-[0.97] md:text-sm"
           >
-            <span className="absolute inset-0 -translate-x-full bg-accent transition-transform duration-300 ease-out group-hover:translate-x-0" />
+            <span aria-hidden="true" className="pointer-events-none absolute -inset-1 rounded-full opacity-0 shadow-[0_0_30px_rgba(255,67,40,0.25)] transition-opacity duration-300 group-hover:opacity-100" />
+            <span aria-hidden="true" className="absolute inset-0 overflow-hidden rounded-full">
+              <span className="absolute inset-0 -translate-x-full bg-accent transition-transform duration-300 ease-out group-hover:translate-x-0" />
+            </span>
             <span className="relative z-10 transition-colors duration-300 group-hover:text-black">See More on Instagram</span>
-            <span className="relative z-10 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-black">
+            <span className="relative z-10 transition-[transform,color] duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-black">
               <svg className="ml-0.5 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg>
             </span>
           </a>

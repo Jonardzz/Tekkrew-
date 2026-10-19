@@ -1,5 +1,4 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { GeistSans } from "geist/font/sans";
 import { Analytics } from "@vercel/analytics/next";
@@ -7,10 +6,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 
 // --- Fonts ---
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-body",
-});
+// Two typefaces: Big Shoulders (headlines) + Geist (everything else).
 
 // Condensed athletic display face for headlines (scoreboard / kit lettering feel)
 const displayFace = localFont({
@@ -25,6 +21,12 @@ const SITE_URL = "https://tekkrew.com";
 const SITE_TITLE = "TekKREW | HTX • DTX";
 const SITE_DESCRIPTION =
   "Freestyle//Panna KREW based in HTX • DTX. TekKREW is a freestyle football and panna crew from Houston, Texas: meet the crew, press features and gallery.";
+
+// Phone status bar / browser chrome blends into the page background
+export const viewport: Viewport = {
+  themeColor: "#08090a",
+  colorScheme: "dark",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -86,7 +88,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("scroll-smooth", "font-sans", GeistSans.variable)}>
-      <body className={`${inter.variable} ${displayFace.variable} font-body antialiased bg-[#050505] text-white`}>
+      <body className={`${displayFace.variable} font-body antialiased bg-[#050505] text-white`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

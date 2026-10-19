@@ -1,6 +1,9 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  // hover: styles only apply on devices that can really hover (mouse/trackpad),
+  // so they don't get stuck "on" after a tap on phones.
+  future: { hoverOnlyWhenSupported: true },
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -24,7 +27,8 @@ const config: Config = {
         foreground: "var(--foreground, #ffffff)",
       },
       fontFamily: {
-        body: ["var(--font-body)", "sans-serif"],
+        sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        body: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "serif"],
       },
       backgroundImage: {

@@ -135,19 +135,21 @@ export default function Masonry({
     return Math.max(...grid.map((item) => item.y + item.h));
   }, [grid]);
 
+  // Phones travel less (24px) than desktop (48px): shorter motion reads as snappier on a small screen.
   const getInitialOffset = (item: GridItem) => {
+    const d = isTouch ? 24 : 48;
     switch (animateFrom) {
       case "top":
-        return { x: item.x, y: item.y - 80 };
+        return { x: item.x, y: item.y - d };
       case "left":
-        return { x: item.x - 80, y: item.y };
+        return { x: item.x - d, y: item.y };
       case "right":
-        return { x: item.x + 80, y: item.y };
+        return { x: item.x + d, y: item.y };
       case "center":
         return { x: width / 2 - item.w / 2, y: item.y };
       case "bottom":
       default:
-        return { x: item.x, y: item.y + 80 };
+        return { x: item.x, y: item.y + d };
     }
   };
 
@@ -179,23 +181,28 @@ export default function Masonry({
           return;
         }
         const start = getInitialOffset(item);
+        // Size is set once (never animated: width/height trigger layout). Only transform + opacity move.
+        // Blur only on desktop and kept light (4px): animating blur on a dozen photos stutters phones.
+        const useBlur = blurToFocus && !isTouch;
+        gsap.set(selector, { width: item.w, height: item.h });
         gsap.fromTo(
           selector,
           {
             opacity: 0,
             x: start.x,
             y: start.y,
-            width: item.w,
-            height: item.h,
-            ...(blurToFocus && { filter: "blur(8px)" }),
+            ...(useBlur && { filter: "blur(4px)" }),
           },
           {
             opacity: 1,
-            ...animProps,
-            ...(blurToFocus && { filter: "blur(0px)" }),
-            duration: 0.7,
+            x: item.x,
+            y: item.y,
+            ...(useBlur && { filter: "blur(0px)" }),
+            duration: isTouch ? 0.45 : 0.6,
             ease: "power3.out",
             delay: index * stagger,
+            force3D: true,
+            ...(useBlur && { clearProps: "filter" }),
           }
         );
       } else {
@@ -228,15 +235,14 @@ export default function Masonry({
         <div
           key={item.id}
           data-key={item.id}
-          className="absolute overflow-hidden rounded-2xl border border-white/10 bg-[#111214] shadow-lg transition-colors duration-300 md:hover:border-accent/40"
-          style={{ willChange: "transform, width, height, opacity" }}
+          className="absolute overflow-hidden rounded-2xl border border-white/10 bg-[#111214] shadow-lg transition-colors duration-200 hover:border-[#FF4328]/40"
           onMouseEnter={() => handleMouseEnter(item.id)}
           onMouseLeave={() => handleMouseLeave(item.id)}
         >
           <button
             type="button"
             onClick={() => onItemClick?.(item)}
-            className="group relative block h-full w-full cursor-pointer"
+            className="group relative block h-full w-full cursor-pointer transition-transform duration-150 ease-out active:scale-[0.97]"
             aria-label={item.alt || "View photo"}
           >
             <Image
@@ -247,9 +253,9 @@ export default function Masonry({
               priority={index < priorityCount}
               quality={85}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-              className="object-cover opacity-80 transition-all duration-500 md:group-hover:scale-105 md:group-hover:opacity-100"
+              className="object-cover opacity-80 transition-[transform,opacity] duration-300 ease-out group-hover:scale-105 group-hover:opacity-100"
             />
-            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 md:group-hover:opacity-100">
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               <div className="flex h-9 w-9 items-center justify-center rounded-full border border-accent bg-black/50 text-accent backdrop-blur-md">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="7" y1="17" x2="17" y2="7"></line>

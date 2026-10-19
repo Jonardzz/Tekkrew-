@@ -137,6 +137,35 @@
 /* Reserve the scrollbar's space so unlocking scroll after the loader doesn't reflow the page */
 html { scrollbar-gutter: stable; }
 
+/* ---------- Feel native on phones (Emil Kowalski / mobile-native) ---------- */
+:root {
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+}
+html {
+  -webkit-tap-highlight-color: transparent; /* no gray flash on tap; controls have their own :active state */
+  -webkit-text-size-adjust: 100%;
+}
+button, a, [role="button"] {
+  touch-action: manipulation; /* no double-tap-zoom wait: taps register instantly */
+}
+button, [role="button"] {
+  -webkit-user-select: none;
+  user-select: none; /* long-press doesn't select button labels */
+}
+
+/* Press feedback: subtle scale on press, 160ms strong ease-out */
+.tk-press {
+  transition-property: transform, color, background-color, border-color, opacity;
+  transition-duration: 160ms, 200ms, 200ms, 200ms, 200ms;
+  transition-timing-function: var(--ease-out-strong), ease, ease, ease, ease;
+}
+.tk-press:active { transform: scale(0.97); }
+
+/* "As seen on" strip: pure CSS so it never competes with JavaScript for frames */
+@keyframes tk-marquee { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+.tk-marquee { animation: tk-marquee 28s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .tk-marquee { animation: none; } }
+
 /* Static stand-in for the Grainient background (used when WebGL2 isn't available) */
 .tk-bg-fallback {
   background:
