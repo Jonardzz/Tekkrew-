@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ==========================================
@@ -135,24 +134,6 @@ export default function Navbar() {
         >
           {/* hairline glow across the top edge of the pill */}
           <span className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent" />
-
-          {/* Logo */}
-          <button
-            onClick={() => goTo("home")}
-            aria-label="TekKREW, back to top"
-            className="group relative mr-1 flex h-9 flex-shrink-0 items-center pl-3 pr-2"
-          >
-            <Image
-              src="/tekkrew-logo.png"
-              alt="TekKREW"
-              width={800}
-              height={420}
-              priority
-              className="-my-2 h-[52px] w-auto transition-transform duration-200 ease-out group-hover:scale-105 group-active:scale-[0.97]"
-            />
-          </button>
-
-          <span className="mx-1 h-5 w-px bg-white/10" />
 
           {/* Links with sliding active pill */}
           <div className="flex items-center px-1">

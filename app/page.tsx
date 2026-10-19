@@ -294,18 +294,19 @@ export default function Page() {
     return () => { document.body.style.overflow = "unset"; };
   }, [isLoading]);
 
-  const handleLoadingComplete = useCallback(() => setIsLoading(false), []);
-  // Start the logo only once the loader has fully faded out, on a fresh frame,
-  // so the two animations never compete for the same frames (the cause of the stutter).
-  const handleLoaderGone = useCallback(() => {
-    requestAnimationFrame(() => requestAnimationFrame(() => setHeroReady(true)));
+  const handleLoadingComplete = useCallback(() => {
+    setIsLoading(false);
+    // Start the hero animation shortly after the loading screen begins fading out.
+    window.setTimeout(() => {
+      setHeroReady(true);
+    }, 300);
   }, []);
 
   return (
     <main className="relative min-h-[100svh] bg-[#08090a] text-text overflow-x-hidden selection:bg-accent selection:text-black font-body">
       <StaticBackground />
 
-      <AnimatePresence mode="wait" onExitComplete={handleLoaderGone}>
+      <AnimatePresence mode="wait">
         {isLoading && <LoadingScreen key="loader" onComplete={handleLoadingComplete} />}
       </AnimatePresence>
 
@@ -371,6 +372,8 @@ function BackgroundElements() {
   );
 }
 
+const LOADER_EXIT = { duration: 0.7, ease: "easeInOut" } as const;
+
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const countRef = useRef<HTMLDivElement>(null);
   const words = ["Skill", "Street", "Passion"];
@@ -399,33 +402,58 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   }, [onComplete]);
 
   return (
+    // Same look as before (fade + slight zoom + blur), built so it stays smooth:
+    //  - the dark backdrop only fades (opacity, GPU)
+    //  - the whole layer zooms with a transform string (GPU, off the main thread)
+    //  - the blur is applied only to the three small text pieces, not the full screen
+    //    (a full-screen blur over the moving WebGL background is what made the hand-off choppy)
     <motion.div
-      // Opacity-only exit (GPU-composited). The old full-screen blur + scale was very
-      // expensive over the WebGL background, especially on phones.
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+      transition={LOADER_EXIT}
       style={{ willChange: "opacity" }}
-      className="fixed inset-0 z-[9999] bg-[#08090a] flex flex-col justify-between"
+      className="fixed inset-0 z-[9999] bg-[#08090a]"
     >
-      <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-white/60 tracking-[0.3em] font-bold">
-        TekKREW
-      </div>
+      <motion.div
+        exit={{ transform: "scale(1.05)" }}
+        transition={LOADER_EXIT}
+        className="absolute inset-0 flex flex-col justify-between"
+      >
+        <motion.div
+          exit={{ filter: "blur(8px)" }}
+          transition={LOADER_EXIT}
+          className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-white/60 tracking-[0.3em] font-bold"
+        >
+          TekKREW
+        </motion.div>
 
-      <div className="flex-1 flex items-center justify-center">
-        <AnimatePresence mode="wait">
-          <motion.div key={wordIndex} initial={{ opacity: 0, transform: "translateY(10px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} exit={{ opacity: 0, transform: "translateY(-10px)" }} transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }} className="text-4xl md:text-6xl lg:text-7xl font-display uppercase text-white absolute">
-            {words[wordIndex]}
+        <div className="flex-1 flex items-center justify-center">
+          <motion.div
+            exit={{ filter: "blur(8px)" }}
+            transition={LOADER_EXIT}
+            className="relative flex h-[1.2em] w-[8ch] items-center justify-center text-4xl md:text-6xl lg:text-7xl font-display uppercase"
+          >
+            <AnimatePresence mode="wait">
+              <motion.div key={wordIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="absolute text-white">
+                {words[wordIndex]}
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
-        </AnimatePresence>
-      </div>
+        </div>
 
-      <div ref={countRef} className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display uppercase text-white tabular-nums leading-none opacity-90">
-        000
-      </div>
+        <motion.div
+          exit={{ filter: "blur(8px)" }}
+          transition={LOADER_EXIT}
+          className="absolute bottom-8 right-8 md:bottom-12 md:right-12"
+        >
+          <div ref={countRef} className="text-6xl md:text-8xl lg:text-9xl font-display uppercase text-white tabular-nums leading-none opacity-90 drop-shadow-md">
+            000
+          </div>
+        </motion.div>
 
-      <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/5 origin-left">
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent origin-left" />
-      </div>
+        <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/5 origin-left">
+          <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 2.2, ease: "linear" }} className="w-full h-full bg-accent origin-left" />
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
