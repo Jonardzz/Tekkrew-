@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, memo, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import TextType from "../components/TextType";
 import Grainient from "../components/Grainient";
@@ -294,34 +294,48 @@ export default function Page() {
     return () => { document.body.style.overflow = "unset"; };
   }, [isLoading]);
 
-  const handleLoadingComplete = useCallback(() => {
-    setIsLoading(false);
-    // Add a slight delay before triggering the hero animation
-    // so it starts exactly when the loading screen is fully out of view.
-    window.setTimeout(() => {
-      setHeroReady(true);
-    }, 300);
+  const handleLoadingComplete = useCallback(() => setIsLoading(false), []);
+  // Start the logo only once the loader has fully faded out, on a fresh frame,
+  // so the two animations never compete for the same frames (the cause of the stutter).
+  const handleLoaderGone = useCallback(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => setHeroReady(true)));
   }, []);
 
   return (
     <main className="relative min-h-[100svh] bg-[#08090a] text-text overflow-x-hidden selection:bg-accent selection:text-black font-body">
-      <BackgroundElements />
+      <StaticBackground />
 
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" onExitComplete={handleLoaderGone}>
         {isLoading && <LoadingScreen key="loader" onComplete={handleLoadingComplete} />}
       </AnimatePresence>
 
       <div className="relative z-10 opacity-100">
-        <Navbar />
+        <StaticNavbar />
         <Hero heroReady={heroReady} />
-        <SquadSection />
-        <MediaSection />
-        <GallerySection />
-        <Footer />
+        <PageBody />
       </div>
     </main>
   );
 }
+
+// Memoised so the loader finishing / the logo starting only re-render the hero,
+// not the whole page (re-rendering everything froze slower phones for ~100 ms right at the hand-off).
+const StaticBackground = memo(function StaticBackground() {
+  return <BackgroundElements />;
+});
+const StaticNavbar = memo(function StaticNavbar() {
+  return <Navbar />;
+});
+const PageBody = memo(function PageBody() {
+  return (
+    <>
+      <SquadSection />
+      <MediaSection />
+      <GallerySection />
+      <Footer />
+    </>
+  );
+});
 
 // ==========================================
 // 4. BACKGROUND & LOADER
@@ -349,7 +363,7 @@ function BackgroundElements() {
 }
 
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
-  const [count, setCount] = useState(0);
+  const countRef = useRef<HTMLDivElement>(null);
   const words = ["Skill", "Street", "Passion"];
   const [wordIndex, setWordIndex] = useState(0);
 
@@ -360,21 +374,28 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
   useEffect(() => {
     let start: number | null = null;
-    const duration = 2200; 
+    let raf = 0;
+    let timer = 0;
+    const duration = 2200;
+    // Counter is written straight to the DOM: no React re-render on every frame.
     const step = (timestamp: number) => {
-      if (!start) start = timestamp;
+      if (start === null) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
-      setCount(Math.floor(progress * 100));
-      if (progress < 1) requestAnimationFrame(step);
-      else setTimeout(onComplete, 150); 
+      if (countRef.current) countRef.current.textContent = String(Math.floor(progress * 100)).padStart(3, "0");
+      if (progress < 1) raf = requestAnimationFrame(step);
+      else timer = window.setTimeout(onComplete, 150);
     };
-    requestAnimationFrame(step);
+    raf = requestAnimationFrame(step);
+    return () => { cancelAnimationFrame(raf); clearTimeout(timer); };
   }, [onComplete]);
 
   return (
     <motion.div
-      exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
-      transition={{ duration: 0.7, ease: "easeInOut" }}
+      // Opacity-only exit (GPU-composited). The old full-screen blur + scale was very
+      // expensive over the WebGL background, especially on phones.
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+      style={{ willChange: "opacity" }}
       className="fixed inset-0 z-[9999] bg-[#08090a] flex flex-col justify-between"
     >
       <div className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-white/60 tracking-[0.3em] font-bold">
@@ -389,8 +410,8 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
         </AnimatePresence>
       </div>
 
-      <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display uppercase text-white tabular-nums leading-none opacity-90 drop-shadow-md">
-        {count.toString().padStart(3, "0")}
+      <div ref={countRef} className="absolute bottom-8 right-8 md:bottom-12 md:right-12 text-6xl md:text-8xl lg:text-9xl font-display uppercase text-white tabular-nums leading-none opacity-90">
+        000
       </div>
 
       <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/5 origin-left">
@@ -431,9 +452,7 @@ function CrewFaces() {
           ))}
         </span>
       </button>
-      <p className="text-sm leading-snug text-white/70">
-        Six players.<br />Est. 2026, HTX • DTX
-      </p>
+      <p className="font-sans text-sm font-medium tracking-[0.2em] text-white/70">HTX • DTX</p>
     </div>
   );
 }
@@ -444,7 +463,9 @@ function Hero({ heroReady }: { heroReady: boolean }) {
       <h1 className="sr-only">TekKREW, a freestyle and panna crew from Houston, Texas</h1>
 
       <div className="relative z-10 flex flex-1 items-center justify-center px-4 pt-24">
-        <TekkrewLogoAnimated play={heroReady} className="w-[min(88vw,780px)] drop-shadow-[0_10px_40px_rgba(0,0,0,0.65)]" />
+        {/* Static dark glow behind the logo. A CSS drop-shadow on the SVG would be re-rendered on every animation frame. */}
+        <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 mt-12 h-[60%] w-[min(100vw,900px)] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,rgba(0,0,0,0.55),transparent)]" />
+        <TekkrewLogoAnimated play={heroReady} className="relative w-[min(88vw,780px)]" />
       </div>
 
       <motion.div
@@ -769,6 +790,71 @@ function PressModal({ feature, onClose }: { feature: MediaFeature; onClose: () =
   );
 }
 
+// Physics-based hover: a damped spring (no bounce) lifts the tile, while the media
+// pulls in from the edges to reveal a thin inner frame. Media is edge-to-edge at rest.
+const TILE_SPRING = { type: "spring", stiffness: 380, damping: 32, mass: 0.6 } as const;
+
+function BentoTile({ feature: f, onOpen }: { feature: MediaFeature; onOpen: () => void }) {
+  const reduce = useReducedMotion();
+  const { width, height } = f.videos[0];
+  const landscape = width > height;
+  return (
+    <motion.button
+      type="button"
+      onClick={onOpen}
+      initial="rest"
+      animate="rest"
+      whileHover={reduce ? undefined : "hover"}
+      whileTap={reduce ? undefined : { scale: 0.985 }}
+      variants={{ rest: { scale: 1 }, hover: { scale: 1.015 } }}
+      transition={TILE_SPRING}
+      style={{ aspectRatio: `${width} / ${height}`, flex: `${width / height} 1 0%` }}
+      className={`group relative isolate overflow-hidden rounded-2xl bg-[#0b0b0d] text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
+        landscape ? "col-span-2" : ""
+      }`}
+    >
+      <motion.div
+        className="absolute inset-0 overflow-hidden rounded-2xl"
+        variants={{ rest: { scale: 1, borderRadius: 16 }, hover: { scale: 0.965, borderRadius: 12 } }}
+        transition={TILE_SPRING}
+      >
+        <Image
+          src={bentoCover[f.id] ?? f.videos[0].poster}
+          alt=""
+          fill
+          sizes={landscape ? "(max-width: 768px) 100vw, 60vw" : "(max-width: 768px) 50vw, 20vw"}
+          quality={85}
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+      </motion.div>
+
+      {f.videos.length > 1 && (
+        <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-black/30 px-2.5 py-1 font-sans text-[10px] font-medium tabular-nums text-white/80 backdrop-blur-md md:left-4 md:top-4 md:text-[11px]">
+          {f.videos.length} videos
+        </span>
+      )}
+
+      {/* 1px inner border */}
+      <span className="pointer-events-none absolute inset-0 rounded-2xl border border-white/10" />
+
+      <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-black/30 text-white backdrop-blur-md transition-colors duration-200 group-hover:border-transparent group-hover:bg-accent md:right-4 md:top-4 md:h-10 md:w-10">
+        <svg className="ml-0.5 h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+      </span>
+
+      <div className="absolute inset-x-2 bottom-2 rounded-xl border border-white/10 bg-black/35 px-3 py-2.5 backdrop-blur-md sm:inset-x-3 sm:bottom-3 md:px-4 md:py-3">
+        <div className="flex items-center gap-2 font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60 md:text-[11px]">
+          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${f.dotClass}`} />
+          <span className="truncate">{f.tag}</span>
+        </div>
+        <h3 className={`mt-1 font-sans font-semibold leading-tight tracking-tight text-white ${landscape ? "text-lg md:text-2xl" : "text-sm md:text-base"}`}>
+          {f.title}
+        </h3>
+      </div>
+    </motion.button>
+  );
+}
+
 function MediaSection() {
   const [openId, setOpenId] = useState<string | null>(null);
   const features = bentoOrder
@@ -782,53 +868,14 @@ function MediaSection() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 flex items-end justify-between gap-6 md:mb-12">
           <h2 className="font-display text-6xl font-black uppercase leading-[0.85] text-white md:text-8xl">Press &amp; Features</h2>
-          <p className="hidden pb-2 text-sm text-white/50 sm:block">Tap a story to watch</p>
         </div>
 
         <MediaTicker />
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:flex md:gap-5">
-          {features.map((f) => {
-            const { width, height } = f.videos[0];
-            const landscape = width > height;
-            return (
-              <button
-                key={f.id}
-                onClick={() => setOpenId(f.id)}
-                style={{ aspectRatio: `${width} / ${height}`, flex: `${width / height} 1 0%` }}
-                className={`group relative overflow-hidden rounded-2xl bg-[#111214] text-left transition-transform duration-150 ease-out active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${
-                  landscape ? "col-span-2" : ""
-                }`}
-              >
-                <Image
-                  src={bentoCover[f.id] ?? f.videos[0].poster}
-                  alt=""
-                  fill
-                  sizes={landscape ? "(max-width: 768px) 100vw, 60vw" : "(max-width: 768px) 50vw, 20vw"}
-                  quality={85}
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-black transition-colors duration-200 group-hover:bg-accent group-hover:text-white md:right-4 md:top-4 md:h-11 md:w-11">
-                  <svg className="ml-0.5 h-3.5 w-3.5 md:h-4 md:w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                </span>
-                <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 md:p-5">
-                  <div className="flex flex-wrap items-center gap-2 text-[11px] text-white/70 md:text-xs">
-                    <span className="flex items-center gap-1.5">
-                      <span className={`h-1.5 w-1.5 rounded-full ${f.dotClass}`} />
-                      {f.tag}
-                    </span>
-                    {f.videos.length > 1 && (
-                      <span className="rounded-full border border-white/20 px-2 py-0.5">{f.videos.length} videos</span>
-                    )}
-                  </div>
-                  <h3 className={`mt-1.5 font-display font-black uppercase leading-[0.9] text-white ${landscape ? "text-3xl md:text-5xl" : "text-2xl md:text-3xl"}`}>
-                    {f.title}
-                  </h3>
-                </div>
-              </button>
-            );
-          })}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:flex md:gap-4">
+          {features.map((f) => (
+            <BentoTile key={f.id} feature={f} onOpen={() => setOpenId(f.id)} />
+          ))}
         </div>
       </div>
 

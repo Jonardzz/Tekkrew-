@@ -134,25 +134,18 @@
   }
 }
 
+/* Reserve the scrollbar's space so unlocking scroll after the loader doesn't reflow the page */
+html { scrollbar-gutter: stable; }
+
 /* ---------- Animated TekKREW logo (hero) ---------- */
 .tk-logo-waiting { visibility: hidden; }
-.tk-logo { display: block; width: 100%; height: auto; overflow: visible; }
+.tk-logo { display: block; width: 100%; height: auto; overflow: visible; will-change: transform; } /* own layer: per-frame redraws stay inside the logo */
 .tk-ink path { fill: none; stroke: #FF4529; stroke-linecap: round; stroke-linejoin: round; }
 .tk-exact { opacity: 0; }
-/* Lettering: the pen traces each outline (stroke), then the letter fills and the outline fades */
-.tk-letter {
-  fill-opacity: 0;
-  stroke: #FEFEFE;
-  stroke-width: 5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: fill-opacity 260ms ease, stroke-opacity 400ms ease;
-}
-.tk-est { stroke-width: 2.2; }
-.tk-letter.is-filled { fill-opacity: 1; }
-.tk-letter.is-settled { stroke-opacity: 0; }
+/* Lettering: solid fill, revealed by the ink-sweep masks set up in TekkrewLogoAnimated */
+.tk-letter { stroke: none; }
 /* Finished state (also prefers-reduced-motion): everything visible, no motion */
-.tk-logo.tk-done .tk-exact, .tk-logo.tk-done .tk-letter { opacity: 1; fill-opacity: 1; stroke-opacity: 0; transition: none; }
+.tk-logo.tk-done .tk-exact { opacity: 1; }
 .tk-logo.tk-done .tk-ink { display: none; }
 
 /* ---------- Mobile menu button (hamburger → X) ----------
