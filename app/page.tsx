@@ -8,6 +8,7 @@ import Grainient from "../components/Grainient";
 import Masonry, { MasonryItem } from "../components/Masonry";
 import Navbar from "../components/Navbar";
 import TekkrewLogoAnimated from "../components/TekkrewLogoAnimated";
+import BookingTicket from "../components/BookingTicket";
 
 // ==========================================
 // 1. ICONS & SVG ASSETS
@@ -333,6 +334,7 @@ const PageBody = memo(function PageBody() {
       <SquadSection />
       <MediaSection />
       <GallerySection />
+      <ContactSection />
       <Footer />
     </>
   );
@@ -640,7 +642,7 @@ const PlayerTile = memo(({ member, isActive, onInteract, onLeave, isTouchDevice,
 });
 PlayerTile.displayName = "PlayerTile";
 
-// Section title that types itself in when it scrolls into view — same speed and cursor as the gallery title.
+// Section title that types itself in when it scrolls into view — same speed (150 ms/letter) and cursor as the gallery title.
 // An invisible copy of the full text reserves the final size, so nothing below jumps while it types.
 function TypedHeading({ text, className }: { text: string; className: string }) {
   return (
@@ -650,7 +652,7 @@ function TypedHeading({ text, className }: { text: string; className: string }) 
         <TextType
           as="span"
           text={text}
-          typingSpeed={60}
+          typingSpeed={150}
           initialDelay={200}
           showCursor
           cursorCharacter="_"
@@ -1004,7 +1006,7 @@ function GallerySection() {
             key={`title-${active.id}`}
             as="h3"
             text={active.title}
-            typingSpeed={60}
+            typingSpeed={150}
             initialDelay={800}
             showCursor
             cursorCharacter="_"
@@ -1020,7 +1022,7 @@ function GallerySection() {
                as="p"
                text={active.date}
                typingSpeed={50}
-               initialDelay={1800}
+               initialDelay={3600}
                showCursor={false}
                className="text-white/80 text-xs md:text-sm uppercase tracking-[0.3em] font-bold"
                startOnVisible={true}
@@ -1088,6 +1090,20 @@ function GallerySection() {
 // ==========================================
 // 10. FOOTER
 // ==========================================
+function ContactSection() {
+  return (
+    // Fills the screen when you land on it (Contact in the navbar), so there's no empty space under the ticket.
+    <section id="contact" className="scroll-mt-20 md:scroll-mt-24 relative flex min-h-[100svh] w-full flex-col justify-center px-4 py-16 md:px-8 md:py-24">
+      <div className="mx-auto w-full max-w-5xl">
+        <div className="mb-8 md:mb-10">
+          <TypedHeading text="Contact" className="font-display text-6xl font-black uppercase leading-[0.85] text-white md:text-8xl" />
+        </div>
+        <BookingTicket />
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   return (
     <footer className="relative z-10 px-4 pb-10 pt-6 md:px-8 md:pb-12">

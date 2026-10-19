@@ -16,9 +16,8 @@ const NAV_SECTIONS = [
   { id: "gallery", label: "Gallery" },
 ] as const;
 
-type SectionId = (typeof NAV_SECTIONS)[number]["id"];
+type SectionId = (typeof NAV_SECTIONS)[number]["id"] | "contact";
 
-const INSTAGRAM_URL = "https://www.instagram.com/tekkrew_/";
 
 const ArrowUpRight = ({ className = "h-3.5 w-3.5" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -173,16 +172,15 @@ export default function Navbar() {
 
           <span className="mx-1 h-5 w-px bg-white/10" />
 
-          {/* Contact — crew Instagram */}
-          <a
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Contact — scrolls to the booking ticket */}
+          <button
+            type="button"
+            onClick={() => goTo("contact")}
             className="tk-press group ml-2 inline-flex items-center gap-1.5 rounded-full border border-white/20 px-5 py-2 text-xs font-black uppercase tracking-[0.14em] text-white/80 hover:border-accent hover:text-accent lg:text-[13px]"
           >
             Contact
-            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </a>
+            <ArrowUpRight className="h-3.5 w-3.5 rotate-90 transition-transform duration-200 ease-out group-hover:translate-y-0.5" />
+          </button>
         </motion.nav>
       </div>
 
@@ -279,17 +277,15 @@ export default function Navbar() {
               </div>
 
               <div className="border-t border-white/10 p-3">
-                <motion.a
+                <motion.button
+                  type="button"
                   variants={itemVariants}
                   whileTap={{ transform: "translateX(0px) scale(0.97)", transition: { duration: 0.12 } }}
-                  href={INSTAGRAM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-2xl border border-white/15 px-4 py-3.5 text-xs font-black uppercase tracking-[0.2em] text-white transition-colors duration-200 active:border-accent active:text-accent"
+                  onClick={() => goTo("contact")}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 px-4 py-3.5 text-xs font-black uppercase tracking-[0.2em] text-white transition-colors duration-200 active:border-accent active:text-accent"
                 >
-                  Contact <ArrowUpRight />
-                </motion.a>
+                  Contact <ArrowUpRight className="h-3.5 w-3.5 rotate-90" />
+                </motion.button>
               </div>
             </motion.nav>
           </>
