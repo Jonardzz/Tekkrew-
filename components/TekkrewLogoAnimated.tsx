@@ -69,22 +69,35 @@ function prepare(root: HTMLElement): Prepared {
   el("stop", { offset: 0, "stop-color": "#fff" }, grad);
   el("stop", { offset: 0.82, "stop-color": "#fff" }, grad);
   el("stop", { offset: 1, "stop-color": "#fff", "stop-opacity": 0 }, grad);
+  // Phones use a hard-edged clip (cheap) instead of the soft gradient mask (slow in mobile Safari).
   letters.forEach((path, i) => {
     const b = path.getBBox();
     const pad = 6;
-    const soft = Math.max(24, b.height * 0.25);
+    const soft = narrow ? 0 : Math.max(24, b.height * 0.25);
     const x = b.x - pad - soft;
     const full = b.width + 2 * pad + 2 * soft;
-    const mask = el("mask", { id: `tk-sweep-${i}`, maskUnits: "userSpaceOnUse", x, y: b.y - pad, width: full, height: b.height + 2 * pad }, defs);
-    const rect = el("rect", { x, y: b.y - pad, width: 0, height: b.height + 2 * pad, fill: "url(#tk-sweep-grad)" }, mask);
-    path.setAttribute("mask", `url(#tk-sweep-${i})`);
+    let rect: SVGRectElement;
+    if (narrow) {
+      const clip = el("clipPath", { id: `tk-sweep-${i}` }, defs);
+      rect = el("rect", { x, y: b.y - pad, width: 0, height: b.height + 2 * pad }, clip);
+      path.setAttribute("clip-path", `url(#tk-sweep-${i})`);
+    } else {
+      const mask = el("mask", { id: `tk-sweep-${i}`, maskUnits: "userSpaceOnUse", x, y: b.y - pad, width: full, height: b.height + 2 * pad }, defs);
+      rect = el("rect", { x, y: b.y - pad, width: 0, height: b.height + 2 * pad, fill: "url(#tk-sweep-grad)" }, mask);
+      path.setAttribute("mask", `url(#tk-sweep-${i})`);
+    }
+    path.style.visibility = "hidden"; // not rendered at all until its sweep begins
     const dur = (b.width / (SWEEP_SPEED * pace)) * 1000 + 140;
     steps.push({
       start: t,
       dur,
       tick: (k) => {
+        if (path.style.visibility) path.style.visibility = "";
         rect.setAttribute("width", String(full * k));
-        if (k >= 1) path.removeAttribute("mask");
+        if (k >= 1) {
+          path.removeAttribute("mask");
+          path.removeAttribute("clip-path");
+        }
       },
     });
     t += dur * SWEEP_OVERLAP;
@@ -92,6 +105,8 @@ function prepare(root: HTMLElement): Prepared {
   const end = Math.max(t, ...steps.map((s) => s.start + s.dur));
   const clamp = (x: number) => Math.min(1, Math.max(0, x));
 
+  exact.style.visibility = "hidden"; // the exact scribble isn't rendered until the hand-over
+  let swapped = false;
   let raf = 0;
   let last: number | null = null;
   let time = 0;
@@ -109,11 +124,20 @@ function prepare(root: HTMLElement): Prepared {
       s.tick(k);
     }
     // the exact traced scribble takes over from the painted line as the pen finishes it
-    const swap = clamp((time - scribbleEnd) / 220);
-    exact.style.opacity = String(swap);
-    ink.style.opacity = String(1 - swap);
+    // (styles are only touched during the 220 ms hand-over, not on every frame)
+    if (time >= scribbleEnd && !swapped) {
+      const swap = clamp((time - scribbleEnd) / 220);
+      if (exact.style.visibility) exact.style.visibility = "";
+      exact.style.opacity = String(swap);
+      ink.style.opacity = String(1 - swap);
+      if (swap >= 1) {
+        swapped = true;
+        ink.style.display = "none";
+      }
+    }
     if (time < end + 300) raf = requestAnimationFrame(frame);
     else {
+      exact.style.visibility = "";
       exact.style.opacity = "1";
       ink.style.display = "none";
     }

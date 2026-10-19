@@ -274,6 +274,7 @@ const Grainient = ({
   intro = true,
   lightMode = false,
   dpr,
+  maxFps = 0,
   className = '',
   style,
   ...rest
@@ -303,7 +304,8 @@ const Grainient = ({
     clickSwirl,
     intro,
     lightMode,
-    dpr
+    dpr,
+    maxFps
   };
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
@@ -369,6 +371,7 @@ const Grainient = ({
     let grainClock = 0;
     let raf = 0;
     let last = 0;
+    let lastDraw = 0; // for the optional maxFps cap
     let visible = true;
 
     const syncPalette = () => {
@@ -515,6 +518,12 @@ const Grainient = ({
       raf = 0;
       if (!visible || document.hidden) return;
       const s = settingsRef.current;
+      // optional frame cap (e.g. 30 fps on phones): skip this frame, try again next one
+      if (s.maxFps > 0 && lastDraw && now - lastDraw < 1000 / s.maxFps - 2) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+      lastDraw = now;
       const dt = last ? clamp((now - last) / 1000, 0.001, 0.05) : 1 / 60;
       last = now;
       if (!reduce) time += dt * s.speed * 0.16;

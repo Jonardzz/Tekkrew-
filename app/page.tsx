@@ -340,9 +340,16 @@ const PageBody = memo(function PageBody() {
 // ==========================================
 // 4. BACKGROUND & LOADER
 // ==========================================
+// Phones: render the grain background at 1x resolution and 30 fps. It moves slowly, so this
+// looks the same but frees the phone's GPU for the logo animation (the main source of choppiness).
+const IS_PHONE = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+
 function BackgroundElements() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#08090a] overflow-hidden">
+      {/* Static fallback with the same look. Shows only if the browser can't run WebGL2
+          (e.g. Chrome with graphics acceleration off); otherwise the canvas covers it. */}
+      <div className="tk-bg-fallback absolute inset-0" />
       {/* 🌟 The Main Grainient Background 🌟 */}
       <div className="absolute inset-0">
         <Grainient
@@ -351,7 +358,8 @@ function BackgroundElements() {
           flow={2}
           silk={0.35}
           grainAmount={0.08}
-          dpr={1.5}
+          dpr={IS_PHONE ? 1 : 1.5}
+          maxFps={IS_PHONE ? 30 : 0}
         />
       </div>
       
@@ -427,7 +435,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
 function CrewFaces() {
   return (
-    <div className="inline-flex flex-wrap items-center gap-4">
+    <div data-nosnippet className="inline-flex flex-wrap items-center gap-4">
       <button
         type="button"
         onClick={() => document.getElementById("tekkrew")?.scrollIntoView({ behavior: "smooth" })}
@@ -443,7 +451,7 @@ function CrewFaces() {
             >
               <Image
                 src={member.image}
-                alt={member.name}
+                alt=""
                 fill
                 sizes="48px"
                 className={`object-cover object-top ${member.imageClass ? "scale-[1.9] origin-[50%_14%]" : ""}`}
@@ -484,7 +492,7 @@ function Hero({ heroReady }: { heroReady: boolean }) {
           </button>
           <button
             onClick={() => document.getElementById("media")?.scrollIntoView({ behavior: "smooth" })}
-            className="rounded-full border border-white/30 bg-black/30 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent"
+            className="rounded-full border border-white/30 bg-black/50 px-7 py-3.5 text-sm font-bold text-white transition-colors hover:border-accent hover:text-accent md:bg-black/30 md:backdrop-blur-sm"
           >
             Press & Features
           </button>
@@ -710,8 +718,8 @@ function MediaTicker() {
 // Tiles keep each video's native shape (16:9 Telemundo, 9:16 KHOU and FIFA).
 // On desktop they share one row: flex-grow = aspect ratio gives every tile the same height.
 const bentoOrder = ["telemundo", "khou", "stella"];
-// 720x1280 cover cut from the KHOU video itself, with the burned-in World Cup caption blurred out.
-const bentoCover: Record<string, string> = { khou: "/khou-thumbnail-916.jpg" };
+// 720x1280 cover: a close crop of the KHOU interview framed above the burned-in World Cup caption (no blur needed).
+const bentoCover: Record<string, string> = { khou: "/khou-cover.jpg" };
 
 function PressModal({ feature, onClose }: { feature: MediaFeature; onClose: () => void }) {
   useEffect(() => {
@@ -843,8 +851,8 @@ function BentoTile({ feature: f, onOpen }: { feature: MediaFeature; onOpen: () =
       </span>
 
       <div className="absolute inset-x-2 bottom-2 rounded-xl border border-white/10 bg-black/35 px-3 py-2.5 backdrop-blur-md sm:inset-x-3 sm:bottom-3 md:px-4 md:py-3">
-        <div className="flex items-center gap-2 font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60 md:text-[11px]">
-          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${f.dotClass}`} />
+        <div className="flex items-center gap-1.5 font-sans text-[8.5px] font-medium uppercase tracking-[0.14em] text-white/55 md:text-[9.5px]">
+          <span className={`h-1 w-1 shrink-0 rounded-full ${f.dotClass}`} />
           <span className="truncate">{f.tag}</span>
         </div>
         <h3 className={`mt-1 font-sans font-semibold leading-tight tracking-tight text-white ${landscape ? "text-lg md:text-2xl" : "text-sm md:text-base"}`}>
