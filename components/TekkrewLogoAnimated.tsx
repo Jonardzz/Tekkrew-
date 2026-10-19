@@ -8,8 +8,8 @@ const START_DELAY = 120; // short beat after the loader has faded, before the pe
 const PEN_SPEED = 2600; // scribble pen speed in SVG units per second
 const SWEEP_SPEED = 1000; // "TekKREW" / "EST. 2026" ink sweep, SVG units per second across each letter (lower = slower)
 const SWEEP_OVERLAP = 0.85; // next letter starts when the current one is 85% swept, so the hand never stops
-const MOBILE_SPEED = 0.65; // on phone-size screens the pen runs at this fraction of PEN_SPEED (the logo is smaller there)
-const MOBILE_START_DELAY = 200; // a slightly longer beat before drawing on phones, ms
+const MOBILE_SPEED = 1; // phones draw at the same speed as desktop
+const MOBILE_START_DELAY = 120; // same beat as desktop
 /* Plays once; the finished logo then stays on screen. */
 /* ======================================================== */
 

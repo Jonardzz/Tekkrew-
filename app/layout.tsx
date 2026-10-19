@@ -21,11 +21,13 @@ const displayFace = localFont({
 
 // --- Metadata & Favicon ---
 const SITE_URL = "https://tekkrew.com";
-const SITE_DESCRIPTION = "Freestyle//Panna KREW based in HTX•DTX";
+const SITE_TITLE = "TekKREW | HTX • DTX";
+const SITE_DESCRIPTION =
+  "Freestyle//Panna KREW based in HTX • DTX. TekKREW is a freestyle football and panna crew from Houston, Texas: meet the crew, press features and gallery.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "TekKREW | Freestylers",
+  title: SITE_TITLE,
   description: SITE_DESCRIPTION,
   applicationName: "TekKREW",
   alternates: { canonical: "/" },
@@ -33,13 +35,13 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     siteName: "TekKREW",
-    title: "TekKREW | Freestylers",
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "TekKREW logo" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "TekKREW | Freestylers",
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     images: ["/og-image.jpg"],
   },
@@ -69,7 +71,7 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": `${SITE_URL}/#webpage`,
       url: SITE_URL,
-      name: "TekKREW | Freestylers",
+      name: SITE_TITLE,
       isPartOf: { "@id": `${SITE_URL}/#website` },
       primaryImageOfPage: { "@type": "ImageObject", url: `${SITE_URL}/og-image.jpg` },
     },
