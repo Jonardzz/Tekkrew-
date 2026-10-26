@@ -34,6 +34,16 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   applicationName: "TekKREW",
   alternates: { canonical: "/" },
+  // Versioned file names so browsers and Google fetch the new icon instead of a cached one.
+  // Google wants a square icon of at least 48x48 px; this one is 512x512.
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/tekkrew-icon-v2.png", type: "image/png", sizes: "512x512" },
+    ],
+    shortcut: "/tekkrew-icon-v2.png",
+    apple: { url: "/tekkrew-apple-icon-v2.png", sizes: "180x180" },
+  },
   openGraph: {
     type: "website",
     url: SITE_URL,
