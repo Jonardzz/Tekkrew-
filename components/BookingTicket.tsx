@@ -58,11 +58,11 @@ export default function BookingTicket() {
       onSubmit={onSubmit}
       onInput={() => error && status !== "error" && setError("")}
       noValidate
-      aria-label="Book TekKREW"
+      aria-label="Book Tekkrew"
     >
       <div className="tk-ticket__main">
         <div className="tk-ticket__eyebrow">
-          <span>TekKREW · <b>Booking pass</b></span>
+          <span>Tekkrew · <b>Booking pass</b></span>
           <span>HTX • DTX</span>
         </div>
         <h3 className="tk-ticket__title">Book the <em>krew</em></h3>
@@ -126,14 +126,14 @@ export default function BookingTicket() {
 
       <div className="tk-ticket__stub">
         <small aria-hidden="true">ADMIT ONE</small>
-        <span className="tk-ticket__stub-name" aria-hidden="true">TekKREW</span>
+        <span className="tk-ticket__stub-name" aria-hidden="true">Tekkrew</span>
         <span className="tk-barcode" aria-hidden="true" />
         <a
           className="tk-ig"
           href="https://www.instagram.com/tekkrew_/"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="TekKREW on Instagram"
+          aria-label="Tekkrew on Instagram"
           title="@tekkrew_"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

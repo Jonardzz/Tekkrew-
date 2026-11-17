@@ -18,9 +18,9 @@ const displayFace = localFont({
 
 // --- Metadata & Favicon ---
 const SITE_URL = "https://tekkrew.com";
-const SITE_TITLE = "TekKREW | HTX • DTX";
+const SITE_TITLE = "Tekkrew | HTX • DTX";
 const SITE_DESCRIPTION =
-  "Freestyle//Panna KREW based in HTX • DTX. TekKREW is a freestyle football and panna crew from Houston, Texas: meet the crew, press features and gallery.";
+  "Freestyle//Panna KREW based in HTX • DTX. Tekkrew is a freestyle football and panna crew from Houston, Texas: meet the crew, press features and gallery.";
 
 // Phone status bar / browser chrome blends into the page background
 export const viewport: Viewport = {
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
-  applicationName: "TekKREW",
+  applicationName: "Tekkrew",
   alternates: { canonical: "/" },
   // Versioned file names so browsers and Google fetch the new icon instead of a cached one.
   // Google wants a square icon of at least 48x48 px; this one is 512x512.
@@ -47,10 +47,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: SITE_URL,
-    siteName: "TekKREW",
+    siteName: "Tekkrew",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    images: [{ url: "/og-image-yellow.jpg", width: 1200, height: 630, alt: "TekKREW logo" }],
+    images: [{ url: "/og-image-yellow.jpg", width: 1200, height: 630, alt: "Tekkrew logo" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -60,14 +60,14 @@ export const metadata: Metadata = {
   },
 };
 
-// Structured data so Google can show the TekKREW name + logo in results.
+// Structured data so Google can show the Tekkrew name + logo in results.
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "Organization",
       "@id": `${SITE_URL}/#org`,
-      name: "TekKREW",
+      name: "Tekkrew",
       url: SITE_URL,
       logo: `${SITE_URL}/tekkrew-logo-square-yellow.png`,
       image: `${SITE_URL}/og-image-yellow.jpg`,
@@ -76,7 +76,7 @@ const jsonLd = {
     {
       "@type": "WebSite",
       "@id": `${SITE_URL}/#website`,
-      name: "TekKREW",
+      name: "Tekkrew",
       url: SITE_URL,
       publisher: { "@id": `${SITE_URL}/#org` },
     },

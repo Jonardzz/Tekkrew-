@@ -106,9 +106,9 @@ export async function POST(req: Request) {
     const transporter = nodemailer.createTransport({ service: "gmail", auth: { user, pass } });
     jobs.push(
       transporter.sendMail({
-        from: `"TekKREW Bookings" <${user}>`,
+        from: `"Tekkrew Bookings" <${user}>`,
         to: process.env.BOOKING_TO || user,
-        subject: `TekKREW Booking: ${f.name}${f.type ? ` · ${f.type}` : ""} (${code})`,
+        subject: `Tekkrew Booking: ${f.name}${f.type ? ` · ${f.type}` : ""} (${code})`,
         text: rows.map(([k, v]) => `${k}: ${v}`).join("\n") + `\n\nBooking code: ${code}\nSent from the booking ticket on tekkrew.com`,
         html,
         ...(isEmail(f.contact) ? { replyTo: `"${f.name.replace(/"/g, "")}" <${f.contact}>` } : {}),
@@ -122,7 +122,7 @@ export async function POST(req: Request) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: "TekKREW Bookings",
+          username: "Tekkrew Bookings",
           content: `🎟️ New booking from **${dc(f.name)}**`,
           allowed_mentions: { parse: [] },
           embeds: [

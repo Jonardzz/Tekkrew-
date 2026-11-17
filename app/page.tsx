@@ -170,9 +170,9 @@ const mediaData: MediaFeature[] = [
     dotClass: "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]",
     title: "KHOU 11 Network",
     paragraphs: [
-      "Houston’s TekKREW was featured by KHOU 11 discussing how freestyle soccer brings people together in Houston.",
+      "Houston’s Tekkrew was featured by KHOU 11 discussing how freestyle soccer brings people together in Houston.",
       <>
-        Thank you <span className="font-bold text-white">@troyklesstv</span> on Instagram for interviewing us and giving TekKREW the opportunity to share our passion for freestyle soccer in Houston.
+        Thank you <span className="font-bold text-white">@troyklesstv</span> on Instagram for interviewing us and giving Tekkrew the opportunity to share our passion for freestyle soccer in Houston.
       </>,
     ],
     videos: [
@@ -425,7 +425,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
           transition={LOADER_EXIT}
           className="absolute top-8 left-8 md:top-12 md:left-12 text-xs md:text-sm text-white/60 tracking-[0.3em] font-bold"
         >
-          TekKREW
+          Tekkrew
         </motion.div>
 
         <div className="flex-1 flex items-center justify-center">
@@ -470,7 +470,7 @@ function CrewFaces() {
       <button
         type="button"
         onClick={() => document.getElementById("tekkrew")?.scrollIntoView({ behavior: "smooth" })}
-        aria-label="Meet TekKREW"
+        aria-label="Meet Tekkrew"
         className="group flex items-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
       >
         <span className="flex -space-x-3">
@@ -499,7 +499,7 @@ function CrewFaces() {
 function Hero({ heroReady }: { heroReady: boolean }) {
   return (
     <section className="relative flex min-h-[100svh] w-full flex-col overflow-hidden">
-      <h1 className="sr-only">TekKREW, a freestyle and panna crew from Houston, Texas</h1>
+      <h1 className="sr-only">Tekkrew, a freestyle and panna crew from Houston, Texas</h1>
 
       <div className="relative z-10 flex flex-1 items-center justify-center px-4 pt-24">
         {/* Static dark glow behind the logo. A CSS drop-shadow on the SVG would be re-rendered on every animation frame. */}
@@ -519,7 +519,7 @@ function Hero({ heroReady }: { heroReady: boolean }) {
             onClick={() => document.getElementById("tekkrew")?.scrollIntoView({ behavior: "smooth" })}
             className="tk-press rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-accent hover:text-white"
           >
-            Meet TekKREW
+            Meet Tekkrew
           </button>
           <button
             onClick={() => document.getElementById("media")?.scrollIntoView({ behavior: "smooth" })}
@@ -705,7 +705,7 @@ function SquadSection() {
     <section id="tekkrew" className="scroll-mt-20 md:scroll-mt-24 relative z-10 w-full px-4 py-16 md:px-8 md:py-28">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 md:mb-12">
-          <TypedHeading text="TekKREW" className="font-display text-6xl font-black leading-[0.85] text-white md:text-8xl" />
+          <TypedHeading text="Tekkrew" className="font-display text-6xl font-black leading-[0.85] text-white md:text-8xl" />
         </div>
 
         <motion.div
@@ -1107,7 +1107,7 @@ function ContactSection() {
 function Footer() {
   return (
     <footer className="relative z-10 px-4 pb-10 pt-6 md:px-8 md:pb-12">
-      <p className="text-center text-sm text-white/45">© 2026 TekKREW. Houston, Texas.</p>
+      <p className="text-center text-sm text-white/45">© 2026 Tekkrew. Houston, Texas.</p>
     </footer>
   );
 }

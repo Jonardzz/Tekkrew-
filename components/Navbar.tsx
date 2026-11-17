@@ -4,14 +4,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ==========================================
-// NAVIGATION — TekKREW premium floating nav
+// NAVIGATION — Tekkrew premium floating nav
 // Desktop: glass pill with scroll-spy + sliding active indicator.
 // Mobile: compact logo chip + morphing hamburger opening a staggered panel.
 // ==========================================
 
 const NAV_SECTIONS = [
   { id: "home", label: "Home" },
-  { id: "tekkrew", label: "TekKREW" },
+  { id: "tekkrew", label: "Tekkrew" },
   { id: "media", label: "Press & Features" },
   { id: "gallery", label: "Gallery" },
 ] as const;
