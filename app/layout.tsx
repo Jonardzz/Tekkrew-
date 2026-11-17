@@ -23,6 +23,9 @@ const brushFace = localFont({
   weight: "400",
   variable: "--font-brush",
   display: "swap",
+  // Brush letters are drawn small inside their box. 125% makes them read the same size the old fonts did.
+  // Bigger text everywhere: raise this number (e.g. "140%").
+  declarations: [{ prop: "size-adjust", value: "125%" }],
 });
 
 // --- Metadata & Favicon ---
