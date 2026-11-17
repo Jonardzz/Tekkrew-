@@ -195,6 +195,15 @@ button, [role="button"] {
 .tk-logo.tk-done .tk-exact { opacity: 1; }
 .tk-logo.tk-done .tk-ink { display: none; }
 
+/* ---------- Brush font everywhere (for now) ----------
+   Every piece of text, the loading screen included, uses the brush face set up in app/layout.tsx.
+   Delete this block to go back to Big Shoulders + Geist. */
+html, html * {
+  font-family: var(--font-brush), "Marker Felt", "Comic Sans MS", cursive !important;
+  font-synthesis: none; /* the brush face has one weight: no fake bold smearing the strokes */
+}
+body { letter-spacing: 0.01em; }
+
 /* ---------- Yellow brush logo (hero intro): components/TekkrewBrushLogo.tsx ----------
    The underline is painted, the letters are written stroke by stroke, the star is drawn, then it sparkles.
    Each pen stroke lives in an SVG mask over the artwork; only stroke-dashoffset / opacity / transform animate. */

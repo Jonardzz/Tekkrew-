@@ -16,6 +16,15 @@ const displayFace = localFont({
   display: "swap",
 });
 
+// Brush face used across the whole site for now (free stand-in for RUSHK, the font of the yellow logo).
+// To use the real RUSHK later: drop its .otf/.ttf into app/fonts and change `src` below.
+const brushFace = localFont({
+  src: "./fonts/CaveatBrush-Regular.ttf",
+  weight: "400",
+  variable: "--font-brush",
+  display: "swap",
+});
+
 // --- Metadata & Favicon ---
 const SITE_URL = "https://tekkrew.com";
 const SITE_TITLE = "Tekkrew | HTX • DTX";
@@ -98,7 +107,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("scroll-smooth", "font-sans", GeistSans.variable)}>
-      <body className={`${displayFace.variable} font-body antialiased bg-[#050505] text-white`}>
+      <body className={`${displayFace.variable} ${brushFace.variable} font-body antialiased bg-[#050505] text-white`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
