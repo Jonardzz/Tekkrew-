@@ -7,7 +7,7 @@ import TextType from "../components/TextType";
 import Grainient from "../components/Grainient";
 import Masonry, { MasonryItem } from "../components/Masonry";
 import Navbar from "../components/Navbar";
-import TekkrewLogoAnimated from "../components/TekkrewLogoAnimated";
+import TekkrewBrushLogo from "../components/TekkrewBrushLogo";
 import BookingTicket from "../components/BookingTicket";
 
 // ==========================================
@@ -357,7 +357,7 @@ function BackgroundElements() {
       {/* 🌟 The Main Grainient Background 🌟 */}
       <div className="absolute inset-0">
         <Grainient
-          colors={["#120f17", "#ffffff", "#000000", "#ffffff", "#000000"]}
+          colors={["#120f17", "#FFD400", "#000000", "#FFD400", "#000000"]}
           angle={55}
           flow={2}
           silk={0.35}
@@ -504,7 +504,7 @@ function Hero({ heroReady }: { heroReady: boolean }) {
       <div className="relative z-10 flex flex-1 items-center justify-center px-4 pt-24">
         {/* Static dark glow behind the logo. A CSS drop-shadow on the SVG would be re-rendered on every animation frame. */}
         <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 mt-12 h-[60%] w-[min(100vw,900px)] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,rgba(0,0,0,0.55),transparent)]" />
-        <TekkrewLogoAnimated play={heroReady} className="relative w-[min(88vw,780px)]" />
+        <TekkrewBrushLogo play={heroReady} className="relative w-[min(90vw,820px)]" />
       </div>
 
       <motion.div
@@ -1069,9 +1069,9 @@ function GallerySection() {
             href="https://www.instagram.com/tekkrew_/"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative inline-flex items-center gap-3 rounded-full border border-[#FF4328]/50 bg-[#0c0d0f]/90 px-8 py-4 text-xs font-black uppercase tracking-[0.2em] text-white transition-[border-color,transform] duration-200 ease-out hover:border-[#FF4328] active:scale-[0.97] md:text-sm"
+            className="group relative inline-flex items-center gap-3 rounded-full border border-[#FFD400]/50 bg-[#0c0d0f]/90 px-8 py-4 text-xs font-black uppercase tracking-[0.2em] text-white transition-[border-color,transform] duration-200 ease-out hover:border-[#FFD400] active:scale-[0.97] md:text-sm"
           >
-            <span aria-hidden="true" className="pointer-events-none absolute -inset-1 rounded-full opacity-0 shadow-[0_0_30px_rgba(255,67,40,0.25)] transition-opacity duration-300 group-hover:opacity-100" />
+            <span aria-hidden="true" className="pointer-events-none absolute -inset-1 rounded-full opacity-0 shadow-[0_0_30px_rgba(255,212,0,0.25)] transition-opacity duration-300 group-hover:opacity-100" />
             <span aria-hidden="true" className="absolute inset-0 overflow-hidden rounded-full">
               <span className="absolute inset-0 -translate-x-full bg-accent transition-transform duration-300 ease-out group-hover:translate-x-0" />
             </span>

@@ -85,7 +85,7 @@ export async function POST(req: Request) {
           <div style="font-size:11px;letter-spacing:2px;color:#7a756c;font-weight:bold">TEKKREW · BOOKING PASS · ${esc(code)}</div>
           <div style="font-size:28px;font-weight:900;color:#111;margin-top:6px;text-transform:uppercase">New booking</div>
         </td>
-        <td style="width:90px;background:#FF4328;color:#fff;text-align:center;font-weight:900;font-size:13px;letter-spacing:2px" rowspan="2">ADMIT</td>
+        <td style="width:90px;background:#FFD400;color:#111;text-align:center;font-weight:900;font-size:13px;letter-spacing:2px" rowspan="2">ADMIT</td>
       </tr>
       <tr><td style="padding:6px 24px 22px">
         ${rows
@@ -128,7 +128,7 @@ export async function POST(req: Request) {
           embeds: [
             {
               title: `Booking pass · ${code}`,
-              color: 0xff4328,
+              color: 0xffd400,
               fields: rows.map(([k, v]) => ({ name: k, value: dc(v), inline: k !== "Details" })),
               footer: { text: "tekkrew.com · HTX • DTX" },
               timestamp: now.toISOString(),

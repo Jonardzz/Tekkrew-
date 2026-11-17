@@ -148,7 +148,7 @@ export default function BookingTicket() {
       <div className="tk-confirm" role="status" aria-live="polite" aria-hidden={status !== "sent"}>
         <div className="tk-confirm__head">
           <span className="tk-confirm__check" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12.5l4.5 4.5L19 7.5" />
             </svg>
           </span>

@@ -10,7 +10,7 @@
   --text: #ffffff;
   --muted: #a1a1aa;
   --stroke: rgba(255, 255, 255, 0.1);
-  --accent: #FF4328; /* TekKREW orange (logo accent) — used sparingly for small details */
+  --accent: #FFD400; /* TekKREW yellow (brush logo) — used sparingly for small details */
 }
 
 @layer utilities {
@@ -169,10 +169,10 @@ button, [role="button"] {
 /* Static stand-in for the Grainient background (used when WebGL2 isn't available) */
 .tk-bg-fallback {
   background:
-    radial-gradient(38% 60% at 6% 40%, rgba(255, 255, 255, 0.9), transparent 75%),
-    radial-gradient(70% 22% at 55% 6%, rgba(255, 255, 255, 0.7), transparent 75%),
-    radial-gradient(30% 55% at 98% 45%, rgba(255, 255, 255, 0.85), transparent 75%),
-    radial-gradient(45% 30% at 30% 100%, rgba(255, 255, 255, 0.35), transparent 75%),
+    radial-gradient(38% 60% at 6% 40%, rgba(255, 212, 0, 0.9), transparent 75%),
+    radial-gradient(70% 22% at 55% 6%, rgba(255, 212, 0, 0.7), transparent 75%),
+    radial-gradient(30% 55% at 98% 45%, rgba(255, 212, 0, 0.85), transparent 75%),
+    radial-gradient(45% 30% at 30% 100%, rgba(255, 212, 0, 0.35), transparent 75%),
     linear-gradient(55deg, #120f17 0%, #050505 45%, #0d0d0d 70%, #000 100%);
 }
 .tk-bg-fallback::after {
@@ -195,6 +195,43 @@ button, [role="button"] {
 .tk-logo.tk-done .tk-exact { opacity: 1; }
 .tk-logo.tk-done .tk-ink { display: none; }
 
+/* ---------- Yellow brush logo (hero intro): components/TekkrewBrushLogo.tsx ----------
+   stroke sweeps in → text wipes on → star pops + sparkle. Only clip-path / transform / opacity animate. */
+.tk-brush { position: relative; display: block; }
+.tk-brush__layer { position: absolute; inset: 0; width: 100%; height: 100%; display: block; -webkit-user-select: none; user-select: none; pointer-events: none; }
+.tk-brush__stroke { clip-path: inset(-4% 100% -4% 0); }
+.tk-brush__text { clip-path: inset(-4% 100% -4% 0); opacity: 0; transform: translateY(2.5%); }
+.tk-brush__star { opacity: 0; transform: scale(0.2) rotate(-28deg); transform-origin: 89% 40.6%; }
+.tk-brush--play .tk-brush__stroke { animation: tk-brush-sweep 560ms cubic-bezier(0.22, 1, 0.36, 1) 80ms forwards; }
+.tk-brush--play .tk-brush__text { animation: tk-brush-text 760ms cubic-bezier(0.22, 1, 0.36, 1) 480ms forwards; }
+.tk-brush--play .tk-brush__star { animation: tk-brush-star 520ms cubic-bezier(0.34, 1.56, 0.64, 1) 1180ms forwards; }
+@keyframes tk-brush-sweep { to { clip-path: inset(-4% 0 -4% 0); } }
+@keyframes tk-brush-text { 0% { clip-path: inset(-4% 100% -4% 0); opacity: 0; transform: translateY(2.5%); } 25% { opacity: 1; } 100% { clip-path: inset(-4% -2% -4% 0); opacity: 1; transform: none; } }
+@keyframes tk-brush-star { 0% { opacity: 0; transform: scale(0.2) rotate(-28deg); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+/* sparkle: three tiny four-point glints around the star, same yellow */
+.tk-brush__sparkles { position: absolute; left: 89%; top: 40.6%; width: 0; height: 0; pointer-events: none; }
+.tk-brush__sparkles i {
+  position: absolute; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  left: var(--x); top: var(--y); background: #FFD400; opacity: 0; transform: scale(0) rotate(0deg);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+.tk-brush__sparkles i:nth-child(1) { --s: clamp(9px, 2.2vw, 20px); --x: clamp(26px, 6.4vw, 60px); --y: clamp(-52px, -5.6vw, -22px); }
+.tk-brush__sparkles i:nth-child(2) { --s: clamp(6px, 1.4vw, 13px); --x: clamp(-58px, -6.2vw, -25px); --y: clamp(-40px, -4.2vw, -17px); }
+.tk-brush__sparkles i:nth-child(3) { --s: clamp(5px, 1.1vw, 10px); --x: clamp(30px, 7.2vw, 68px); --y: clamp(14px, 3.4vw, 32px); }
+.tk-brush--play .tk-brush__sparkles i { animation: tk-brush-glint 620ms cubic-bezier(0.22, 1, 0.36, 1) 1500ms both; }
+.tk-brush--play .tk-brush__sparkles i:nth-child(2) { animation-delay: 1590ms; }
+.tk-brush--play .tk-brush__sparkles i:nth-child(3) { animation-delay: 1680ms; }
+/* seamless idle loop once the intro has landed: the glints twinkle again every few seconds */
+.tk-brush--play.tk-brush--idle .tk-brush__sparkles i { animation: tk-brush-glint 620ms cubic-bezier(0.22, 1, 0.36, 1) 1500ms both, tk-brush-twinkle 4200ms ease-in-out 3400ms infinite; }
+.tk-brush--play.tk-brush--idle .tk-brush__sparkles i:nth-child(2) { animation-delay: 1590ms, 3650ms; }
+.tk-brush--play.tk-brush--idle .tk-brush__sparkles i:nth-child(3) { animation-delay: 1680ms, 3900ms; }
+@keyframes tk-brush-glint { 0% { opacity: 0; transform: scale(0) rotate(0deg); } 45% { opacity: 1; transform: scale(1) rotate(45deg); } 100% { opacity: 0; transform: scale(0.2) rotate(90deg); } }
+@keyframes tk-brush-twinkle { 0%, 78%, 100% { opacity: 0; transform: scale(0) rotate(0deg); } 86% { opacity: 0.95; transform: scale(1) rotate(45deg); } 94% { opacity: 0; transform: scale(0.2) rotate(90deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .tk-brush__stroke, .tk-brush__text, .tk-brush__star { animation: none !important; clip-path: none; opacity: 1; transform: none; }
+  .tk-brush__sparkles { display: none; }
+}
+
 /* ---------- Mobile menu button (hamburger → X) ----------
    Emil Kowalski–style: only transform/opacity animate, ease-in-out for the on-screen morph,
    0.96 press scale, hover gated to real pointers, no colour flash when opening. */
@@ -216,7 +253,7 @@ button, [role="button"] {
 }
 .tk-burger:active { transform: scale(0.96); }
 .tk-burger:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.tk-burger[data-open] { border-color: rgba(255, 67, 40, 0.5); }
+.tk-burger[data-open] { border-color: rgba(255, 212, 0, 0.5); }
 .tk-burger__line {
   position: absolute;
   left: 50%;
@@ -317,7 +354,7 @@ button, [role="button"] {
 }
 .tk-ticket__btn:active { transform: scale(0.97); }
 .tk-ticket__btn[disabled] { cursor: default; }
-@media (hover: hover) and (pointer: fine) { .tk-ticket__btn:not([disabled]):hover { background: var(--accent); color: #fff; } }
+@media (hover: hover) and (pointer: fine) { .tk-ticket__btn:not([disabled]):hover { background: var(--accent); color: #111; } }
 .tk-lbl { display: inline-flex; align-items: center; gap: 8px; transition: opacity 180ms var(--ease-out-strong), transform 180ms var(--ease-out-strong), filter 180ms var(--ease-out-strong); }
 .tk-lbl--sending { position: absolute; inset: 0; justify-content: center; opacity: 0; transform: translateY(6px); filter: blur(2px); }
 .tk-ticket[data-state="sending"] .tk-lbl--idle { opacity: 0; transform: translateY(-6px); filter: blur(2px); }
@@ -329,14 +366,14 @@ button, [role="button"] {
 /* stub: orange gradient, barcode, perforated tear line */
 .tk-ticket__stub {
   position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 16px; padding: 30px 12px;
-  color: #fff;
+  color: #111;
   background:
     radial-gradient(120% 60% at 50% 0%, rgba(255, 255, 255, 0.22), transparent 60%),
-    linear-gradient(180deg, #ff5a3c 0%, #FF4328 45%, #c8260f 100%);
+    linear-gradient(180deg, #ffe14d 0%, #FFD400 45%, #e0b400 100%);
 }
 .tk-ticket__stub::before { /* perforation */
   content: ""; position: absolute; left: -1px; top: 18px; bottom: 18px; width: 2px;
-  background: repeating-linear-gradient(to bottom, rgba(246, 243, 236, 0.55) 0 7px, transparent 7px 13px);
+  background: repeating-linear-gradient(to bottom, rgba(17, 17, 17, 0.45) 0 7px, transparent 7px 13px);
 }
 .tk-ticket__stub small { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; opacity: 0.9; }
 .tk-ticket__stub-name { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-display), sans-serif; font-weight: 900; font-size: 40px; letter-spacing: 0.05em; line-height: 1; }
@@ -374,7 +411,7 @@ button, [role="button"] {
 .tk-confirm__head { display: flex; align-items: center; gap: 16px; }
 .tk-confirm__check {
   flex: none; display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: var(--accent);
-  box-shadow: 0 0 30px rgba(255, 67, 40, 0.45); transform: scale(0.6); opacity: 0;
+  box-shadow: 0 0 30px rgba(255, 212, 0, 0.45); transform: scale(0.6); opacity: 0;
   transition: transform 320ms cubic-bezier(0.2, 1.3, 0.4, 1) 60ms, opacity 160ms ease 60ms;
 }
 .tk-confirm__check svg { width: 28px; height: 28px; }
@@ -411,9 +448,9 @@ button, [role="button"] {
   .tk-ticket__row { grid-template-columns: 1fr; gap: 8px; }
   .tk-ticket__btn { width: 100%; }
   .tk-ticket__stub { height: var(--stub-h); flex-direction: row; padding: 0 22px;
-    background: radial-gradient(60% 120% at 0% 50%, rgba(255, 255, 255, 0.2), transparent 60%), linear-gradient(90deg, #ff5a3c, #FF4328 50%, #c8260f); }
+    background: radial-gradient(60% 120% at 0% 50%, rgba(255, 255, 255, 0.2), transparent 60%), linear-gradient(90deg, #ffe14d, #FFD400 50%, #e0b400); }
   .tk-ticket__stub::before { left: 18px; right: 18px; top: -1px; bottom: auto; width: auto; height: 2px;
-    background: repeating-linear-gradient(to right, rgba(246, 243, 236, 0.55) 0 7px, transparent 7px 13px); }
+    background: repeating-linear-gradient(to right, rgba(17, 17, 17, 0.45) 0 7px, transparent 7px 13px); }
   .tk-ticket__stub-name { writing-mode: horizontal-tb; transform: none; font-size: 30px; }
   .tk-barcode { width: 54px; height: 30px; }
   .tk-ig { width: 36px; height: 36px; }
